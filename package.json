@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.50.0",
+    "axios": "^1.9.0",
     "embla-carousel-react": "^8.6.0",
     "next": "15.3.2",
     "react": "^19.0.0",

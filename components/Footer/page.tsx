@@ -3,8 +3,8 @@ import { FaFacebook, FaInstagram } from "react-icons/fa6"
 const Footer = () => {
     return (
         <div role='footer' className="flex justify-center w-full min-h-[7rem] bg-[var(--main-color)] py-12">
-            <div role='footer-content' className="flex flex-col gap-4 sm:w-[95rem] text-[#ffffff]">
-                <div role="top-side" className="flex gap-20">
+            <div role='footer-content' className="flex flex-col gap-4 px-4 sm:w-[95rem] text-[#ffffff]">
+                <div role="top-side" className="flex flex-col gap-10 sm:flex-row sm:gap-20">
                     <div role="left-side" >
                         <h3 className="font-bold mb-2">Sobre o Projeto</h3>
                         <ul className="flex flex-col gap-1">
@@ -49,7 +49,7 @@ const Footer = () => {
                         </ul>
                     </div>
                     <div role='right-side' className="flex items-center flex-row gap-4">
-                        <a href="https://www.instagram.com/regiaovulcanica/" target="_blank"><FaInstagram></FaInstagram></a>
+                        <a href="https://www.instagram.com/visitearegiaovulcanica/" target="_blank"><FaInstagram></FaInstagram></a>
                         <a href="https://www.facebook.com/regiaovulcanica" target="_blank"><FaFacebook></FaFacebook></a>
                     </div>
                 </div>

@@ -1,0 +1,3 @@
+interface member{
+    name: string;
+}
