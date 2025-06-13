@@ -2,7 +2,7 @@ import { FaFacebook, FaInstagram } from "react-icons/fa6"
 
 const Footer = () => {
     return (
-        <div role='footer' className="flex justify-center w-full min-h-[7rem] bg-[var(--main-color)] py-12">
+        <div role='footer' className="flex justify-center w-full h-[22rem] bg-[var(--main-color)] py-12 absolute bottom-0">
             <div role='footer-content' className="flex flex-col gap-4 px-4 sm:w-[95rem] text-[#ffffff]">
                 <div role="top-side" className="flex flex-col gap-10 sm:flex-row sm:gap-20">
                     <div role="left-side" >

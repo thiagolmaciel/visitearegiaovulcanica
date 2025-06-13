@@ -26,9 +26,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body className="min-h-[100vh] relative">
         <Navbar />
+        <div className="pb-[22rem]">
         {children}
+        </div>
         <Footer />
       </body>
     </html>

@@ -9,12 +9,12 @@ import { HiUserGroup } from "react-icons/hi";
 import { FaCircleChevronLeft, FaCircleChevronRight } from "react-icons/fa6";
 import SuggestionItem from "../../components/SuggestionItem/page";
 import Carousel from "../../components/Carousel/page";
-import SuggestionModel from "../../components/SuggestionModel/page";
 import { supabase } from "../../utils/supabaseClient";
 import { BiSolidCheese, BiSolidCoffee } from "react-icons/bi";
 
 export default async function Home() {
   const { data: members, error } = await supabase.from('members').select('*');
+  console.log(error)
 
   return (
     <div role='main' className="flex flex-col items-center ">
@@ -54,9 +54,7 @@ export default async function Home() {
           <div className="flex flex-col">
            
             <div className="mt-2 flex flex-row gap-10">
-            <Carousel title="Explore "members={members}></Carousel>
-
-           
+            <Carousel title="Explore" members={members}></Carousel>
             </div>
           </div>
         </div>
