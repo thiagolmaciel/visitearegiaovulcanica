@@ -1,13 +1,10 @@
 import Image from "next/image";
-import { FaBed, FaFish, FaHorse, FaMountain, FaSearch } from "react-icons/fa";
+import { FaBed, FaHorse, FaMountain, FaSearch } from "react-icons/fa";
 import { PiBeerBottleBold, PiCoffeeBeanFill, PiFlowerTulipBold } from "react-icons/pi";
 import CategoryItem from "../../components/CategoryItem/page";
-import { GiBullHorns, GiFishingPole, GiFlowerHat, GiFlowers, GiSoccerBall } from "react-icons/gi";
 import { LuCandy, LuGrape } from "react-icons/lu";
-import { IoFootball } from "react-icons/io5";
 import { HiUserGroup } from "react-icons/hi";
 import { FaCircleChevronLeft, FaCircleChevronRight } from "react-icons/fa6";
-import SuggestionItem from "../../components/SuggestionItem/page";
 import Carousel from "../../components/Carousel/page";
 import { supabase } from "../../utils/supabaseClient";
 import { BiSolidCheese, BiSolidCoffee } from "react-icons/bi";
@@ -54,7 +51,7 @@ export default async function Home() {
           <div className="flex flex-col">
            
             <div className="mt-2 flex flex-row gap-10">
-            <Carousel title="Explore" members={members}></Carousel>
+            <Carousel title="Explore" members={members || []}></Carousel>
             </div>
           </div>
         </div>
