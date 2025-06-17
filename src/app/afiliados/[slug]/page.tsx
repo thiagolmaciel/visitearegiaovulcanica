@@ -1,3 +1,4 @@
+'use client'
 import React from 'react';
 import { supabase } from '../../../../utils/supabaseClient';
 import { IoShareSocial } from 'react-icons/io5';
@@ -6,9 +7,11 @@ import { getMemberServices, Service } from '../../../../service/memberServices';
 import ServiceTag from '../../../../components/ServiceTag/page';
 import ContactArea from '../../../../components/ContactArea/page';
 import { FaWhatsapp } from 'react-icons/fa';
+import { useParams } from 'next/navigation';
 
-const MemberPage = async ({ params }: { params: { slug: string } }) => {
-  const { slug } = params;
+async function MemberPage() {
+  const params = useParams();
+  const slug = params.slug as string;
 
   const { data: member, error: memberError } = await supabase
     .from('members')

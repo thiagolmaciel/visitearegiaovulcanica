@@ -1,6 +1,6 @@
 import { Member } from "./Member";
 
-interface CarrouselProps {
+export type CarouselProps = {
     title: string;
     members: Member[];
 

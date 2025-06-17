@@ -3,6 +3,7 @@ import useEmblaCarousel from 'embla-carousel-react'
 import { useCallback } from 'react';
 import SuggestionItem from '../SuggestionItem/page';
 import { FaCircleChevronLeft, FaCircleChevronRight } from 'react-icons/fa6';
+import { CarouselProps } from '../../model/CarouselProps';
 
 type Member = {
   id: string;
@@ -11,7 +12,7 @@ type Member = {
 
 
 
-const Carousel = ({ title, members }: CarrouselProps) => {
+const Carousel = ({ title, members }: CarouselProps) => {
   const [emblaRef, emblaApi] = useEmblaCarousel();
   
   const scrollPrev = useCallback(() => {
