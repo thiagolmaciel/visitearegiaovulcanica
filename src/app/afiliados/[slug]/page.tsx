@@ -7,13 +7,7 @@ import ServiceTag from '../../../../components/ServiceTag/page';
 import ContactArea from '../../../../components/ContactArea/page';
 import { FaWhatsapp } from 'react-icons/fa';
 
-type Props = {
-  params: {
-    slug: string;
-  };
-};
-
-const MemberPage = async ({ params }: Props) => {
+const MemberPage = async ({ params }: { params: { slug: string } }) => {
   const { slug } = params;
 
   const { data: member, error: memberError } = await supabase
@@ -67,7 +61,7 @@ const MemberPage = async ({ params }: Props) => {
         <div className='flex justify-between items-center '>
           <div>
             <p className='flex items-center text-center text-2xl font-bold'>{member.name}</p>
-            </div>
+          </div>
           <a href={`https://wa.me/+55${member.whatsapp}`} target="_blank" role='whatsapp' className='flex items-center gap-4 w-[20rem] px-2 py-2 text-xl rounded-full text-white font-bold bg-[var(--main-color)] justify-center'>
             <p>Enviar Mensagem</p> <FaWhatsapp />
           </a>
