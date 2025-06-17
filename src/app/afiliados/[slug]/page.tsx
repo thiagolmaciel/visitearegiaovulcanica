@@ -44,20 +44,20 @@ async function MemberPage() {
         </div>
         <div role="image_area" className='flex my-4 gap-1 h-[40rem] w-full rounded-2xl overflow-clip'>
           <div role="image_box" className='relative overflow-clip flex-1'>
-            <Image src={member.image} alt="" fill className='object-cover scale-100 hover:scale-110 transition-all ease-in-out duration-250' />
+            <Image src={await member.image} alt="" fill className='object-cover scale-100 hover:scale-110 transition-all ease-in-out duration-250' />
           </div>
           <div className='flex-1 grid grid-cols-2 grid-rows-2 gap-1 '>
             <div role="image_box" className='relative overflow-clip'>
-              <Image src={member.image} alt="" fill className='object-cover scale-100 hover:scale-110 transition-all ease-in-out duration-250' />
+              <Image src={await member.image} alt="" fill className='object-cover scale-100 hover:scale-110 transition-all ease-in-out duration-250' />
             </div>
             <div role="image_box" className='relative overflow-clip'>
-              <Image src={member.image} alt="" fill className='object-cover scale-100 hover:scale-110 transition-all ease-in-out duration-250' />
+              <Image src={await member.image} alt="" fill className='object-cover scale-100 hover:scale-110 transition-all ease-in-out duration-250' />
             </div>
             <div role="image_box" className='relative overflow-clip'>
-              <Image src={member.image} alt="" fill className='object-cover scale-100 hover:scale-110 transition-all ease-in-out duration-250' />
+              <Image src={await member.image} alt="" fill className='object-cover scale-100 hover:scale-110 transition-all ease-in-out duration-250' />
             </div>
             <div role="image_box" className='relative overflow-clip'>
-              <Image src={member.image} alt="" fill className='object-cover scale-100 hover:scale-110 transition-all ease-in-out duration-150' />
+              <Image src={await member.image} alt="" fill className='object-cover scale-100 hover:scale-110 transition-all ease-in-out duration-150' />
             </div>
           </div>
         </div>
