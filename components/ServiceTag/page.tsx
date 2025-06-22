@@ -14,7 +14,7 @@ const ServiceTag = (serviceobject: Service) => {
                 <Icon />
             </div>
             <div>
-                <p className='text-justify'>{serviceobject.description}</p>
+                <p className='text-left'>{serviceobject.description}</p>
             </div>
         </div>
     );

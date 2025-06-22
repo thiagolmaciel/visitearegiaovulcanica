@@ -1,42 +1,38 @@
-'use client'
-import React from 'react';
-import { supabase } from '../../../../utils/supabaseClient';
 import { IoShareSocial } from 'react-icons/io5';
 import Image from 'next/image';
 import { getMemberServices, Service } from '../../../../service/memberServices';
 import ServiceTag from '../../../../components/ServiceTag/page';
 import ContactArea from '../../../../components/ContactArea/page';
 import { FaWhatsapp } from 'react-icons/fa';
-import { useParams } from 'next/navigation';
+import MapComponent from '../../../../components/MapComponent/page';
+import { supabase } from '../../../../utils/supabaseClient';
 
-async function MemberPage() {
-  const params = useParams();
-  const slug = params.slug as string;
+interface MemberPageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export default async function MemberPage({ params }: MemberPageProps) {
+  const { slug } = await params;
 
   const { data: member, error: memberError } = await supabase
     .from('members')
     .select('*')
-    .eq('slug', slug)
+    .eq('slug', 'tradicafe')
     .single();
 
+  if (memberError ) {
+    return <p>Erro</p>;
+  }
+  if (!member){
+    return <p>Não encontrado!</p>
+  }
   const services = await getMemberServices(member.id);
 
-  const { data: images, error: imageError } = await supabase.storage.from('afiliados').list('Tradi');
-
-  if (memberError) {
-    return <p>Erro ao receber {slug}</p>;
-  }
-
-  if (!member) {
-    return <p>Member not found</p>;
-  }
-  console.log('TESTE');
-  console.log(services)
   return (
     <div role='main' className="flex flex-col items-center ">
       <div className="flex flex-col justify-start sm:w-[95rem] px-[4rem] py-[2rem] gap-4 min-h-[50rem] my-5 bg-[#fff] rounded-2xl shadow-lg">
         <div role="header" className="flex col items-center justify-between w-full">
-          <p className='text-3xl font-bold'>{member.name}</p>
+          <p className='text-3xl font-bold'>{member.name} - {member.title}</p>
           <a href="#" className='flex items-center gap-2 text-x'>
             <p>Compartilhar </p>
             <IoShareSocial />
@@ -65,7 +61,7 @@ async function MemberPage() {
           <div>
             <p className='flex items-center text-center text-2xl font-bold'>{member.name}</p>
           </div>
-          <a href={`https://wa.me/+55${member.whatsapp}`} target="_blank" role='whatsapp' className='flex items-center gap-4 w-[20rem] px-2 py-2 text-xl rounded-full text-white font-bold bg-[var(--main-color)] justify-center'>
+          <a href={`https://wa.me/+55${member.whatsapp}`} target="_blank" role='whatsapp' className='translate-0 flex items-center gap-4 w-[20rem] px-2 py-2 text-xl rounded-full text-white font-bold bg-[var(--main-color)] justify-center shadow-md hover:translate-1 transition-all ease-in duration-100'>
             <p>Enviar Mensagem</p> <FaWhatsapp />
           </a>
         </div>
@@ -74,7 +70,7 @@ async function MemberPage() {
           <div role='left-side' className='flex-3'>
             <div>
               <ul className='flex flex-row gap-4'>
-                {services.map((service: Service) => (
+              {services.map((service: Service) => (
                   <li key={service.id}><ServiceTag {...service} /></li>
                 ))}
               </ul>
@@ -84,12 +80,12 @@ async function MemberPage() {
           </div>
           <div role='right-side' className='flex-2'>
             <ContactArea {...member} />
+            <div className="hline mt-4" />
+            <MapComponent {...member} />
           </div>
 
         </div>
       </div>
     </div>
   );
-};
-
-export default MemberPage;
+}

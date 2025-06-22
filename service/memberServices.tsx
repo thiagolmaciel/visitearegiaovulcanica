@@ -37,3 +37,18 @@ export async function getMemberServices(memberId: number): Promise<Service[]> {
 
   return services as Service[];
 }
+
+export async function getMemberLocation(memberID: number) {
+  const { data, error } = await supabase
+    .from('locations')
+    .select('*')
+    .eq('member_id', memberID)
+    .single();
+
+  if (error || !data) {
+    console.error('Erro ao buscar localização:', error?.message);
+    return null;
+  }
+
+  return data;
+}
