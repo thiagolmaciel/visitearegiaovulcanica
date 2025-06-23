@@ -9,6 +9,7 @@ import Carousel from "../../components/Carousel/page";
 import { supabase } from "../../utils/supabaseClient";
 import { BiSolidCheese, BiSolidCoffee } from "react-icons/bi";
 import SearchForm from "../../components/SearchForm/page";
+import { Suspense } from "react";
 
 export default async function Home() {
   const { data: members, error } = await supabase.from('members').select('*');
@@ -21,7 +22,9 @@ export default async function Home() {
         <Image src='/regiao-vulcanica.jpg' alt='' fill className="object-cover selection-none" />
         <div className="flex items-center justify-center flex-col gap-2 relative z-10 text-white selection-none">
           <p className="font-bold text-2xl starting:mb-0 starting:opacity-0 mb-4 opacity-100 transition-all ease-in duration-300 selection-none">Visite e desfrute da Região Vulcânica!</p>
-          <SearchForm />
+          <Suspense fallback={<p>...</p>}>
+            <SearchForm />
+          </Suspense>
         </div>
       </div>  
       {/*Show Places*/}
