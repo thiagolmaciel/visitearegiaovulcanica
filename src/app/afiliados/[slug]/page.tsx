@@ -10,12 +10,13 @@ import { headers } from 'next/headers';
 import { getImages } from '../../../../service/imagesServices';
 
 interface MemberPageProps {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }
 
-export default async function MemberPage({ params }: MemberPageProps) {
-  const { slug } = await params;
 
+export default async function MemberPage({ params }: MemberPageProps) {
+  const { slug } = params;
+  
   const { data: member, error: memberError } = await supabase
     .from('members')
     .select('*')
