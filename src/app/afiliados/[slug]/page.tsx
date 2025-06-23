@@ -11,12 +11,12 @@ import { getImages } from '../../../../service/imagesServices';
 
 interface MemberPageProps {
   params: { slug: string };
+  searchParams?: { [key: string]: string | string[] | undefined };
 }
-
 
 export default async function MemberPage({ params }: MemberPageProps) {
   const { slug } = params;
-  
+
   const { data: member, error: memberError } = await supabase
     .from('members')
     .select('*')
