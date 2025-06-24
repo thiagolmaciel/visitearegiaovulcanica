@@ -10,10 +10,12 @@ import { supabase } from "../../utils/supabaseClient";
 import { BiSolidCheese, BiSolidCoffee } from "react-icons/bi";
 import SearchForm from "../../components/SearchForm/page";
 import { Suspense } from "react";
+import { fetchAllMembers, fetchMembersFromCity } from "../../service/memberServices";
 
 export default async function Home() {
-  const { data: members, error } = await supabase.from('members').select('*');
-  console.log(error)
+  const allMembers = await fetchAllMembers();
+  const pdcMembers = await fetchMembersFromCity(1);
+  const andMembers = await fetchMembersFromCity(3);
 
   return (
     <div role='main' className="flex flex-col items-center ">
@@ -50,7 +52,13 @@ export default async function Home() {
           <div className="flex flex-col">
            
             <div className="mt-2 flex flex-row gap-10">
-            <Carousel title="Explore" members={members || []}></Carousel>
+            <Carousel title="Explore" members={allMembers || []}></Carousel>
+            </div>
+            <div className="mt-8 flex flex-row gap-10">
+            <Carousel title="Em Poços de Caldas" members={pdcMembers || []}></Carousel>
+            </div>
+            <div className="mt-8 flex flex-row gap-10">
+            <Carousel title="Visite Andradas" members={andMembers || []}></Carousel>
             </div>
           </div>
         </div>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "../../components/Navbar/page";
@@ -30,6 +31,7 @@ export default function RootLayout({
         <Navbar />
         <div className="pb-[22rem]">
         {children}
+        <SpeedInsights />
         </div>
         <Footer />
       </body>

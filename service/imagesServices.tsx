@@ -28,3 +28,4 @@ export async function getImages(slug: string){
   });
   return images_links;
 }
+

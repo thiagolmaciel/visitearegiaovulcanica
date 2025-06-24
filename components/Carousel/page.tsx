@@ -43,7 +43,7 @@ const Carousel = ({ title, members }: CarouselProps) => {
         <div className='embla__container flex gap-10'>
           {members?.map((member) => (
             <div className='embla__slide flex-1' key={member.id}>
-              <SuggestionItem title={member.name} image_url={member.image} slug={member.slug} star="4.5" />
+              <SuggestionItem title={member.name} id={member.id} image_url={member.image} slug={member.slug} star="4.5" />
             </div>
           ))}
         </div>
