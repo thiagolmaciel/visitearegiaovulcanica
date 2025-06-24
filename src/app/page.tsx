@@ -50,18 +50,20 @@ export default async function Home() {
 
         <div role="suggestion" className="mt-4 flex flex-col gap-8">
           <div className="flex flex-col">
-           
+          <p className='text-3xl font-bold'>Explore</p>
             <div className="mt-2 flex flex-row gap-10">
-            <Carousel title="Explore" members={allMembers || []}></Carousel>
+            <Carousel title="Nossos afiliados" members={allMembers || []}></Carousel>
             </div>
             <div className="mt-8 flex flex-row gap-10">
             <Carousel title="Em Poços de Caldas" members={pdcMembers || []}></Carousel>
             </div>
             <div className="mt-8 flex flex-row gap-10">
-            <Carousel title="Visite Andradas" members={andMembers || []}></Carousel>
+            <Carousel title="Em Andradas" members={andMembers || []}></Carousel>
             </div>
           </div>
+          
         </div>
+        <div className="mt-3 mb-2"><button className="btn-more shadow-lg">Explore mais destinos</button></div>
       </div>
     </div>
   );

@@ -27,7 +27,7 @@ const Carousel = ({ title, members }: CarouselProps) => {
     <div className='embla flex flex-col gap-4 pb-4'>
       <div role="title-box" className="flex flex-row items-center justify-between text-xl font-bold">
         <div role="title">
-          <p className='text-3xl'>{title}</p>
+          <p className='text-2xl'>{title}</p>
         </div>
         <div role="buttons" className="flex items-center flex-row gap-2">
           <button onClick={scrollPrev} className="embla__prev flex items-center justify-center gap-1 text-md text-[#cacaca] hover:text-[#b9b9b9] font-semibold transition-all ease-in-out duration-100 cursor-pointer">
