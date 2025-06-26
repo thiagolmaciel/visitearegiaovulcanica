@@ -50,7 +50,7 @@ const SearchPageContent = () => {
                 </div>
               ) : (
                 <div className='w-full'>
-                  <ul className='flex flex-row flex-wrap gap-6 justify-between'>
+                  <ul className='flex flex-row flex-wrap gap-x-16 gap-y-8'>
                     {searchResult.map((result) => (
                       <li key={result.id}>
                         <SuggestionItem
