@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { Service } from '../../service/memberServices';
 import iconsMap from '../../lib/iconsMap';
+import { Service } from '../../model/Service';
 
 const ServiceTag = (serviceobject: Service) => {
     const Icon = iconsMap[serviceobject.icon as keyof typeof iconsMap];

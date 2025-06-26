@@ -1,17 +1,19 @@
-import { supabase } from "../utils/supabaseClient";
+import { isCity, isState } from "./locationServices";
+import { fetchAllMembers, fetchMembersByCityName, fetchMembersByPartialQuery, fetchMembersByStateName, } from "./memberServices";
 
-export default async function searchServices(query: string) {
 
-    const { data: members, error: membersError } = await supabase
-        .from('members')
-        .select()
-        .textSearch('name_title_description', query);
+export async function searchMembers(query: string) {
+  const normalizedQuery = query.trim().toLowerCase();
 
-    if (membersError) {
-        throw new Error(
-            membersError?.message || "Erro na busca"
-        );
-    }
-    
-    return members;
+  if (!normalizedQuery) return fetchAllMembers();
+
+  if (await isCity(normalizedQuery)) {
+    return fetchMembersByCityName(normalizedQuery);
+  }
+  if (await isState(normalizedQuery)) {
+    return fetchMembersByStateName(normalizedQuery);
+  }
+  return fetchMembersByPartialQuery(normalizedQuery);
 }
+
+

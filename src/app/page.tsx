@@ -10,12 +10,12 @@ import { supabase } from "../../utils/supabaseClient";
 import { BiSolidCheese, BiSolidCoffee } from "react-icons/bi";
 import SearchForm from "../../components/SearchForm/page";
 import { Suspense } from "react";
-import { fetchAllMembers, fetchMembersFromCity } from "../../service/memberServices";
+import { fetchAllMembers, fetchMembersByCityId } from "../../service/memberServices";
 
 export default async function Home() {
   const allMembers = await fetchAllMembers();
-  const pdcMembers = await fetchMembersFromCity(1);
-  const andMembers = await fetchMembersFromCity(3);
+  const pdcMembers = await fetchMembersByCityId(1);
+  const andMembers = await fetchMembersByCityId(3);
 
   return (
     <div role='main' className="flex flex-col items-center ">

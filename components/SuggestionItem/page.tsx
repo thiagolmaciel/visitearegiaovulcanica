@@ -9,7 +9,6 @@ import iconsMap from '../../lib/iconsMap';
 interface SuggestionItemProps {
   image_url: string;
   title: string;
-  star: string;
   slug: string;
   id: number;
 }
@@ -18,7 +17,7 @@ interface Service {
   icon: string;
 }
 
-const SuggestionItem = ({ image_url, title, star, slug, id }: SuggestionItemProps) => {
+const SuggestionItem = ({ image_url, title, slug, id }: SuggestionItemProps) => {
   const [cityName, setCityName] = useState<string>('Carregando...');
   const [serviceIcons, setServiceIcons] = useState<Service[]>([]);
 
@@ -39,8 +38,8 @@ const SuggestionItem = ({ image_url, title, star, slug, id }: SuggestionItemProp
   return (
     <a href={`afiliados/${slug}`}>
       <div className="flex flex-col gap-4 w-[20rem]">
-        <div className="flex h-[14rem] w-[20rem] shadow-lg rounded-2xl overflow-clip hover:-translate-y-1 transition-all ease-in duration-300">
-          <Image src={image_url} alt='house' height={300} width={350} className="object-cover" />
+        <div className="flex h-30 w-90 sm:h-[14rem] sm:w-[20rem] shadow-lg rounded-2xl overflow-clip hover:-translate-y-1 transition-all ease-in duration-300">
+          <Image src={image_url} alt='house' height={300} width={350} className="sm:object-cover" />
         </div>
 
         <div className="flex items-center justify-between">
