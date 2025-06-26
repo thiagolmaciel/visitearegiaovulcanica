@@ -1,6 +1,6 @@
 import { IoShareSocial } from 'react-icons/io5';
 import Image from 'next/image';
-import { getMemberServices, Service } from '../../../../service/memberServices';
+import { getMemberServices } from '../../../../service/memberServices';
 import ServiceTag from '../../../../components/ServiceTag/page';
 import ContactArea from '../../../../components/ContactArea/page';
 import { FaWhatsapp } from 'react-icons/fa';
@@ -8,6 +8,7 @@ import MapComponent from '../../../../components/MapComponent/page';
 import { supabase } from '../../../../utils/supabaseClient';
 import { headers } from 'next/headers';
 import { getImages } from '../../../../service/imagesServices';
+import { Service } from '../../../../model/Service';
 
 interface MemberPageProps {
   params: Promise<{ slug: string }>;
