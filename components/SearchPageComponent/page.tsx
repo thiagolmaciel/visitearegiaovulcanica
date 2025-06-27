@@ -15,7 +15,7 @@ const SearchPageComponent = ({ query, setQuery, onSubmit }: Props) => {
         type="search"
         required
         placeholder="Onde você deseja ir?"
-        className="flex py-0 w-auto items-center text-left px-4 justify-center grow h-full  bg-white rounded-l-full focus:outline-none focus:px-5 transition-all duration-50 ease-in-out"
+        className="flex py-0 w-auto h-15 items-center text-left px-4 justify-center grow   bg-white rounded-l-full focus:outline-none focus:px-5 transition-all duration-50 ease-in-out"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />

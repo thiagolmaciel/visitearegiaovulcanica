@@ -19,18 +19,18 @@ export default async function Home() {
 
   return (
     <div role='main' className="flex flex-col items-center ">
-      <div className="flex items-center justify-center relative w-full h-[45rem] overflow-clip">
-        <div className="absolute top-0 h-[45rem] inset-0 bg-gradient-to-b from-transparent to-black z-10 selection-none"></div>
+      <div className="flex items-center justify-center relative w-full h-[27rem] sm:h-[45rem] overflow-clip">
+        <div className="absolute top-0 h-[27rem] sm:h-[45rem] inset-0 bg-gradient-to-b from-transparent to-black z-10 selection-none"></div>
         <Image src='/regiao-vulcanica.jpg' alt='' fill className="object-cover selection-none" />
         <div className="flex items-center justify-center flex-col gap-2 relative z-10 text-white selection-none">
-          <p className="font-bold text-2xl starting:mb-0 starting:opacity-0 mb-4 opacity-100 transition-all ease-in duration-300 selection-none">Visite e desfrute da Região Vulcânica!</p>
+          <p className="font-bold text-2xl text-center starting:mb-0 starting:opacity-0 mb-4 opacity-100 transition-all ease-in duration-300 selection-none">Visite e desfrute da Região Vulcânica!</p>
           <Suspense fallback={<p>...</p>}>
             <SearchForm />
           </Suspense>
         </div>
       </div>  
       {/*Show Places*/}
-      <div className="flex flex-col items-center justify-start sm:w-[95rem] px-[5rem] py-[2rem] gap-4 min-h-[28rem] bg-[#fff] rounded-2xl -translate-y-[5rem] z-11 shadow-lg">
+      <div className="flex flex-col items-center justify-start w-[100vw] sm:w-[95rem] px-[5rem] py-[2rem] gap-4 min-h-[28rem] bg-[#fff] rounded-2xl sm:-translate-y-[5rem] z-11 shadow-lg overflow-clip">
         <div role="category-selector" className="flex">
           <ul className="flex justify-between min-w-[90rem]">
             <li className="flex items-center justify-center gap-1 text-md text-[#cacaca] font-semibold bg-[#eeeeee] py-2 px-3 rounded-full shadow-md hover:-translate-y-0.5 transition-all ease-in-out duration-100 cursor-pointer active:bg-[#f7f7f7]"><FaCircleChevronLeft /></li>

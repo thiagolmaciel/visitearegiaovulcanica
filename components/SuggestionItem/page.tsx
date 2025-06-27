@@ -37,9 +37,9 @@ const SuggestionItem = ({ image_url, title, slug, id }: SuggestionItemProps) => 
 
   return (
     <a href={`afiliados/${slug}`}>
-      <div className="flex flex-col gap-4 w-[20rem]">
-        <div className="flex h-30 w-90 sm:h-[14rem] sm:w-[20rem] shadow-lg rounded-2xl overflow-clip hover:-translate-y-1 transition-all ease-in duration-300">
-          <Image src={image_url} alt='house' height={300} width={350} className="sm:object-cover" />
+      <div className="flex flex-col gap-4 w-[90vw]  sm:w-[20rem]">
+        <div className="flex h-[18rem] w-[90vw] sm:h-[14rem] sm:w-[20rem] shadow-lg rounded-2xl overflow-clip hover:-translate-y-1 transition-all ease-in duration-300">
+          <Image src={image_url} alt='house' height={600} width={700} className="grow object-cover" />
         </div>
 
         <div className="flex items-center justify-between">

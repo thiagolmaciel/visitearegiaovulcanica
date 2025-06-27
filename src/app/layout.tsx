@@ -29,7 +29,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="min-h-[100vh] relative">
         <Navbar />
-        <div className="pb-[22rem]">
+        <div className="pb-[52rem] sm:pb-[22rem]">
         {children}
         <SpeedInsights />
         </div>

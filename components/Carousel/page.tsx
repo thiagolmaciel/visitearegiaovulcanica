@@ -24,7 +24,7 @@ const Carousel = ({ title, members }: CarouselProps) => {
   }, [emblaApi]);
 
   return (
-    <div className='embla flex flex-col gap-4 pb-4'>
+    <div className='embla flex flex-col gap-4 mb-4'>
       <div role="title-box" className="flex flex-row items-center justify-between text-xl font-bold">
         <div role="title">
           <p className='text-2xl'>{title}</p>
@@ -39,8 +39,8 @@ const Carousel = ({ title, members }: CarouselProps) => {
         </div>
       </div>
 
-      <div className="embla__viewport overflow-hidden w-[90rem]" ref={emblaRef}>
-        <div className='embla__container flex gap-10'>
+      <div className="embla__viewport overflow-hidden w-[90vw] sm:w-[90rem]" ref={emblaRef}>
+        <div className='embla__container flex gap-2'>
           {members?.map((member) => (
             <div className='embla__slide flex-1' key={member.id}>
               <SuggestionItem title={member.name} id={member.id} image_url={member.image} slug={member.slug}/>

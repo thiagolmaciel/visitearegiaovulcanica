@@ -23,13 +23,13 @@ const SearchForm = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex items-center h-15 w-[35rem] hover:w-[40rem] transition-all ease-in duration-600 text-black bg-white rounded-full"
+      className="flex items-center h-15 w-[90vw] sm:w-[35rem] sm:hover:w-[40rem] transition-all ease-in duration-600 text-black"
     >
       <input
         type="search"
         required
         placeholder="Onde você deseja ir?"
-        className="flex py-0 w-auto items-center text-left px-4 justify-center grow h-full hover:bg-gray-200 rounded-full focus:outline-none focus:px-5 transition-all duration-50 ease-in-out"
+        className="flex py-0 w-auto items-center text-left px-4 justify-center grow h-full bg-white hover:bg-gray-200 rounded-l-full focus:outline-none focus:px-5 transition-all duration-50 ease-in-out"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />

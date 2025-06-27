@@ -17,7 +17,7 @@ const FilterComponent = () => {
     if (!services.length) return null
 
     return (
-        <div className="flex flex-col gap-4 items-start sm:flex-1 px-[2rem] py-[2rem] h-[40rem] bg-[#fff] rounded-2xl shadow-lg">
+        <div className="hidden sm:visible sm:flex flex-col gap-4 items-start sm:flex-1 px-[2rem] py-[2rem] h-[40rem] bg-[#fff] rounded-2xl shadow-lg">
             <div className='flex flex-col gap-2 w-full text-xl font-bold'>
                 <p>Filtre por:</p>
                 <div className="hline w-full bg-green-50 mb-0!"></div>
