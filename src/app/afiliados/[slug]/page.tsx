@@ -10,6 +10,7 @@ import { headers } from 'next/headers';
 import { getImages } from '../../../../service/imagesServices';
 import { Service } from '../../../../model/Service';
 import ImageCarousel from '../../../../components/ImageCarousel/page';
+import { copyLink } from '../../../../utils/copyLink';
 
 interface MemberPageProps {
   params: Promise<{ slug: string }>;
@@ -34,21 +35,22 @@ export default async function MemberPage({ params }: MemberPageProps) {
   const services = await getMemberServices(member.id);
   const images = await getImages(slug.trim())
 
+
   return (
     <div role='main' className="flex flex-col items-center ">
       <div className="flex flex-col justify-start w-[100vw] sm:w-[95rem] px-[1rem] sm:px-[4rem] py-[2rem] gap-4 min-h-[50rem] my-5 bg-[#fff] rounded-2xl shadow-lg">
         <div role="header" className="flex col items-center justify-between w-full">
           <p className='text-3xl font-bold'>{member.name}
           </p>
-          <a href="#" className='flex items-center gap-2 text-x'>
-            <p>Compartilhar </p>
-            <IoShareSocial />
+          <a href='' className='flex items-center gap-2 text-x'>
+            <p className='hidden sm:visible'>Compartilhar </p>
+            <IoShareSocial className='text-xl sm:text-x'/>
           </a>
         </div>
         {images && images.length > 0 && (
   <div role="image_area" className='flex my-4 gap-1 sm:h-[40rem] w-full rounded-2xl overflow-clip'>
-    <div role='desktop-images'>
-      <div role="image_box" className='hidden sm:visible relative overflow-clip flex-1'>
+    <div role='desktop-images' className='hidden sm:visible'>
+      <div role="image_box" className='sm:visible relative overflow-clip flex-1'>
         <Image
           src={images[0].url}
           alt=""
@@ -73,7 +75,7 @@ export default async function MemberPage({ params }: MemberPageProps) {
         ))}
       </div>
     </div>
-    <div role='mobile-images'>
+    <div role='mobile-images' className='visible sm:hidden'>
       <ImageCarousel images={images} />
       <div className='flex gap-2 w-full items-center justify-center text-[#b7b7b7]'><FaCircle size={7}/><FaCircle size={7}/><FaCircle size={7}/></div>
 

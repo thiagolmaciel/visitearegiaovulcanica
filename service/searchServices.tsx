@@ -7,6 +7,10 @@ export async function searchMembers(query: string) {
 
   if (!normalizedQuery) return fetchAllMembers();
 
+  if (query='Explorar') {
+    return fetchAllMembers();
+  }
+
   if (await isCity(normalizedQuery)) {
     return fetchMembersByCityName(normalizedQuery);
   }

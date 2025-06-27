@@ -23,7 +23,7 @@ export default async function Home() {
         <div className="absolute top-0 h-[27rem] sm:h-[45rem] inset-0 bg-gradient-to-b from-transparent to-black z-10 selection-none"></div>
         <Image src='/regiao-vulcanica.jpg' alt='' fill className="object-cover selection-none" />
         <div className="flex items-center justify-center flex-col gap-2 relative z-10 text-white selection-none">
-          <p className="font-bold text-2xl text-center starting:mb-0 starting:opacity-0 mb-4 opacity-100 transition-all ease-in duration-300 selection-none">Visite e desfrute da Região Vulcânica!</p>
+          <p className="font-bold text-2xl text-center starting:mb-0 mx-2 sm:mx-0 starting:opacity-0 mb-4 opacity-100 transition-all ease-in duration-300 selection-none">Visite e desfrute da Região Vulcânica!</p>
           <Suspense fallback={<p>...</p>}>
             <SearchForm />
           </Suspense>
@@ -63,7 +63,7 @@ export default async function Home() {
           </div>
           
         </div>
-        <div className="mt-3 mb-2"><button className="btn-more shadow-lg">Explore mais destinos</button></div>
+        <div className="mt-3 mb-2"><a href="/search?query=Explorar"><button className="btn-more shadow-lg">Explore mais destinos</button></a></div>
       </div>
     </div>
   );

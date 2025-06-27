@@ -8,7 +8,7 @@ interface Props {
 const SearchPageComponent = ({ query, setQuery, onSubmit }: Props) => {
   return (
     <form
-      className="flex items-center flex-1 h-15 transition-all ease-in duration-600 text-black  rounded-full"
+      className="flex mx-2 sm:mx-0 items-center flex-1 h-15 transition-all ease-in duration-600 text-black  rounded-full"
       onSubmit={onSubmit}
     >
       <input

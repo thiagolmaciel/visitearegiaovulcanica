@@ -36,10 +36,10 @@ const SearchPageContent = () => {
   return (
     <div role='main' className="flex flex-col items-center">
       <div className='flex flex-col w-[100vw] sm:w-[95rem]'>
-        <div className='flex flex-col sm:flex-row my-3 sm:my-5 sm:justify-between gap-2'>
+        <div className='flex flex-col sm:flex-row my-3 sm:my-5 sm:justify-between gap-2 '>
           <div className='flex flex-col sm:flex-4 gap-2'>
             <SearchPageComponent query={query} setQuery={setQuery} onSubmit={onSubmit} />
-            <div className="flex flex-col items-center px-[2rem] py-[2rem] min-h-[26rem] sm:min-h-[50rem] bg-[#fff] rounded-t-2xl sm:rounded-2xl shadow-lg">
+            <div className="flex flex-col items-center sm:px-[2rem] py-[2rem] min-h-[26rem] sm:min-h-[50rem] bg-[#fff] rounded-t-2xl sm:rounded-2xl shadow-lg">
               {loading ? (
                 <div className="flex justify-center items-center w-full h-40">
                   <div className="animate-spin rounded-full h-10 w-10 border-4 border-[var(--main-color)] border-t-transparent" />
@@ -49,10 +49,10 @@ const SearchPageContent = () => {
                   <MdOutlineSearchOff /> Nenhum resultado encontrado!
                 </div>
               ) : (
-                <div className='w-full'>
-                  <ul className='flex flex-row flex-wrap gap-x-16 gap-y-8'>
+                <div className='w-full flex'>
+                  <ul className='flex flex-col justify-center sm:flex-row sm:flex-wrap gap-x-16 gap-y-8 w-full sm:justify-between'>
                     {searchResult.map((result) => (
-                      <li key={result.id}>
+                      <li key={result.id} className='flex  justify-center'>
                         <SuggestionItem
                           title={result.name}
                           id={result.id}
