@@ -4,10 +4,9 @@ import { fetchAllMembers, fetchMembersByCityName, fetchMembersByPartialQuery, fe
 
 export async function searchMembers(query: string) {
   const normalizedQuery = query.trim().toLowerCase();
+  if (!normalizedQuery) return null;
 
-  if (!normalizedQuery) return fetchAllMembers();
-
-  if (query='Explorar') {
+  if (normalizedQuery === '*') {
     return fetchAllMembers();
   }
 

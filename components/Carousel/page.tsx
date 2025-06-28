@@ -40,9 +40,9 @@ const Carousel = ({ title, members }: CarouselProps) => {
       </div>
 
       <div className="embla__viewport overflow-hidden w-[90vw] sm:w-[90rem]" ref={emblaRef}>
-        <div className='embla__container flex gap-2'>
+        <div className='embla__container flex gap-10'>
           {members?.map((member) => (
-            <div className='embla__slide flex-1' key={member.id}>
+            <div className='embla__slide flex-1 sm:flex-auto sm:flex' key={member.id}>
               <SuggestionItem title={member.name} id={member.id} image_url={member.image} slug={member.slug}/>
             </div>
           ))}

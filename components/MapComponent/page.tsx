@@ -10,6 +10,7 @@ const MapComponent = async (member: Member) => {
   if (!location) return null;
 
   return (
+    
     <div className='mt-8'>
       <div className='mb-4'><p className='font-bold text-xl'>Onde eles estão?</p></div>
       <div className="rounded-xl overflow-clip" dangerouslySetInnerHTML={{ __html: location.google_maps_embed }} />
