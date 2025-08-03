@@ -41,7 +41,7 @@ export default async function MemberPage({ params }: MemberPageProps) {
 
   return (
     <div role='main' className="flex flex-col items-center ">
-      <div className="flex flex-col justify-start w-[100vw] sm:w-[95rem] px-[1rem] sm:px-[4rem] py-[1rem] sm:py-[2rem] gap-4 min-h-[50rem] my-4 sm:my-5 bg-[#fff] rounded-2xl shadow-lg">
+      <div className="flex flex-col justify-start w-[100vw] sm:w-[95rem] px-[1rem] sm:px-[4rem] py-[1rem] sm:py-[2rem] gap-4  mt-4 sm:mt-5 bg-[#fff] rounded-t-2xl shadow-lg">
         <div role="header" className="flex col items-center justify-between w-full">
           <p className='text-3xl font-bold'>{member.name}
           </p>
@@ -93,34 +93,42 @@ export default async function MemberPage({ params }: MemberPageProps) {
         <div className='flex flex-col gap-2 sm:flex-row sm:justify-between items-center '>
           <div>
             <p className='flex items-center text-center text-2xl font-bold'>{member.name} {member.title ? ` - ${member.title}` : ''}</p>
-            <p className='text-[#636363]'>{city.name} - {abrevToName(city.state_id)}</p>
+            <p className='text-[#636363] text-center sm:text-left '>{city.name} - {abrevToName(city.state_id)}</p>
           </div>
           <a href={`https://wa.me/+55${member.whatsapp}`} target="_blank" role='whatsapp' className='translate-0 flex items-center gap-4 w-full sm:w-[20rem] px-2 py-2 text-xl rounded-xl sm:rounded-full text-white font-bold bg-[var(--main-color)] justify-center shadow-md hover:-translate-y-1 transition-all ease-in duration-100'>
             <p>Enviar Mensagem</p> <FaWhatsapp />
           </a>
         </div>
-        <div className='hline' />
-        <div role='content' className='flex flex-col sm:flex-row gap-6 sm:gap-20'>
-          <div role='left-side' className='flex-3'>
+      </div>
+      <div className='hline' />
+      <div role='content' className='flex flex-col sm:flex-row gap-6 sm:gap-8 sm:w-[95rem]'>
+        <div role='left-side' className='flex-3'>
+          <div className="flex flex-col justify-start  px-[1rem] sm:px-[4rem] py-[1rem] sm:py-[2rem] gap-4  bg-[#fff] rounded-b-2xl shadow-lg">
+
             <div>
-              <ul className='flex flex-row gap-4'>
+              <ul className='flex flex-row gap-8 mb-8 flex-wrap'>
                 {services.map((service: Service) => (
                   <li key={service.id}><ServiceTag {...service} /></li>
                 ))}
               </ul>
-
             </div>
-            <p className='text-justify'>{member.description}</p>
+            <span>
+              <p className='text-xl font-bold mb-1'>Conheça o local</p>
+              <p className='text-justify'>{member.description}</p>
+            </span>
           </div>
-          <div role='right-side' className='flex-2'>
-            <ContactArea {...member} />
-            <div className="hline mt-4" />
-          </div>
-          
         </div>
-        <MapComponent {...member} />
+        <div role='right-side' className='flex-2'>
+          <div className="flex flex-col justify-start px-[1rem] sm:px-[4rem] py-[1rem] sm:py-[2rem] gap-4  bg-[#fff] rounded-b-2xl shadow-lg">
+            <ContactArea {...member} />
+          </div>
+        </div>
 
       </div>
+      <div className="flex flex-col justify-start sm:w-[95rem] mt-5 mb-4 px-[1rem] sm:px-[4rem] py-[1rem] sm:py-[2rem] gap-4  bg-[#fff] rounded-2xl shadow-lg">
+        <MapComponent {...member} />
+      </div>
     </div>
+
   );
 }

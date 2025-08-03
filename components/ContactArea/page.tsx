@@ -11,9 +11,9 @@ const ContactArea = (member: Member) => {
             {/* <div role='whatsapp' className='flex items-center gap-4 w-full px-2 py-2 text-xl rounded-xl text-white font-bold bg-[var(--main-color)] justify-center'>
                 <p>Enviar Mensagem</p> <FaWhatsapp />
             </div> */}
-            <div className='flex flex-col'>
-                <p className='text-xl font-bold mb-2'>Contato</p>
-                <ul className='mb-2'>
+            <div className='flex flex-col gap-3'>
+                <p className='text-xl font-bold'>Contato</p>
+                <ul className='flex sm:flex-col sm:gap-3 gap-5'>
                     {member.phone && (
                         <li className='flex flex-row gap-4 items-center'><FaPhone /> <p>{formatPhone(member.phone)}</p></li>
                     )
@@ -27,8 +27,8 @@ const ContactArea = (member: Member) => {
                     )
                     }
                 </ul>
-                <div className="hline" />
-                <ul className='flex sm:flex-row gap-8'>
+                <div className="hline !mb-0" />
+                <ul className='flex sm:flex-row gap-8   '>
                     {member.instagram && (
                         <li> <a href={member.instagram} target="_blank" className='flex flex-row gap-4 items-center'><FaInstagram /><p>Instagram</p></a></li>
                     )
@@ -40,7 +40,7 @@ const ContactArea = (member: Member) => {
                 </ul>
                 {member.website && (
                     <>
-                    <div className="hline mt-2" />
+                    <div className="hline !mb-0" />
                     <span>
                         <a href={member.website} target="_blank" className='flex flex-row gap-4 items-center'>
                             <BiWorld />
