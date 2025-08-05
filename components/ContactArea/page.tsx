@@ -1,11 +1,25 @@
 import React from 'react'
 import { Member } from '../../model/Member'
+
+import { formatPhone } from '../../utils/stringUtils'
+import iconsMap from '../../lib/iconsMap'
 import { FaFacebook, FaInstagram, FaPhone, FaWhatsapp } from 'react-icons/fa'
 import { MdEmail } from 'react-icons/md'
 import { BiWorld } from 'react-icons/bi'
-import { formatPhone } from '../../utils/stringUtils'
+
+
+const ContactTag = (icon: keyof typeof iconsMap, title:string ) => {
+    const Icon = iconsMap[icon];
+    return (
+        <div  className='flex flex-row gap-4 items-center'>
+        <p><Icon /></p>
+        <p>{title}</p>
+        </div>
+    )
+}
 
 const ContactArea = (member: Member) => {
+
     return (
         <div>
             {/* <div role='whatsapp' className='flex items-center gap-4 w-full px-2 py-2 text-xl rounded-xl text-white font-bold bg-[var(--main-color)] justify-center'>
@@ -16,6 +30,7 @@ const ContactArea = (member: Member) => {
                 <ul className='flex sm:flex-col sm:gap-3 gap-5'>
                     {member.phone && (
                         <li className='flex flex-row gap-4 items-center'><FaPhone /> <p>{formatPhone(member.phone)}</p></li>
+
                     )
                     }
                     {member.whatsapp && (

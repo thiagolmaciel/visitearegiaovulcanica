@@ -19,7 +19,7 @@ const Navbar = () => {
                     <div className="relative">
                       <li className="flex items-center"><div onClick={toggleDropdown} className="shadow-none hover:shadow-sm transition-all ease-in duration-300 bg-[#3e523d] p-3 rounded-full"><TbWorld size={25}/></div></li>
                       {isOpen && (
-                        <div className="absolute w-[13rem] z-100 border-1 left-0  bg-[var(--main-color)] border-[#3e523d]">
+                        <div className="absolute left-0 flex sm:w-[13rem] mt-1 -translate-x-7 z-100 border-1   bg-[var(--main-color)] border-[#3e523d]">
                         <ul className="h-full w-full">
                           <li className="px-3 py-1 font-bold bg-[#3e523d]">Português - PT-BR</li>
                           <li className="px-3 py-1 hover:bg-[#4b624b]">English - ENG</li>

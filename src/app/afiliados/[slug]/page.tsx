@@ -1,6 +1,6 @@
 import { IoShareSocial } from 'react-icons/io5';
 import Image from 'next/image';
-import { getMemberServices } from '../../../../service/memberServices';
+import { getMemberServices, fetchAllMembers } from '../../../../service/memberServices';
 import ServiceTag from '../../../../components/ServiceTag/page';
 import ContactArea from '../../../../components/ContactArea/page';
 import { FaCircle, FaDotCircle, FaWhatsapp } from 'react-icons/fa';
@@ -13,6 +13,8 @@ import ImageCarousel from '../../../../components/ImageCarousel/page';
 import { copyLink } from '../../../../utils/copyLink';
 import { getCityByID } from '../../../../service/locationServices';
 import { abrevToName } from '../../../../lib/textFunctions';
+import Carousel from '../../../../components/Carousel/page';
+import ExploreButton from '../../../../components/ExploreButton/page';
 
 interface MemberPageProps {
   params: Promise<{ slug: string }>;
@@ -37,6 +39,11 @@ export default async function MemberPage({ params }: MemberPageProps) {
   const services = await getMemberServices(member.id);
   const images = await getImages(slug.trim())
   const city = await getCityByID(member.id);
+  const allMembers = await fetchAllMembers();
+
+  if(allMembers){
+    allMembers.sort(() => Math.random() - 0.5)
+  }
 
 
   return (
@@ -54,7 +61,7 @@ export default async function MemberPage({ params }: MemberPageProps) {
           <>
             <div role="image_area" className='hidden sm:flex my-4 gap-1 sm:h-[40rem] w-full rounded-2xl overflow-clip'>
               {/* <div role='desktop-images' className='flex'> */}
-              <div role="image_box" className='relative overflow-clip flex-1'>
+              <div role="image_box" className='relative overflow-clip flex-1 cursor-pointer'>
                 <Image
                   src={images[0].url}
                   alt=""
@@ -64,7 +71,7 @@ export default async function MemberPage({ params }: MemberPageProps) {
               </div>
               <div className='flex-1 grid grid-cols-2 grid-rows-2 gap-1 '>
                 {[1, 2, 3, 4].map((idx) => (
-                  <div key={idx} role="image_box" className='relative overflow-clip'>
+                  <div key={idx} role="image_box" className='relative overflow-clip cursor-pointer'>
                     {images[idx]?.url ? (
                       <Image
                         src={images[idx].url}
@@ -125,8 +132,12 @@ export default async function MemberPage({ params }: MemberPageProps) {
         </div>
 
       </div>
-      <div className="flex flex-col justify-start sm:w-[95rem] mt-5 mb-4 px-[1rem] sm:px-[4rem] py-[1rem] sm:py-[2rem] gap-4  bg-[#fff] rounded-2xl shadow-lg">
+      <div className="flex flex-col justify-start w-full sm:w-[95rem]  mt-5 px-[1rem] sm:px-[4rem] py-[1rem] sm:py-[2rem] gap-4  bg-[#fff] rounded-2xl shadow-lg">
         <MapComponent {...member} />
+      </div>
+      <div className="flex flex-col justify-center items-center w-full sm:w-[95rem]  mt-5 mb-5 px-[1rem] sm:px-[4rem] py-[1rem] sm:py-[2rem] gap-4  bg-[#fff] rounded-2xl shadow-lg">
+      <Carousel title="Veja mais" members={allMembers || []} />
+      <ExploreButton />
       </div>
     </div>
 
