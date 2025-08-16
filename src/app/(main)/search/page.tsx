@@ -1,11 +1,11 @@
 'use client'
 import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { searchMembers } from '../../../service/searchServices';
-import SuggestionItem from '../../../components/SuggestionItem/page';
-import SearchPageComponent from '../../../components/SearchPageComponent/page';
+import { searchMembers } from '../../../../service/searchServices';
+import SuggestionItem from '../components/SuggestionItem/page';
+import SearchPageComponent from '../components/SearchPageComponent/page';
 import { MdOutlineSearchOff } from 'react-icons/md';
-import FilterComponent from '../../../components/FilterComponent/page';
+import FilterComponent from '../components/FilterComponent/page';
 
 const SearchPageContent = () => {
   const searchParams = useSearchParams();

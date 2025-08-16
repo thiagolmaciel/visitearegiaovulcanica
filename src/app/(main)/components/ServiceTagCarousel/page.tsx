@@ -2,8 +2,8 @@
 import useEmblaCarousel from 'embla-carousel-react';
 import React, { useCallback } from 'react';
 import CategoryItem from '../CategoryItem/page';
-import { Service } from '../../model/Service';
-import iconsMap from '../../lib/iconsMap';
+import { Service } from '../../../../../model/Service';
+import iconsMap from '../../../../../lib/iconsMap';
 import { FaCircleChevronLeft, FaCircleChevronRight } from 'react-icons/fa6';
 
 type Props = {

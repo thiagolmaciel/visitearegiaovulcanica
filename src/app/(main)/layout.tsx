@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import Navbar from "../../components/Navbar/page";
-import Footer from "../../components/Footer/page";
+import "../globals.css";
+import Navbar from "./components/Navbar/page";
+import Footer from "./components/Footer/page";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

@@ -1,10 +1,10 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Image from "next/image"
-import { abrevToName, truncateString } from "../../lib/textFunctions";
-import { getCityByID } from "../../service/locationServices";
-import { getMemberServicesIcons } from '../../service/memberServices';
-import iconsMap from '../../lib/iconsMap';
+import { abrevToName, truncateString } from "../../../../../lib/textFunctions";
+import { getCityByID } from "../../../../../service/locationServices";
+import { getMemberServicesIcons } from '../../../../../service/memberServices';
+import iconsMap from '../../../../../lib/iconsMap';
 
 interface SuggestionItemProps {
   image_url: string;
