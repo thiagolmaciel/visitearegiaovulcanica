@@ -1,10 +1,10 @@
 import Image from "next/image";
 import { FaCircleChevronLeft, FaCircleChevronRight } from "react-icons/fa6";
-import Carousel from "./components/Carousel/page";
-import SearchForm from "./components/SearchForm/page";
+import Carousel from "./components/Carousel/Carousel";
+import SearchForm from "./components/SearchForm/SearchForm";
 import { Suspense } from "react";
 import { fetchAllMembers, fetchMembersByCityId } from "../../../service/memberServices";
-import ServiceTagCarousel from "./components/ServiceTagCarousel/page";
+import ServiceTagCarousel from "./components/ServiceTagCarousel/ServiceTagCarousel";
 import { getAllServices } from "../../../service/servicesServices";
 import { Service } from "../../../model/Service";
 

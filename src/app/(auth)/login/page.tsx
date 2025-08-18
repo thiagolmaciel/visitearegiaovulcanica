@@ -1,7 +1,8 @@
+'use client'
 import Image from 'next/image'
 import React from 'react'
-import LoginForm from '../components/LoginForm/page'
-
+import dynamic from 'next/dynamic'
+const LoginForm = dynamic(() => import('../components/LoginForm/LoginForm'), { ssr: false })
 const Login = () => {
   return (
     <div className='bg-white flex grow max-w-[70rem] sm:min-h-[40rem]  rounded-lg shadow-md flex-col sm:flex-row overflow-clip'>

@@ -1,7 +1,8 @@
+'use client'
 import React, { useEffect, useState } from 'react'
-import { getAllServices } from '../../service/servicesServices'
-import { Service } from '../../model/Service'
-import iconsMap from '../../lib/iconsMap'
+import { getAllServices } from '../../../../../service/servicesServices'
+import { Service } from '../../../../../model/Service'
+import iconsMap from '../../../../../lib/iconsMap'
 
 const FilterComponent = () => {
     const [services, setServices] = useState<Service[]>([])

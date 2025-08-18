@@ -2,10 +2,10 @@
 import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { searchMembers } from '../../../../service/searchServices';
-import SuggestionItem from '../components/SuggestionItem/page';
-import SearchPageComponent from '../components/SearchPageComponent/page';
+import SuggestionItem from '../components/SuggestionItem/SuggestionItem';
+import SearchPageComponent from '../components/SearchPageComponent/SearchPageComponent';
 import { MdOutlineSearchOff } from 'react-icons/md';
-import FilterComponent from '../components/FilterComponent/page';
+import FilterComponent from '../components/FilterComponent/FIlterComponent';
 
 const SearchPageContent = () => {
   const searchParams = useSearchParams();

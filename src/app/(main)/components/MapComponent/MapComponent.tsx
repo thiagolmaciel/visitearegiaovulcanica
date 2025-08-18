@@ -1,7 +1,7 @@
 import React from 'react';
-import { Member } from '../../model/Member';
-import { getMemberLocation } from '../../service/memberServices';
-import { Location } from '../../model/Location';
+import { Member } from '../../../../../model/Member';
+import { getMemberLocation } from '../../../../../service/memberServices';
+import { Location } from '../../../../../model/Location';
 
 
 

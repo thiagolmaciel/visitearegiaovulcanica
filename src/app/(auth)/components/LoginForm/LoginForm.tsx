@@ -2,8 +2,12 @@
 
 import { FormEvent } from "react";
 import { signIn } from "next-auth/react"
+import { useSearchParams } from "next/navigation";
 
 export default function LoginForm() {
+    const searchParams = useSearchParams()
+    const error = searchParams.get('error')
+
     async function login(e: FormEvent<HTMLFormElement>){
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
@@ -28,18 +32,17 @@ export default function LoginForm() {
                 type="text"
                 placeholder='Username'
                 name="user"
-                required
             />
             <input
                 type="password"
                 placeholder='Senha'
                 name="password"
-                required
             />
             <div className="min-w-[20rem] flex flex-row items-center justify-between">
                 <div><p className='text-sm text-gray-400'>Esqueci minha senha</p></div>
                 <div><button className='btn' type="submit">Entrar</button></div>
             </div>
+            {error === "CredentialsSignin" && <div className="bg-red-500 w-full text-center py-2 px-2 text-white font-bold rounded-lg">Erro no login</div>}
         </form>
     )
 }

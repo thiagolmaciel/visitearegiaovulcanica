@@ -1,8 +1,8 @@
 import React from 'react'
-import { Member } from '../../model/Member'
+import { Member } from '../../../../../model/Member'
 
-import { formatPhone } from '../../utils/stringUtils'
-import iconsMap from '../../lib/iconsMap'
+import { formatPhone } from '../../../../../utils/stringUtils'
+import iconsMap from '../../../../../lib/iconsMap'
 import { FaFacebook, FaInstagram, FaPhone, FaWhatsapp } from 'react-icons/fa'
 import { MdEmail } from 'react-icons/md'
 import { BiWorld } from 'react-icons/bi'

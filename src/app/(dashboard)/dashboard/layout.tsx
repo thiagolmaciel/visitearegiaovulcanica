@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Geist, Geist_Mono } from "next/font/google";
-import "../globals.css";
-import Navbar from "./components/Navbar/Navbar";
-import Footer from "./components/Footer/Footer";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,24 +14,22 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "VisiteRV",
-  description: "Te ajudando a desbravar essa região!",
+  title: "Portal do Afiliado",
+  description: "Portal do Afiliado",
 };
 
-export default function RootLayout({
+export default function DashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
     <html lang="en">
-      <body className="min-h-[100vh] relative">
-        <Navbar />
-        <div className="pb-[52rem] sm:pb-[22rem]">
+      <body className="relative bg-none! bg-gray-200 ">
+        <div className="h-screen flex items-center justify-center px-5">
         {children}
         <SpeedInsights />
         </div>
-        <Footer />
       </body>
     </html>
   );

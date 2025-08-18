@@ -1,18 +1,18 @@
 import { IoShareSocial } from 'react-icons/io5';
 import Image from 'next/image';
 import { getMemberServices, fetchAllMembers } from '../../../../../service/memberServices';
-import ServiceTag from '../../components/ServiceTag/page';
-import ContactArea from '../../components/ContactArea/page';
+import ServiceTag from '../../components/ServiceTag/ServiceTag';
+import ContactArea from '../../components/ContactArea/ContactArea';
 import { FaCircle, FaDotCircle, FaWhatsapp } from 'react-icons/fa';
-import MapComponent from '../../components/MapComponent/page';
+import MapComponent from '../../components/MapComponent/MapComponent';
 import { supabase } from '../../../../../utils/supabaseClient';
 import { getImages } from '../../../../../service/imagesServices';
 import { Service } from '../../../../../model/Service';
-import ImageCarousel from '../../components/ImageCarousel/page';
+import ImageCarousel from '../../components/ImageCarousel/ImageCarousel';
 import { getCityByID } from '../../../../../service/locationServices';
 import { abrevToName } from '../../../../../lib/textFunctions';
-import Carousel from '../../components/Carousel/page';
-import ExploreButton from '../../components/ExploreButton/page';
+import Carousel from '../../components/Carousel/Carousel';
+import ExploreButton from '../../components/ExploreButton/ExploreButton';
 
 interface MemberPageProps {
   params: Promise<{ slug: string }>;
