@@ -13,6 +13,8 @@ import { getCityByID } from '../../../../../service/locationServices';
 import { abrevToName } from '../../../../../lib/textFunctions';
 import Carousel from '../../components/Carousel/Carousel';
 import ExploreButton from '../../components/ExploreButton/ExploreButton';
+import ImageModal from '../../components/ImageModal/ImageModal';
+import DesktopMainImages from '../../components/DesktopMainImages/DesktopMainImages';
 
 interface MemberPageProps {
   params: Promise<{ slug: string }>;
@@ -39,7 +41,7 @@ export default async function MemberPage({ params }: MemberPageProps) {
   const city = await getCityByID(member.id);
   const allMembers = await fetchAllMembers();
 
-  if(allMembers){
+  if (allMembers) {
     allMembers.sort(() => Math.random() - 0.5)
   }
 
@@ -55,46 +57,7 @@ export default async function MemberPage({ params }: MemberPageProps) {
             <IoShareSocial className='text-xl sm:text-x' />
           </a>
         </div>
-        {images && images.length > 0 && (
-          <>
-            <div role="image_area" className='hidden sm:flex my-4 gap-1 sm:h-[40rem] w-full rounded-2xl overflow-clip'>
-              {/* <div role='desktop-images' className='flex'> */}
-              <div role="image_box" className='relative overflow-clip flex-1 cursor-pointer'>
-                <Image
-                  src={images[0].url}
-                  alt=""
-                  fill
-                  className='object-cover scale-100 hover:scale-110 transition-all ease-in-out duration-250'
-                />
-              </div>
-              <div className='flex-1 grid grid-cols-2 grid-rows-2 gap-1 '>
-                {[1, 2, 3, 4].map((idx) => (
-                  <div key={idx} role="image_box" className='relative overflow-clip cursor-pointer'>
-                    {images[idx]?.url ? (
-                      <Image
-                        src={images[idx].url}
-                        alt=""
-                        fill
-                        className='object-cover scale-100 hover:scale-110 transition-all ease-in-out duration-250'
-                      />
-                    ) : (
-                      <div className="bg-gray-200 w-full h-full" />
-                    )}
-                  </div>
-                ))}
-              </div>
-              {/* </div> */}
-              {/* <div role='mobile-images' className='block sm:hidden'>
-      <ImageCarousel images={images} />
-      <div className='flex gap-2 w-full items-center justify-center text-[#b7b7b7]'><FaCircle size={7}/><FaCircle size={7}/><FaCircle size={7}/></div>
-    </div> */}
-            </div>
-            <div role='mobile-images' className='block sm:hidden'>
-              <ImageCarousel images={images} />
-              <div className='flex gap-2 w-full items-center justify-center text-[#b7b7b7]'><FaCircle size={7} /><FaCircle size={7} /><FaCircle size={7} /></div>
-            </div>
-          </>
-        )}
+       <DesktopMainImages images={images}></DesktopMainImages>
         <div className='flex flex-col gap-2 sm:flex-row sm:justify-between items-center '>
           <div>
             <p className='flex items-center text-center text-2xl font-bold'>{member.name} {member.title ? ` - ${member.title}` : ''}</p>
@@ -109,9 +72,10 @@ export default async function MemberPage({ params }: MemberPageProps) {
       <div role='content' className='flex flex-col sm:flex-row gap-6 sm:gap-8 sm:w-[95rem]'>
         <div role='left-side' className='flex-3'>
           <div className="flex flex-col justify-start  px-[1rem] sm:px-[4rem] py-[1rem] sm:py-[2rem] gap-4  bg-[#fff] rounded-b-2xl shadow-lg">
-
             <div>
-              <ul className='flex flex-row gap-8 mb-8 flex-wrap'>
+              <p className='text-xl font-bold mb-1'>Aqui você encontra...</p>
+
+              <ul className='flex flex-row gap-8 my-8 flex-wrap'>
                 {services.map((service: Service) => (
                   <li key={service.id}><ServiceTag {...service} /></li>
                 ))}
@@ -119,7 +83,7 @@ export default async function MemberPage({ params }: MemberPageProps) {
             </div>
             <span>
               <p className='text-xl font-bold mb-1'>Conheça o local</p>
-              <p className='text-justify'>{member.description}</p>
+              <p className='text-justify leading-7'>{member.description}</p>
             </span>
           </div>
         </div>
@@ -134,8 +98,8 @@ export default async function MemberPage({ params }: MemberPageProps) {
         <MapComponent {...member} />
       </div>
       <div className="flex flex-col justify-center items-center w-full sm:w-[95rem]  mt-5 mb-5 px-[1rem] sm:px-[4rem] py-[1rem] sm:py-[2rem] gap-4  bg-[#fff] rounded-2xl shadow-lg">
-      <Carousel title="Veja mais" members={allMembers || []} />
-      <ExploreButton />
+        <Carousel title="Veja mais" members={allMembers || []} />
+        <ExploreButton />
       </div>
     </div>
 

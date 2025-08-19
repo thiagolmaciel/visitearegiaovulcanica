@@ -5,6 +5,7 @@ import "../globals.css";
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -29,7 +30,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="min-h-[100vh] relative">
         <Navbar />
-        <div className="pb-[52rem] sm:pb-[22rem]">
+        <div className="pb-[40rem] sm:pb-[18rem]">
         {children}
         <SpeedInsights />
         </div>

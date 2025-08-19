@@ -39,7 +39,7 @@ const Carousel = ({ title, members }: CarouselProps) => {
         </div>
       </div>
 
-      <div className="embla__viewport overflow-hidden w-[90vw] sm:w-[90rem]" ref={emblaRef}>
+      <div className="embla__viewport overflow-hidden w-[90vw] sm:max-w-[90rem]" ref={emblaRef}>
         <div className='embla__container flex gap-10'>
           {members?.map((member) => (
             <div className='embla__slide flex-1 sm:flex-auto sm:flex' key={member.id}>
