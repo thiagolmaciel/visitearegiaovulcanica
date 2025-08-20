@@ -1,25 +1,78 @@
-import Image from 'next/image';
-import React from 'react'
+'use client'
+import Image from 'next/image'
+import React, { useCallback, useEffect, useState } from 'react'
+import useEmblaCarousel from 'embla-carousel-react'
+import { FaCircleChevronLeft, FaCircleChevronRight } from 'react-icons/fa6';
+import { EmblaOptionsType } from 'embla-carousel'
 
-interface Image {
-    url: string;
+interface ImageType {
+    url: string
 }
 
 interface ImageModalProps {
-    images: Image[];
+    images: ImageType[]
+    options?: EmblaOptionsType
 }
 
-const ImageModal = ({ images }: ImageModalProps) => {
+const ImageModal = ({ images, options }: ImageModalProps) => {
+    const [emblaRef, emblaApi] = useEmblaCarousel(options)
+    const [prevDisabled, setPrevDisabled] = useState(true)
+    const [nextDisabled, setNextDisabled] = useState(true)
+
+    const scrollPrev = useCallback(() => {
+        if (emblaApi) emblaApi.scrollPrev()
+    }, [emblaApi])
+
+    const scrollNext = useCallback(() => {
+        if (emblaApi) emblaApi.scrollNext()
+    }, [emblaApi])
+
+    const onSelect = useCallback(() => {
+        if (!emblaApi) return
+        setPrevDisabled(!emblaApi.canScrollPrev())
+        setNextDisabled(!emblaApi.canScrollNext())
+      }, [emblaApi])
+
+      useEffect(() => {
+        if (!emblaApi) return
+        onSelect()
+        emblaApi.on('select', onSelect)
+        emblaApi.on('reInit', onSelect)
+      }, [emblaApi, onSelect])
+
     return (
-        <div>
-            <div className="carousel carousel-center bg-neutral rounded-box max-w-md space-x-4 w-screen h-[90vh]">
-                {images.map((img, idx) => (
-                    <div key={idx} className="carousel-item h-max w-max relative">
-                    <Image src={img.url} alt={`Imagem ${idx}`} fill className='object-cover'></Image>
-                    </div>
-                ))} 
-            </div>
+        <div className="embla flex flex-row gap-5">
+  <div className="embla__controls flex justify-between mb-2">
+    <button onClick={scrollPrev} disabled={prevDisabled} className="disabled:opacity-30">
+      <FaCircleChevronLeft size={30} className='text-gray-300 hover:pointer hover:cursor-pointer hover:scale-105' />
+    </button>
+  </div>
+
+  <div className="embla__viewport overflow-hidden h-[50rem] w-[90rem]" ref={emblaRef}>
+    <div className="embla__container flex touch-pan-y">
+      {images.map((img, idx) => (
+        <div
+          key={idx}
+          className="embla__slide relative flex-[0_0_100%] h-[50rem]"
+        >
+          <Image
+            src={img.url}
+            alt={`Imagem ${idx}`}
+            fill
+            className="object-cover rounded-lg"
+          />
         </div>
+      ))}
+    </div>
+  </div>
+  <div className="embla__controls flex justify-between mb-2">
+    <button onClick={scrollNext} disabled={nextDisabled} className="disabled:opacity-30 hover:cursor-pointer hover:scale-105">
+      <FaCircleChevronRight size={30} className='text-gray-300 hover:pointer hover:cursor-pointer hover:scale-105' />
+    </button>
+  </div>
+
+</div>
+
     )
 }
 

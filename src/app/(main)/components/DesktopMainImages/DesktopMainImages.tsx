@@ -40,6 +40,7 @@ const DesktopMainImages = ({ images }: ImageModalProps) => {
                         alt=""
                         fill
                         className='object-cover scale-100 hover:scale-110 transition-all ease-in-out duration-250'
+                        onClick={() => modalRef.current?.showModal()}
                       />
                     ) : (
                       <div className="bg-gray-200 w-full h-full" />
@@ -47,12 +48,12 @@ const DesktopMainImages = ({ images }: ImageModalProps) => {
                   </div>
                 ))}
               </div>
-              <dialog ref={modalRef} id="image_desktop_modal" className="modal w-full">
-                <div className="modal-box w-[90rem]">
-                  <form method="dialog" className='w-screen'>
+              <dialog ref={modalRef} id="image_desktop_modal" className="modal">
+                <div className="modal-box max-w-none w-[100rem] my-10">
+                  <form method="dialog" className='flex'>
                     <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                   </form>
-                  <ImageModal images={images} />
+                    <ImageModal images={images} />
                   </div>
               </dialog>
               {/* </div> */}
