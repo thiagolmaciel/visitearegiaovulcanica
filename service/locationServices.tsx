@@ -1,4 +1,4 @@
-import { supabase } from "../utils/supabaseClient";
+import { supabase } from "../utils/supabase/client";
 
 export async function getCityByID(id: number){
     const { data: locationData, error: locationError } = await supabase

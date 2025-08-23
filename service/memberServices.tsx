@@ -1,5 +1,5 @@
 import { Service } from "../model/Service";
-import { supabase } from "../utils/supabaseClient";
+import { supabase } from "../utils/supabase/client";
 
 
 

@@ -1,4 +1,4 @@
-import { supabase } from "../utils/supabaseClient";
+import { supabase } from "../utils/supabase/client";
 
 export async function getImages(slug: string){
     const { data, error } = await supabase

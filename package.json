@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@next-auth/supabase-adapter": "^0.2.1",
+    "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.50.0",
     "@vercel/speed-insights": "^1.2.0",
     "axios": "^1.9.0",
