@@ -1,11 +1,24 @@
-import React from 'react'
+'use client'
+import { useSearchParams } from 'next/navigation';
+import React, { Suspense } from 'react';
 
-const errorPage = () => {
+const ErrorContent = () => {
+  const searchParams = useSearchParams();
+  const msg = searchParams.get("msg");
   return (
     <div>
-      Ops! Algo deu errado.
+      <p>Ops! Algo deu errado.</p>
+      <p>{msg}</p>
     </div>
-  )
-}
+  );
+};
 
-export default errorPage
+const ErrorPage = () => {
+  return (
+    <Suspense fallback={<p>Carregando...</p>}>
+      <ErrorContent />
+    </Suspense>
+  );
+};
+
+export default ErrorPage;

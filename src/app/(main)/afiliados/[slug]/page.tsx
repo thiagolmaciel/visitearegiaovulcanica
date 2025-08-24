@@ -5,7 +5,7 @@ import ServiceTag from '../../components/ServiceTag/ServiceTag';
 import ContactArea from '../../components/ContactArea/ContactArea';
 import { FaCircle, FaDotCircle, FaWhatsapp } from 'react-icons/fa';
 import MapComponent from '../../components/MapComponent/MapComponent';
-import { supabase } from '../../../../../utils/supabase/client';
+import supabase from'../../../../../utils/supabase/client';
 import { getImages } from '../../../../../service/imagesServices';
 import { Service } from '../../../../../model/Service';
 import ImageCarousel from '../../components/ImageCarousel/ImageCarousel';

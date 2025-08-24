@@ -4,9 +4,6 @@ import React from 'react'
 import LogoutButton from './components/LogoutButton/page'
 import UsernameComponent from './components/UsernameComponent/page'
 
-import { supabase } from '../../../../utils/supabase/client';
-
-
 const Page =  async () => {
   const session = await getServerSession()
   if (!session || session == null) {

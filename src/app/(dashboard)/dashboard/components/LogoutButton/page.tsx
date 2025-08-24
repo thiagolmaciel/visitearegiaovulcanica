@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { useRouter } from 'next/navigation'
-import { supabase } from '../../../../../../utils/supabase/client'
+import supabase from'../../../../../../utils/supabase/client'
 
 const LogoutButton = () => {
   const router = useRouter()
