@@ -1,8 +1,6 @@
 'use client'
 
-import { FormEvent } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
-import { signIn } from "../../../../../lib/auth-actions";
+import { signIn, signUp } from "../../../../../lib/auth-actions";
 
 export default function LoginForm() {
  
@@ -26,6 +24,8 @@ export default function LoginForm() {
                 <div><p className='text-sm text-gray-400'>Esqueci minha senha</p></div>
                 <div><button className='btn' formAction={signIn} type="submit">Entrar</button></div>
             </div>
+            <div><button className='btn' formAction={signUp} type="submit">Registro</button></div>
+
           
         </form>
     )
