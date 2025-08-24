@@ -5,7 +5,7 @@ import LogoutButton from './components/LogoutButton/page'
 import UsernameComponent from './components/UsernameComponent/page'
 
 const Page =  async () => {
-  const session = await getServerSession()
+  const session = await getUser()
   if (!session || session == null) {
     redirect('/')
   }
