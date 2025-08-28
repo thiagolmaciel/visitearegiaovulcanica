@@ -1,7 +1,5 @@
 import { IoShareSocial } from 'react-icons/io5';
-import Image from 'next/image';
 import { getMemberServices, fetchAllMembers } from '@/service/memberServices';
-
 import { FaCircle, FaDotCircle, FaWhatsapp } from 'react-icons/fa';
 import { getImages } from '@/service/imagesServices';
 import { Service } from '@/model/Service';
