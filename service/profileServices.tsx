@@ -1,13 +1,12 @@
 import { createClient } from "@/lib/supabase/client";
 
-export async function getProfile(){
+export async function getProfile(id: string){
     const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser();
-    if(user){
+    if(id){
         const { data: profile, error } = await supabase
         .from('profiles')
         .select('*')
-        .eq('id', user.id)
+        .eq('id', id)
         .single();
         return profile;
     }

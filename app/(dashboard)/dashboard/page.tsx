@@ -7,12 +7,12 @@ import { getProfile } from "@/service/profileServices";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
-  const profile = await getProfile()
   const { data, error } = await supabase.auth.getClaims();
   if (error || !data?.claims) {
     redirect("/auth/login");
   }
-
+  const id_user = data.claims.sub
+  const profile = await getProfile(id_user)
   return (
     <div className="flex-1 w-full flex flex-col gap-12">
       <div className="w-full">
