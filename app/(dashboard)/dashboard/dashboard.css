@@ -43,7 +43,11 @@ font-family: Arial, Helvetica, sans-serif;
 }
 
 .p-standard{
-  @apply px-6 sm:px-36
+  @apply px-6 sm:px-52
+}
+
+h1{
+  @apply font-bold text-2xl
 }
 /* input{
   @apply min-w-[20rem] border-1 border-gray-300 px-3 py-2 rounded-sm focus:outline-none

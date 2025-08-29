@@ -11,11 +11,11 @@ import { createClient } from '@/lib/supabase/client'
 const Navbar = () => {
   return (
     <div className='h-24 w-full p-standard flex items-center justify-between gap-5 '>
-      <div className='relative h-full w-24 '>
-        <Image src='/logo_dashboard.png' alt='logo' fill className='absolute object-contain'></Image>
+      <div className='flex items-center justify-center h-full w-24 '>
+        <Image src='/logo_dashboard.png' alt='logo' width={480} height={800} className='object-contain'></Image>
       </div>
       <div className='flex items-center gap-5 md:gap-10 text-base '>
-  
+      Olá, Fazenda Santa Maria
         <Link href={'/'} className='hidden md:flex border-b-2 border-[var(--main-color)]'>Home</Link>
         <Link href={'/'} className='hidden md:flex'>Meus locais</Link>
         <Link href={'/'} className='hidden md:flex'>Perfil</Link>

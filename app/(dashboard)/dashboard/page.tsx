@@ -1,9 +1,10 @@
 import { redirect } from "next/navigation";
-
 import { createClient } from "@/lib/supabase/server";
 import { InfoIcon } from "lucide-react";
 import { FetchDataSteps } from "@/components/tutorial/fetch-data-steps";
 import { getProfile } from "@/service/profileServices";
+import ListPlaces from "@/components/dashboard/list-places";
+import CreateMemberButton from "@/components/dashboard/create-member-button";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -13,20 +14,29 @@ export default async function DashboardPage() {
   }
   const id_user = data.claims.sub
   const profile = await getProfile(id_user)
+
   return (
     <div className="flex-1 w-full flex flex-col gap-12">
       <div className="w-full">
         <div className="bg-accent text-sm p-3 px-5 rounded-md text-foreground flex gap-3 items-center">
           <InfoIcon size="16" strokeWidth={2} />
-          This is a protected page that you can only see as an authenticated
-          user
+          Este é seu dashboard pessoal, gerencie seus agriturismos aqui
         </div>
       </div>
       <div className="flex flex-col gap-2 items-start">
-        <h1>Olá, {profile?.full_name ?? 'Usuário'} </h1>
+        <h1>Olá, <span className="text-[var(--main-color)]">{profile?.full_name ?? 'Usuário'}</span> </h1>
+        <p>Este é o seu dashboard</p>
       </div>
       <div className="flex flex-col gap-2 items-start">
-        <h2 className="font-bold text-2xl mb-4">Your user details </h2>
+      <h2 className="font-bold text-xl">Seus agriturismos</h2>
+      <div className="flex w-full items-center justify-between">
+        <p className="text-[#747474]">Gerencie e visualize seus locais de agriturismo aqui</p>
+        <CreateMemberButton id={id_user}/>
+      </div>
+      <ListPlaces id={id_user}></ListPlaces>
+      </div>
+      <div className="flex flex-col gap-2 items-start">
+        <h2 className="font-bold text-xl mb-4">Seu json (para teste) </h2>
         <pre className="text-xs font-mono p-3 rounded border max-h-32 overflow-auto">
           {JSON.stringify(data.claims, null, 2)}
         </pre>

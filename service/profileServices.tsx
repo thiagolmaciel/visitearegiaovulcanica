@@ -12,3 +12,18 @@ export async function getProfile(id: string){
     }
     return null
 }
+
+export async function getMembersByProfileID(id: string) {
+    if (!id) return []
+    const supabase = createClient()
+    const {data: members, error} = await supabase
+    .from('members')
+    .select('*')
+    .eq('profile_id', id)
+    if(error){
+        console.error('Erro ao buscar');
+        return [];
+    }
+    return members || [];
+  }
+  
