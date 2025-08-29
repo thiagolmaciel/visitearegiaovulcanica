@@ -33,18 +33,7 @@ export default function DashboardLayout({
         <Navbar />
         <Toaster
           position="top-center"
-          toastOptions={{
-            style: {
-              background: "var(--accent)",
-              color: "var(--foreground)",
-              padding: "12px 20px",
-              borderRadius: "8px",
-              fontSize: "0.875rem",
-              display: "flex",
-              gap: "0.75rem",
-              alignItems: "center",
-            },
-          }}
+          richColors
         />
         <div className="p-standard">{children}</div>
       </body>
