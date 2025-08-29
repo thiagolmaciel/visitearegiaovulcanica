@@ -203,7 +203,7 @@ export async function deleteMemberById(member_id: string) {
     simpleToast('Erro ao deletar local!', 'error')
   }
   console.log(member_id)
-  simpleToast('Sucesso ao deletar local!')
+  simpleToast('Sucesso ao deletar local!', 'success')
 }
 
 export async function fetchMemberNameByID(member_id: string){
