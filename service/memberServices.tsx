@@ -1,5 +1,6 @@
 import { Service } from "@/model/Service";
 import { createClient } from "@/lib/supabase/client";
+import { simpleToast } from "@/utils/simple-toast";
 
 const supabase = createClient();
 
@@ -77,16 +78,16 @@ export async function getMemberLocation(memberID: number) {
   return data;
 }
 
-export async function fetchAllMembers(){
+export async function fetchAllMembers() {
   const { data: members, error } = await supabase.from('members').select('*');
-  if(!members || error) return null
+  if (!members || error) return null
   return members
 }
 
 export async function fetchMembersByCityId(city_id: number) {
   const { data, error } = await supabase
-  .from("members")
-  .select(`
+    .from("members")
+    .select(`
     *,
     locations:location_id (
       id,
@@ -94,22 +95,22 @@ export async function fetchMembersByCityId(city_id: number) {
       address
     )
   `)
-  .eq("locations.city_id", city_id);
+    .eq("locations.city_id", city_id);
 
-if (error) {
-  console.error("Erro ao buscar membros:", error);
-  return [];
-}
+  if (error) {
+    console.error("Erro ao buscar membros:", error);
+    return [];
+  }
 
-const filteredMembers = data.filter(member => member.locations?.city_id === city_id);
+  const filteredMembers = data.filter(member => member.locations?.city_id === city_id);
 
-return filteredMembers;
+  return filteredMembers;
 }
 
 export async function fetchMembersByStateId(state_id: string) {
   const { data, error } = await supabase
-  .from("members")
-  .select(`
+    .from("members")
+    .select(`
     *,
     locations:location_id (
       id,
@@ -152,27 +153,27 @@ export async function fetchMembersByStateName(name: string) {
   return data;
 }
 
-export async function getCityIdByName(name: string){
+export async function getCityIdByName(name: string) {
   console.log(name)
-  const {data, error} = await supabase
-  .from('cities')
-  .select('id')
-  .ilike('name', name )
-  .single()
+  const { data, error } = await supabase
+    .from('cities')
+    .select('id')
+    .ilike('name', name)
+    .single()
   console.log(data)
-  if(!data || error) return null
+  if (!data || error) return null
   return data
 }
 
-export async function getStateIdByName(name: string){
+export async function getStateIdByName(name: string) {
   console.log(name)
-  const {data, error} = await supabase
-  .from('states')
-  .select('id')
-  .ilike('name', name )
-  .single()
+  const { data, error } = await supabase
+    .from('states')
+    .select('id')
+    .ilike('name', name)
+    .single()
   console.log(data)
-  if(!data || error) return null
+  if (!data || error) return null
   return data
 }
 
@@ -192,4 +193,28 @@ export async function fetchMembersByPartialQuery(query: string) {
   return data || [];
 }
 
+export async function deleteMemberById(member_id: string) {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from('members')
+    .delete()
+    .eq('id', member_id)
+  if (error) {
+    simpleToast('Erro ao deletar local!', 'error')
+  }
+  console.log(member_id)
+  simpleToast('Sucesso ao deletar local!')
+}
 
+export async function fetchMemberNameByID(member_id: string){
+  var name = ""
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from('members')
+    .select("name")
+    .eq('id', member_id)
+  if (error) {
+    throw error
+  }
+  return name;
+}

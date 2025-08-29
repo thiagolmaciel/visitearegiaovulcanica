@@ -28,14 +28,6 @@ export default async function DashboardPage() {
         <p>Este é o seu dashboard</p>
       </div>
       <div className="flex flex-col gap-2 items-start">
-      <h2 className="font-bold text-xl">Seus agriturismos</h2>
-      <div className="flex w-full items-center justify-between">
-        <p className="text-[#747474]">Gerencie e visualize seus locais de agriturismo aqui</p>
-        <CreateMemberButton id={id_user}/>
-      </div>
-      <ListPlaces id={id_user}></ListPlaces>
-      </div>
-      <div className="flex flex-col gap-2 items-start">
         <h2 className="font-bold text-xl mb-4">Seu json (para teste) </h2>
         <pre className="text-xs font-mono p-3 rounded border max-h-32 overflow-auto">
           {JSON.stringify(data.claims, null, 2)}

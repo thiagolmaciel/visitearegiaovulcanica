@@ -1,14 +1,31 @@
-import React from 'react'
-import { IoOptions } from 'react-icons/io5'
+'use client'
+import React, { useState } from 'react'
 import { SlOptionsVertical } from 'react-icons/sl'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu'
 import Link from 'next/link'
-import { FaPen } from 'react-icons/fa'
+import { createClient } from '@/lib/supabase/client'
+import { toast } from 'sonner'
+import ConfirmDialog from './confirm-dialog'
+import { deleteMemberById } from '@/service/memberServices'
 
 interface OptionsButtonProps {
     member_id: string
+    member_name: string
+    onUpdate?: () => void; 
 }
-const OptionsButton = ({ member_id }: OptionsButtonProps) => {
+const OptionsButton = ({ member_id, member_name, onUpdate}: OptionsButtonProps) => {
+    const [dialogOpen, setDialogOpen] = useState(false)
+
+    async function handleDelete() {
+        try {
+            await deleteMemberById(member_id) // aguarda a exclusão
+            onUpdate?.()
+        } catch (error) {
+            throw error
+        }
+    }
+
+    
     return (
 
         <DropdownMenu>
@@ -24,11 +41,19 @@ const OptionsButton = ({ member_id }: OptionsButtonProps) => {
                     </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild className='focus:outline-none focus:ring-0 cursor-pointer'>
-                    <Link href='/' className='w-full'>
+                    <div onClick={() => setDialogOpen(true)}>
                         <p>Deletar</p>
-                    </Link>
+                    </div>
                 </DropdownMenuItem>
+             
             </DropdownMenuContent>
+            <ConfirmDialog open={dialogOpen}
+                    onClose={(confirmed) => {
+                        setDialogOpen(false)
+                        if (confirmed) handleDelete()
+                    }}
+                    description={'Deseja realmente deletar o membro ' + member_name + '?'}>
+                </ConfirmDialog>
         </DropdownMenu>
     )
 }

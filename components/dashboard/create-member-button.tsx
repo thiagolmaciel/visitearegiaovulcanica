@@ -7,12 +7,15 @@ import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import { createClient } from '@/lib/supabase/client';
 import { slugify } from '@/utils/slugify';
+import { redirect, useRouter } from 'next/navigation';
+import { simpleToast } from '@/utils/simple-toast';
 
 interface CreateMemberProps {
   id: string;
+  onUpdate?: () => void; 
 }
 
-const CreateMemberButton = ({id}: CreateMemberProps) => {
+const CreateMemberButton = ({id, onUpdate}: CreateMemberProps) => {
   const [open, setOpen] = useState(false)
   const [form, setForm] = useState({
     name: "",
@@ -93,6 +96,8 @@ const CreateMemberButton = ({id}: CreateMemberProps) => {
         setForm({name: "", description: "", email: ""})
         setWhatsapp('')
         setPhone('')
+        onUpdate?.()
+        simpleToast('Local criado com sucesso', 'success')
       }
 
   }
