@@ -3,23 +3,28 @@ import { useEffect, useState } from 'react'
 import Image from "next/image"
 import { abrevToName, truncateString } from "@/lib/textFunctions";
 import { getCityByID } from "@/service/locationServices";
-import { getMemberServicesIcons } from '@/service/memberServices';
+import { getMemberServices, getMemberServicesIcons } from '@/service/memberServices';
 import iconsMap from '@/lib/iconsMap';
+import { Service } from '@/model/Service';
 
 interface SuggestionItemProps {
   image_url: string;
   title: string;
   slug: string;
   id: number;
+  description?: string;
 }
 
-interface Service {
+interface ServiceIcon {
   icon: string;
 }
 
-const SuggestionItem = ({ image_url, title, slug, id }: SuggestionItemProps) => {
+
+
+const SuggestionItem = ({ image_url, description, title, slug, id }: SuggestionItemProps) => {
   const [cityName, setCityName] = useState<string>('Carregando...');
-  const [serviceIcons, setServiceIcons] = useState<Service[]>([]);
+  const [serviceIcons, setServiceIcons] = useState<ServiceIcon[]>([]);
+  const [services, setServices] = useState<Service[]>([]);
 
   useEffect(() => {
     (async () => {
@@ -31,7 +36,9 @@ const SuggestionItem = ({ image_url, title, slug, id }: SuggestionItemProps) => 
       }
 
       const icons = await getMemberServicesIcons(id);
+      const services = await getMemberServices(id);
       setServiceIcons(icons);
+      setServices(services)
     })();
   }, [id]);
 
@@ -46,6 +53,7 @@ const SuggestionItem = ({ image_url, title, slug, id }: SuggestionItemProps) => 
           <div>
             <p className="font-semibold">{truncateString(title)}</p>
             <p className=''>{cityName}</p>
+            <p className='hidden'>{description}</p>
           </div>
 
           <div className="flex  gap-2 text-[#535353]">
@@ -55,6 +63,9 @@ const SuggestionItem = ({ image_url, title, slug, id }: SuggestionItemProps) => 
                 return Icon ? <li className="p-1 rounded-lg shadow-md" key={index}>
                   <Icon  />
                 </li> : null;
+              })}
+              {services.map((service, index) => {
+                return<p key={index} className='hidden'>{service.name}</p>
               })}
             </ul>
           </div>

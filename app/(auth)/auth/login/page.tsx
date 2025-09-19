@@ -1,5 +1,6 @@
 import { LoginForm } from "@/components/auth/login-form";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Page() {
   
@@ -15,6 +16,7 @@ export default function Page() {
     </div>
     <div role='right-side' className='flex items-center sm:w-2/5 justify-center px-2 py-5'>
      <LoginForm />
+   
     </div>
 
   </div>

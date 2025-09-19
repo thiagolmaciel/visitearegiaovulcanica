@@ -27,7 +27,7 @@ export async function getCityByID(id: number){
   export async function getAllCities() {
     const { data, error } = await supabase.from('cities').select('name');
     if (error) throw new Error(error.message);
-    return data.map(city => city.name.toLowerCase());
+    return data.map(city => city.name);
   }
   
   export async function getAllStates() {

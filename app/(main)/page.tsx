@@ -16,7 +16,7 @@ export default async function Home() {
 
   return (
     <div role='main' className="flex flex-col items-center ">
-    <div className="relative w-full h-[27rem] sm:h-[45rem] overflow-hidden">
+    <div className="relative w-screen h-[27rem] sm:h-[45rem] overflow-hidden">
   <Image
     src="/regiao-vulcanica.jpg"
     alt="Região Vulcânica"

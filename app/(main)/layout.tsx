@@ -22,7 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="min-h-[100vh] relative">
         <Navbar />
-        <div className="pb-[40rem] sm:pb-[18rem]">
+        <div className="flex justify-center pb-[40rem] sm:pb-[18rem]">
         {children}
         </div>
         <Footer />

@@ -36,7 +36,7 @@ const ListPlaces = ({ id }: ListPlacesProps) => {
         </div>
       <ul className="flex mt-6 gap-10 w-full">
         {members.map((member) => (
-          <div key={member.id} className="flex gap-2">
+          <div key={member.id} className="flex flex-row gap-2">
             <SuggestionItem
               title={member.name}
               id={member.id}

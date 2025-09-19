@@ -100,6 +100,7 @@ export function LoginForm() {
 
             </div>
             {error && <ErrorAlert error={translateError(error)} />}
+            
         </form>
     );
 }
