@@ -6,6 +6,8 @@ import { getCityByID } from "@/service/locationServices";
 import { getMemberServices, getMemberServicesIcons } from '@/service/memberServices';
 import iconsMap from '@/lib/iconsMap';
 import { Service } from '@/model/Service';
+import { getImagesByID } from '@/service/imagesServices';
+import { ImageModel } from '@/model/ImageModel';
 
 interface SuggestionItemProps {
   image_url: string;
@@ -25,8 +27,7 @@ const SuggestionItem = ({ image_url, description, title, slug, id }: SuggestionI
   const [cityName, setCityName] = useState<string>('Carregando...');
   const [serviceIcons, setServiceIcons] = useState<ServiceIcon[]>([]);
   const [services, setServices] = useState<Service[]>([]);
-
-  useEffect(() => {
+const [image, setImage] = useState<ImageModel>({ url: '/house.jpg', name: 'house' });  useEffect(() => {
     (async () => {
       const city = await getCityByID(id);
       if (city) {
@@ -36,6 +37,10 @@ const SuggestionItem = ({ image_url, description, title, slug, id }: SuggestionI
       }
       const icons = await getMemberServicesIcons(id);
       const services = await getMemberServices(id);
+      const images = await getImagesByID(id);
+      if (images.length > 0) {
+        setImage(images[Math.floor(Math.random() * images.length)]);
+      }
       setServiceIcons(icons);
       setServices(services)
     })();
@@ -45,7 +50,7 @@ const SuggestionItem = ({ image_url, description, title, slug, id }: SuggestionI
     <a href={`/afiliados/${slug}`}>
       <div className="flex flex-col gap-4 w-[90vw]  sm:w-[20rem]">
         <div className="flex h-[18rem] w-[90vw] sm:h-[14rem] sm:w-[20rem] shadow-lg rounded-2xl overflow-clip hover:-translate-y-1 transition-all ease-in duration-300">
-          <Image src={image_url} alt='house' height={600} width={700} className="grow object-cover" />
+          <Image src={image.url} alt='house' height={600} width={700} className="grow object-cover" />
         </div>
 
         <div className="flex items-center justify-between">
@@ -60,11 +65,11 @@ const SuggestionItem = ({ image_url, description, title, slug, id }: SuggestionI
               {serviceIcons.map((service, index) => {
                 const Icon = iconsMap[service.icon as keyof typeof iconsMap];
                 return Icon ? <li className="p-1 rounded-lg shadow-md" key={index}>
-                  <Icon  />
+                  <Icon />
                 </li> : null;
               })}
               {services.map((service, index) => {
-                return<p key={index} className='hidden'>{service.name}</p>
+                return <p key={index} className='hidden'>{service.name}</p>
               })}
             </ul>
           </div>
