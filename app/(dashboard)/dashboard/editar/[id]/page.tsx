@@ -17,6 +17,7 @@ import Image from 'next/image'
 import { stringify } from 'querystring'
 import { FaX } from 'react-icons/fa6'
 import { FaPlus } from 'react-icons/fa'
+import ServiceSelector from '@/components/dashboard/service-selector'
 
 const EditarPage = () => {
   const params = useParams() // aqui sem generics
@@ -213,6 +214,10 @@ const EditarPage = () => {
               </div>
 
             </div>
+        </div>
+        <div>
+          <div className='mb-2'><Label htmlFor="services" className='mb-2'>Seus serviços</Label></div>
+          <ServiceSelector id={member.id}/>
         </div>
        <div>
          <div className='flex w-full justify-between items-center mb-4'>

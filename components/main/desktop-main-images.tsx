@@ -18,6 +18,8 @@ interface DesktopMainImagesProps {
 const DesktopMainImages: React.FC<DesktopMainImagesProps> = ({ member_id }) => {  
   const [loading, setLoading] = useState(true)
   const [images, setImages] = useState<Image[]>([])
+  const modalRef = useRef<HTMLDialogElement>(null);
+
   useEffect(() => {
     const fetchImages = async () => {
       try {
@@ -37,7 +39,6 @@ const DesktopMainImages: React.FC<DesktopMainImagesProps> = ({ member_id }) => {
     return <div className='loading'></div>
   }
 
-    const modalRef = useRef<HTMLDialogElement>(null);
     return (
       <div>
         {loading ? (
