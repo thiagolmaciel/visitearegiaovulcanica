@@ -1,6 +1,5 @@
 export interface Member {
-    id: number;
-    created_at: string;
+    id: string;
     name: string;
     description: string;
     email: string;

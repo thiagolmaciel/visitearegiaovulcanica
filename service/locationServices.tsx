@@ -2,15 +2,20 @@ import { createClient } from "@/lib/supabase/client";
 
 const supabase = createClient();
 
-export async function getCityByID(id: number){
+export async function getCityByID(id: string){
     const { data: locationData, error: locationError } = await supabase
       .from('locations')
       .select('city_id')
       .eq('member_id', id)
       .single();
-  
-    if (!locationData || locationError) return null;
-  
+
+    if (!locationData ){
+        return null
+    }
+    else if (locationError) {
+      return null
+    }
+
     const cityId = locationData.city_id; 
   
     const { data: cityData, error: cityError } = await supabase

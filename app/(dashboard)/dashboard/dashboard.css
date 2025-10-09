@@ -43,8 +43,9 @@ font-family: Arial, Helvetica, sans-serif;
 }
 
 .p-standard{
-  @apply px-6 sm:px-52
+  @apply px-6 lg:px-52
 }
+
 
 h1{
   @apply font-bold text-2xl

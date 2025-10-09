@@ -9,6 +9,7 @@ import ConfirmDialog from './confirm-dialog'
 import { deleteMemberById } from '@/service/memberServices'
 import { Button } from '../ui/button'
 import { FaPen, FaTrash } from 'react-icons/fa'
+import EditMemberButton from './edit-member-button'
 
 interface OptionsButtonProps {
     member_id: string
@@ -40,8 +41,8 @@ const OptionsButton = ({ member_id, member_name, onUpdate }: OptionsButtonProps)
                         <DropdownMenuLabel>Opções</DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem asChild className='focus:outline-none focus:ring-0 cursor-pointer'>
-                            <Link href='/' className='w-full'>
-                                <p>Editar</p>
+                             <Link href={`editar/${member_id}`}>
+                                                        <p>Editar</p>
                             </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild className='focus:outline-none focus:ring-0 cursor-pointer'>
@@ -50,7 +51,7 @@ const OptionsButton = ({ member_id, member_name, onUpdate }: OptionsButtonProps)
                             </div>
                         </DropdownMenuItem>
 
-                    </DropdownMenuContent>
+                    </DropdownMenuContent>2
                     <ConfirmDialog open={dialogOpen}
                         onClose={(confirmed) => {
                             setDialogOpen(false)
@@ -69,7 +70,7 @@ const OptionsButton = ({ member_id, member_name, onUpdate }: OptionsButtonProps)
                         </Button>
                     </li>
                     <li>
-                        <Button className='flex'>
+                        <Button className='flex' open={dialogOpen}>
                             <FaTrash />
                             Deletar
                             </Button>

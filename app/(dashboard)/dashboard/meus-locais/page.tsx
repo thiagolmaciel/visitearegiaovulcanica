@@ -17,7 +17,7 @@ const MeusLocaisPage = async () => {
   return (
     <div className="flex-1 w-full flex flex-col gap-8">
       <InfoTag message='Nesta área estão seus locais públicos, os customize cuidadosamente.'></InfoTag>
-
+    
       <div className="flex flex-col gap-2 items-start">
         <h2 className="font-bold text-xl">Seus agriturismos</h2>
         <ListPlaces id={id_user}></ListPlaces>

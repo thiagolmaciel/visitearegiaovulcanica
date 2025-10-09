@@ -27,7 +27,7 @@ const ContactArea = (member: Member) => {
             </div> */}
             <div className='flex flex-col gap-3'>
                 <p className='text-xl font-bold'>Contato</p>
-                <ul className='flex sm:flex-col sm:gap-3 gap-5'>
+                <ul className='flex flex-col sm:flex-col sm:gap-3 gap-5'>
                     {member.phone && (
                         <li className='flex flex-row gap-4 items-center'><FaPhone /> <p>{formatPhone(member.phone)}</p></li>
 

@@ -12,7 +12,7 @@ import ContactArea from '@/components/main/contact-area';
 import MapComponent from '@/components/main/map-component';
 import Carousel from '@/components/main/carousel';
 import ExploreButton from '@/components/main/explore-button';
-  
+
 interface MemberPageProps {
   params: Promise<{ slug: string }>;
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -35,7 +35,6 @@ export default async function MemberPage({ params }: MemberPageProps) {
     return <p>Não encontrado!</p>
   }
   const services = await getMemberServices(member.id);
-  const images = await getImages(slug.trim())
   const city = await getCityByID(member.id);
   const allMembers = await fetchAllMembers();
 
@@ -55,11 +54,13 @@ export default async function MemberPage({ params }: MemberPageProps) {
             <IoShareSocial className='text-xl sm:text-x' />
           </a>
         </div>
-       <DesktopMainImages images={images}></DesktopMainImages>
+        <DesktopMainImages member_id={member.id as string}></DesktopMainImages>
         <div className='flex flex-col gap-2 sm:flex-row sm:justify-between items-center '>
           <div>
             <p className='flex items-center text-center text-2xl font-bold'>{member.name} {member.title ? ` - ${member.title}` : ''}</p>
-            <p className='text-[#636363] text-center sm:text-left '>{city.name} - {abrevToName(city.state_id)}</p>
+            {city && (
+              <p className='text-[#636363] text-center sm:text-left '>{city.name} - {abrevToName(city.state_id)}</p>
+            )}
           </div>
           <a href={`https://wa.me/+55${member.whatsapp}`} target="_blank" role='whatsapp' className='translate-0 flex items-center gap-4 w-full sm:w-[20rem] px-2 py-2 text-xl rounded-xl sm:rounded-full text-white font-bold bg-[var(--main-color)] justify-center shadow-md hover:-translate-y-1 transition-all ease-in duration-100'>
             <p>Enviar Mensagem</p> <FaWhatsapp />
@@ -67,9 +68,9 @@ export default async function MemberPage({ params }: MemberPageProps) {
         </div>
       </div>
       <div className='hline' />
-      <div role='content' className='flex flex-col sm:flex-row gap-6 sm:gap-8 sm:w-[95rem]'>
+      <div role='content' className='flex flex-col sm:flex-row gap-1 w-[100vw] sm:gap-8 sm:w-[95rem]'>
         <div role='left-side' className='flex-3'>
-          <div className="flex flex-col justify-start  px-[1rem] sm:px-[4rem] py-[1rem] sm:py-[2rem] gap-4  bg-[#fff] rounded-b-2xl shadow-lg">
+          <div className="flex flex-col justify-start px-[1rem] sm:px-[4rem] py-[1rem] sm:py-[2rem] gap-4  bg-[#fff] sm:rounded-b-2xl shadow-lg">
             <div>
               <p className='text-xl font-bold mb-1'>Aqui você encontra...</p>
 
@@ -86,11 +87,10 @@ export default async function MemberPage({ params }: MemberPageProps) {
           </div>
         </div>
         <div role='right-side' className='flex-2'>
-          <div className="flex flex-col justify-start px-[1rem] sm:px-[4rem] py-[1rem] sm:py-[2rem] gap-4  bg-[#fff] rounded-b-2xl shadow-lg">
+          <div className="flex flex-col justify-start px-[1rem] sm:px-[4rem] py-[1rem] sm:py-[2rem] gap-4  bg-[#fff] sm:rounded-b-2xl shadow-lg">
             <ContactArea {...member} />
           </div>
         </div>
-""
       </div>
       <div className="flex flex-col justify-start w-full sm:w-[95rem]  mt-5 px-[1rem] sm:px-[4rem] py-[1rem] sm:py-[2rem] gap-4  bg-[#fff] rounded-2xl shadow-lg">
         <MapComponent {...member} />

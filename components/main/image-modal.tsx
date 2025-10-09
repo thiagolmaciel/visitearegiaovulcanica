@@ -41,9 +41,9 @@ const ImageModal = ({ images, options }: ImageModalProps) => {
       }, [emblaApi, onSelect])
 
     return (
-        <div className="embla flex flex-row gap-5">
-  <div className="embla__controls flex justify-between mb-2">
-    <button onClick={scrollPrev} disabled={prevDisabled} className="disabled:opacity-30">
+        <div className="embla flex flex-row">
+  <div className="embla__controls flex justify-between items-center px-4">
+  <button onClick={scrollPrev} disabled={prevDisabled} className="h-max disabled:opacity-30">
       <FaCircleChevronLeft size={30} className='text-gray-300 hover:pointer hover:cursor-pointer hover:scale-105' />
     </button>
   </div>
@@ -65,8 +65,8 @@ const ImageModal = ({ images, options }: ImageModalProps) => {
       ))}
     </div>
   </div>
-  <div className="embla__controls flex justify-between mb-2">
-    <button onClick={scrollNext} disabled={nextDisabled} className="disabled:opacity-30 hover:cursor-pointer hover:scale-105">
+  <div className="embla__controls flex justify-between items-center px-4">
+    <button onClick={scrollNext} disabled={nextDisabled} className="h-max disabled:opacity-30 hover:cursor-pointer hover:scale-105">
       <FaCircleChevronRight size={30} className='text-gray-300 hover:pointer hover:cursor-pointer hover:scale-105' />
     </button>
   </div>

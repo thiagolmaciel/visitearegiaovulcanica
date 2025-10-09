@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import SuggestionItem from '../main/suggestion-item';
 import OptionsButton from './options-button';
 import CreateMemberButton from './create-member-button';
+import EditMemberButton from './edit-member-button';
 
 interface ListPlacesProps {
   id: string;
@@ -34,9 +35,9 @@ const ListPlaces = ({ id }: ListPlacesProps) => {
         id={id} 
         onUpdate={fetchMembers}/>
         </div>
-      <ul className="flex mt-6 gap-10 w-full">
+      <ul className="flex sm:flex-row flex-col mt-6 gap-10 w-full flex-wrap">
         {members.map((member) => (
-          <div key={member.id} className="flex flex-row gap-2">
+          <div key={member.id} className="flex sm:flex-1 sm:flex-row flex-col gap-3">
             <SuggestionItem
               title={member.name}
               id={member.id}

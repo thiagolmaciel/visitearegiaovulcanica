@@ -11,3 +11,9 @@ export function normalize(str: string): string {
     }
     return number; 
   }
+
+  export function sanitizeFileName(name: string) {
+    return name
+      .normalize("NFD") // remove acentuação
+      .replace(/[^a-zA-Z0-9._-]/g, "_"); // só deixa letras, números, . _ e -
+  }

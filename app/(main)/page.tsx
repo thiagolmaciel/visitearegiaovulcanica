@@ -10,8 +10,8 @@ import MainPageSearch from "@/components/main/main-page-search";
 
 export default async function Home() {
   const allMembers = await fetchAllMembers();
-  const pdcMembers = await fetchMembersByCityId(1);
-  const andMembers = await fetchMembersByCityId(3);
+  const pdcMembers = await fetchMembersByCityId('600f448c-da0f-49cf-8190-994630aab331');
+  const andMembers = await fetchMembersByCityId('f1f58689-b3b2-461b-9da0-300d6d72b94b');
   const services: Service[] = await getAllServices() || [];
 
   return (

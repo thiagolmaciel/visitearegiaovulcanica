@@ -76,7 +76,7 @@ const SearchPage = () => {
             <FaSearch className='text-white' />
           </div>
         </div>
-        <div className='flex flex-row bg-[#fff] rounded-xl h-full shadow-sm px-4 py-6'> {/*List Component*/}
+        <div className='flex flex-row bg-[#fff] rounded-xl h-max shadow-sm px-4 py-6'> {/*List Component*/}
         <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8 w-full">
                       {searchResult.map((member, idx) => (
                 <li key={member.id} id={`member-${member.id}`}  className='flex  justify-center'>

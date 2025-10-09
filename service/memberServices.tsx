@@ -1,14 +1,52 @@
 import { Service } from "@/model/Service";
 import { createClient } from "@/lib/supabase/client";
 import { simpleToast } from "@/utils/simple-toast";
+import { Member } from "@/model/Member";
 
 const supabase = createClient();
 
 
-export async function getMemberServices(memberId: number): Promise<Service[]> {
+export async function getMemberByID(memberId: string){
+  const { data: member, error: member_Error } = await supabase
+  .from('members')
+  .select('*')
+  .eq('id', memberId)
+  .single();
+
+  if (member_Error || !member) {
+    console.error('Erro ao buscar membro: ', member_Error);
+    return null;
+  }
+  return member
+}
+
+export async function updateMember(member: Member){
+  console.log(member)
+  const { error } = await supabase
+  .from('members')
+  .update({
+    name: member.name,
+    description: member.description,
+    email: member.email,
+    whatsapp: member.whatsapp,
+    phone: member.phone,
+    instagram: member.instagram,
+    facebook: member.facebook,
+    website: member.website,
+    slug: member.slug,
+    location_id: member.location_id,
+    image: member.image
+  })
+  .eq('id', member.id);
+  if (error) {
+    return error
+  }
+}
+
+export async function getMemberServices(memberId: string): Promise<Service[]> {
   const { data: member_services, error: member_services_Error } = await supabase
     .from('member_services')
-    .select('services_id')
+    .select('service_id')
     .eq('member_id', memberId);
 
   if (member_services_Error || !member_services) {
@@ -16,7 +54,7 @@ export async function getMemberServices(memberId: number): Promise<Service[]> {
     return [];
   }
 
-  const serviceIDs = member_services.map((ms) => ms.services_id);
+  const serviceIDs = member_services.map((ms) => ms.service_id);
   if (serviceIDs.length === 0) {
     return [];
   }
@@ -34,18 +72,18 @@ export async function getMemberServices(memberId: number): Promise<Service[]> {
   return services as Service[];
 }
 
-export async function getMemberServicesIcons(memberId: number): Promise<Service[]> {
+export async function getMemberServicesIcons(memberId: string): Promise<Service[]> {
   const { data: member_services, error: member_services_Error } = await supabase
     .from('member_services')
-    .select('services_id')
+    .select('service_id')
     .eq('member_id', memberId);
-
+   
   if (member_services_Error || !member_services) {
     console.error('Erro ao buscar member_services: ', member_services_Error);
     return [];
   }
 
-  const serviceIDs = member_services.map((ms) => ms.services_id);
+  const serviceIDs = member_services.map((ms) => ms.service_id);
   if (serviceIDs.length === 0) {
     return [];
   }
@@ -84,7 +122,7 @@ export async function fetchAllMembers() {
   return members
 }
 
-export async function fetchMembersByCityId(city_id: number) {
+export async function fetchMembersByCityId(city_id: string) {
   const { data, error } = await supabase
     .from("members")
     .select(`

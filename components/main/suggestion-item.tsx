@@ -11,7 +11,7 @@ interface SuggestionItemProps {
   image_url: string;
   title: string;
   slug: string;
-  id: number;
+  id: string;
   description?: string;
 }
 
@@ -34,7 +34,6 @@ const SuggestionItem = ({ image_url, description, title, slug, id }: SuggestionI
       } else {
         setCityName('Localização não disponível');
       }
-
       const icons = await getMemberServicesIcons(id);
       const services = await getMemberServices(id);
       setServiceIcons(icons);
