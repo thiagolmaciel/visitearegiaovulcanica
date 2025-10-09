@@ -26,7 +26,7 @@ export default async function Home() {
   <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black z-10"></div>
   <MainPageSearch />
 </div>
-      <div className="flex flex-col items-center justify-start w-[100vw] sm:w-[95rem] sm:max-w-screen px-[5rem] py-[2rem] gap-4 min-h-[28rem] bg-[#fff] rounded-2xl sm:-translate-y-[5rem] z-[999] shadow-lg overflow-clip">
+      <div className="flex flex-col items-center justify-start w-[100vw] sm:w-[95rem] sm:max-w-[100vw] px-[5rem] py-[2rem] gap-4 min-h-[28rem] bg-[#fff] rounded-2xl sm:-translate-y-[5rem] z-[999] shadow-lg overflow-clip">
         <div role="category-selector" className="flex ">
           <ul className="flex items-center justify-center sm:mx-0 max-w-[100vw] sm:max-w-[90rem] ">
             <ServiceTagCarousel services={services}/>

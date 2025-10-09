@@ -6,12 +6,12 @@ import { Member } from "@/model/Member";
 const supabase = createClient();
 
 
-export async function getMemberByID(memberId: string){
+export async function getMemberByID(memberId: string) {
   const { data: member, error: member_Error } = await supabase
-  .from('members')
-  .select('*')
-  .eq('id', memberId)
-  .single();
+    .from('members')
+    .select('*')
+    .eq('id', memberId)
+    .single();
 
   if (member_Error || !member) {
     console.error('Erro ao buscar membro: ', member_Error);
@@ -20,24 +20,24 @@ export async function getMemberByID(memberId: string){
   return member
 }
 
-export async function updateMember(member: Member){
+export async function updateMember(member: Member) {
   console.log(member)
   const { error } = await supabase
-  .from('members')
-  .update({
-    name: member.name,
-    description: member.description,
-    email: member.email,
-    whatsapp: member.whatsapp,
-    phone: member.phone,
-    instagram: member.instagram,
-    facebook: member.facebook,
-    website: member.website,
-    slug: member.slug,
-    location_id: member.location_id,
-    image: member.image
-  })
-  .eq('id', member.id);
+    .from('members')
+    .update({
+      name: member.name,
+      description: member.description,
+      email: member.email,
+      whatsapp: member.whatsapp,
+      phone: member.phone,
+      instagram: member.instagram,
+      facebook: member.facebook,
+      website: member.website,
+      slug: member.slug,
+      location_id: member.location_id,
+      image: member.image
+    })
+    .eq('id', member.id);
   if (error) {
     return error
   }
@@ -77,7 +77,7 @@ export async function getMemberServicesIcons(memberId: string): Promise<Service[
     .from('member_services')
     .select('service_id')
     .eq('member_id', memberId);
-   
+
   if (member_services_Error || !member_services) {
     console.error('Erro ao buscar member_services: ', member_services_Error);
     return [];
@@ -101,17 +101,22 @@ export async function getMemberServicesIcons(memberId: string): Promise<Service[
   return services as Service[];
 }
 
-export async function getMemberLocation(memberID: number) {
+export async function getMemberLocation(memberID: string) {
   const { data, error } = await supabase
     .from('locations')
     .select('*')
     .eq('member_id', memberID)
     .single();
 
-  if (error || !data) {
+  if (!data) {
+    return null;
+  }
+
+  if (error) {
     console.error('Erro ao buscar localização:', error?.message);
     return null;
   }
+
 
   return data;
 }
@@ -244,7 +249,7 @@ export async function deleteMemberById(member_id: string) {
   simpleToast('Sucesso ao deletar local!', 'success')
 }
 
-export async function fetchMemberNameByID(member_id: string){
+export async function fetchMemberNameByID(member_id: string) {
   var name = ""
   const supabase = createClient();
   const { data, error } = await supabase

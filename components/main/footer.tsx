@@ -9,7 +9,7 @@ const Footer = () => {
                     <div role="left-side" >
                         <h3 className="font-bold mb-2">Sobre o Projeto</h3>
                         <ul className="flex flex-col gap-1">
-                            <li><a href="#">Conheça a iniciativa</a></li>
+                            <li><a href="/sobre/conheca-a-iniciativa">Conheça a iniciativa</a></li>
                             <li><a href="#">Apoie comunidades locais</a></li>
                             <li><a href="#">Notícias e atualizações</a></li>
                         </ul>

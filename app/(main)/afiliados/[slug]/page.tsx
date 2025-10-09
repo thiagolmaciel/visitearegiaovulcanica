@@ -92,9 +92,7 @@ export default async function MemberPage({ params }: MemberPageProps) {
           </div>
         </div>
       </div>
-      <div className="flex flex-col justify-start w-full sm:w-[95rem]  mt-5 px-[1rem] sm:px-[4rem] py-[1rem] sm:py-[2rem] gap-4  bg-[#fff] rounded-2xl shadow-lg">
         <MapComponent {...member} />
-      </div>
       <div className="flex flex-col justify-center items-center w-full sm:w-[95rem]  mt-5 mb-5 px-[1rem] sm:px-[4rem] py-[1rem] sm:py-[2rem] gap-4  bg-[#fff] rounded-2xl shadow-lg">
         <Carousel title="Veja mais" members={allMembers || []} />
         <ExploreButton />

@@ -70,7 +70,7 @@ const OptionsButton = ({ member_id, member_name, onUpdate }: OptionsButtonProps)
                         </Button>
                     </li>
                     <li>
-                        <Button className='flex' open={dialogOpen}>
+                        <Button className='flex' onClick={() => setDialogOpen(true)}>
                             <FaTrash />
                             Deletar
                             </Button>
