@@ -8,8 +8,7 @@ import iconsMap from '@/lib/iconsMap';
 import { Service } from '@/model/Service';
 import { getImagesByID } from '@/service/imagesServices';
 import { ImageModel } from '@/model/ImageModel';
-import { spinner } from '@heroui/theme';
-
+import { Spinner } from '@heroui/react'; // ou '@heroui/theme' se estiver exportando de lá
 interface SuggestionItemProps {
   image_url: string;
   title: string;
@@ -47,12 +46,13 @@ const SuggestionItem = ({ image_url, description, title, slug, id }: SuggestionI
       }
       setServiceIcons(icons);
       setServices(services)
+      setLoading(false);
+
     })();
-    setLoading(false);
   }, [id]);
 
   if(loading){
-    return spinner({ size: 'md', className: 'm-auto' });
+    return <Spinner size="lg" className='m-auto'/>
   }
   return (
     <a href={`/afiliados/${slug}`}>

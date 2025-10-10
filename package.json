@@ -7,6 +7,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@heroui/react": "^2.8.5",
     "@heroui/spinner": "^2.2.24",
     "@heroui/system": "^2.4.23",
     "@heroui/theme": "^2.4.23",
