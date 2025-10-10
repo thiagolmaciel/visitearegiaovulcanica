@@ -8,6 +8,7 @@ import iconsMap from '@/lib/iconsMap';
 import { Service } from '@/model/Service';
 import { getImagesByID } from '@/service/imagesServices';
 import { ImageModel } from '@/model/ImageModel';
+import { spinner } from '@heroui/theme';
 
 interface SuggestionItemProps {
   image_url: string;
@@ -24,10 +25,13 @@ interface ServiceIcon {
 
 
 const SuggestionItem = ({ image_url, description, title, slug, id }: SuggestionItemProps) => {
+  const [loading, setLoading] = useState<boolean>(true);
   const [cityName, setCityName] = useState<string>('Carregando...');
   const [serviceIcons, setServiceIcons] = useState<ServiceIcon[]>([]);
   const [services, setServices] = useState<Service[]>([]);
-const [image, setImage] = useState<ImageModel>({ url: '/house.jpg', name: 'house' });  useEffect(() => {
+  const [image, setImage] = useState<ImageModel>({ url: '/house.jpg', name: 'house' });
+
+  useEffect(() => {
     (async () => {
       const city = await getCityByID(id);
       if (city) {
@@ -44,8 +48,12 @@ const [image, setImage] = useState<ImageModel>({ url: '/house.jpg', name: 'house
       setServiceIcons(icons);
       setServices(services)
     })();
+    setLoading(false);
   }, [id]);
 
+  if(loading){
+    return spinner({ size: 'md', className: 'm-auto' });
+  }
   return (
     <a href={`/afiliados/${slug}`}>
       <div className="flex flex-col gap-4 w-[90vw]  sm:w-[20rem]">
