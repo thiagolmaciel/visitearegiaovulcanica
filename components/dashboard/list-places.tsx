@@ -35,22 +35,22 @@ const ListPlaces = ({ id }: ListPlacesProps) => {
         id={id} 
         onUpdate={fetchMembers}/>
         </div>
-      <ul className="flex sm:flex-row flex-col mt-6 gap-10 w-full flex-wrap">
-        {members.map((member) => (
-          <div key={member.id} className="flex sm:flex-1 sm:flex-row flex-col gap-3">
-            <SuggestionItem
-              title={member.name}
-              id={member.id}
-              image_url={member.image}
-              slug={member.slug}
-            />
-            <OptionsButton
-              member_id={member.id}
-              member_name={member.name}
-              onUpdate={fetchMembers}
-            />
-          </div>
-        ))}
+      <ul className="flex flex-col w-full gap-4 sm:flex-row sm:flex-wrap sm:gap-5 mt-6">
+          {members.map((member) => (
+            <div key={member.id} className="flex sm:flex-row flex-col gap-3">
+              <SuggestionItem
+                title={member.name}
+                id={member.id}
+                image_url={member.image}
+                slug={member.slug}
+              />
+              <OptionsButton
+                member_id={member.id}
+                member_name={member.name}
+                onUpdate={fetchMembers}
+              />
+            </div>
+          ))}
       </ul>
     </div>
   );

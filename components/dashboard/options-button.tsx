@@ -51,7 +51,7 @@ const OptionsButton = ({ member_id, member_name, onUpdate }: OptionsButtonProps)
                             </div>
                         </DropdownMenuItem>
 
-                    </DropdownMenuContent>2
+                    </DropdownMenuContent>
                     <ConfirmDialog open={dialogOpen}
                         onClose={(confirmed) => {
                             setDialogOpen(false)

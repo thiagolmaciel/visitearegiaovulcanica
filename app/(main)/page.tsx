@@ -1,18 +1,52 @@
 import Image from "next/image";
+import { Metadata } from "next";
 
 import { fetchAllMembers, fetchMembersByCityId } from "@/service/memberServices";
 import { getAllServices } from "@/service/servicesServices";
+import { getImagesByID } from "@/service/imagesServices";
 import { Service } from "@/model/Service";
 import Carousel from "@/components/main/carousel";
 import ServiceTagCarousel from "@/components/main/service-tag-carousel";
 
 import MainPageSearch from "@/components/main/main-page-search";
 
+export const metadata: Metadata = {
+  title: "VisiteRV - Explore a Região Vulcânica",
+  description: "Descubra lugares incríveis na Região Vulcânica de Poços de Caldas e Andradas",
+  openGraph: {
+    title: "VisiteRV - Explore a Região Vulcânica",
+    description: "Descubra lugares incríveis na Região Vulcânica de Poços de Caldas e Andradas",
+    images: [
+      {
+        url: "/regiao-vulcanica.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Região Vulcânica",
+      },
+    ],
+  },
+};
+
 export default async function Home() {
   const allMembers = await fetchAllMembers();
   const pdcMembers = await fetchMembersByCityId('600f448c-da0f-49cf-8190-994630aab331');
   const andMembers = await fetchMembersByCityId('f1f58689-b3b2-461b-9da0-300d6d72b94b');
   const services: Service[] = await getAllServices() || [];
+
+  // Get images from the first few members for preloading
+  const preloadImageUrls: string[] = [];
+  const membersToPreload = [...(allMembers || []), ...(pdcMembers || []), ...(andMembers || [])].slice(0, 6);
+  
+  for (const member of membersToPreload) {
+    try {
+      const images = await getImagesByID(member.id);
+      if (images.length > 0) {
+        preloadImageUrls.push(images[0].url);
+      }
+    } catch (error) {
+      console.log('Error preloading images for member:', member.id);
+    }
+  }
 
   return (
     <div role='main' className="flex flex-col items-center ">
@@ -22,8 +56,11 @@ export default async function Home() {
     alt="Região Vulcânica"
     fill
     className="object-cover z-10"
+    priority
+    sizes="100vw"
+    quality={85}
   />
-  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black z-10"></div>
+  <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/80 z-10"></div>
   <MainPageSearch />
 </div>
       <div className="flex flex-col items-center justify-start w-[100vw] sm:w-[95rem] sm:max-w-[100vw] px-[5rem] py-[2rem] gap-4 min-h-[28rem] bg-[#fff] rounded-2xl sm:-translate-y-[5rem] z-[999] shadow-lg overflow-clip">

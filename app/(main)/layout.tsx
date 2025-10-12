@@ -20,6 +20,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="preload" as="image" href="/regiao-vulcanica.jpg" />
+        <link rel="preload" as="image" href="/house.jpg" />
+        <link rel="preload" as="image" href="/logo.png" />
+      </head>
       <body className="min-h-[100vh] relative">
         <Navbar />
         <div className="flex justify-center pb-[40rem] sm:pb-[18rem]">

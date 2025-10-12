@@ -35,7 +35,7 @@ export default function DashboardLayout({
           position="top-center"
           richColors
         />
-        <div className="p-standard">{children}</div>
+        <div className="p-standard pb-12">{children}</div>
       </body>
     </html>
   );

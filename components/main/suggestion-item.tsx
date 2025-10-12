@@ -8,7 +8,6 @@ import iconsMap from '@/lib/iconsMap';
 import { Service } from '@/model/Service';
 import { getImagesByID } from '@/service/imagesServices';
 import { ImageModel } from '@/model/ImageModel';
-import { Spinner } from '@heroui/react'; // ou '@heroui/theme' se estiver exportando de lá
 interface SuggestionItemProps {
   image_url: string;
   title: string;
@@ -42,45 +41,114 @@ const SuggestionItem = ({ image_url, description, title, slug, id }: SuggestionI
       const services = await getMemberServices(id);
       const images = await getImagesByID(id);
       if (images.length > 0) {
-        setImage(images[Math.floor(Math.random() * images.length)]);
+        const selectedImage = images[Math.floor(Math.random() * images.length)];
+        setImage(selectedImage);
+        
+        // Preload da imagem selecionada
+        const img = new window.Image();
+        img.onload = () => {
+          setLoading(false);
+        };
+        img.onerror = () => {
+          setLoading(false);
+        };
+        img.src = selectedImage.url;
+      } else {
+        // Preload da imagem padrão
+        const img = new window.Image();
+        img.onload = () => {
+          setLoading(false);
+        };
+        img.onerror = () => {
+          setLoading(false);
+        };
+        img.src = '/house.jpg';
       }
       setServiceIcons(icons);
       setServices(services)
-      setLoading(false);
 
     })();
   }, [id]);
 
   if(loading){
-    return <Spinner size="lg" className='m-auto'/>
+    return (
+      <div className="flex flex-col gap-3 w-[90vw] sm:w-[20rem] bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div className="flex h-[18rem] w-[90vw] sm:h-[14rem] sm:w-[20rem] bg-gray-100 flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-gray-500"></div>
+        </div>
+        <div className="p-4 flex flex-col gap-3">
+          <div className="flex flex-col gap-2">
+            <div className="h-5 w-32 bg-gray-200 rounded animate-pulse"></div>
+            <div className="h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
+          </div>
+          <div className="border-b border-gray-200 mt-2"></div>
+          <div className="flex items-center justify-between">
+            <div className="h-4 w-20 bg-gray-200 rounded animate-pulse"></div>
+            <div className="h-4 w-4 bg-gray-200 rounded animate-pulse"></div>
+          </div>
+        </div>
+      </div>
+    )
   }
   return (
     <a href={`/afiliados/${slug}`}>
-      <div className="flex flex-col gap-4 w-[90vw]  sm:w-[20rem]">
-        <div className="flex h-[18rem] w-[90vw] sm:h-[14rem] sm:w-[20rem] shadow-lg rounded-2xl overflow-clip hover:-translate-y-1 transition-all ease-in duration-300">
-          <Image src={image.url} alt='house' height={600} width={700} className="grow object-cover" />
+      <div className="flex flex-col gap-3 w-[90vw] sm:w-[20rem] bg-white rounded-2xl shadow-lg overflow-hidden hover:-translate-y-1 transition-all ease-in-out duration-300 cursor-pointer">
+        <div className="relative h-[18rem] w-[90vw] sm:h-[14rem] sm:w-[20rem] overflow-hidden group">
+          <Image 
+            src={image.url} 
+            alt={title} 
+            height={600} 
+            width={700} 
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" 
+          />
+          
+          {/* Ícones de categoria no canto superior direito */}
+          <div className="absolute top-2 right-2 flex gap-1">
+            {serviceIcons.slice(0, 4).map((service, index) => {
+              const Icon = iconsMap[service.icon as keyof typeof iconsMap];
+              return Icon ? (
+                <div key={index} className="bg-white rounded-lg p-1 shadow-sm">
+                  <Icon className="w-3 h-3 text-[var(--main-color)]" />
+                </div>
+              ) : null;
+            })}
+            {serviceIcons.length > 4 && (
+              <div className="bg-white rounded-lg p-1 shadow-sm">
+                <span className="text-xs text-gray-500 font-medium">+{serviceIcons.length - 4}</span>
+              </div>
+            )}
+          </div>
+          
+          {/* Sombra interna no hover */}
+          <div className="absolute inset-0 shadow-inner opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         </div>
 
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="font-semibold">{truncateString(title)}</p>
-            <p className=''>{cityName}</p>
-            <p className='hidden'>{description}</p>
+        <div className="p-4 flex flex-col gap-3">
+          <div className="flex flex-col gap-2">
+            <h3 className="font-semibold text-gray-800 text-lg leading-tight">{truncateString(title)}</h3>
+            <div className="flex items-center gap-1 text-sm text-gray-500">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+              </svg>
+              <span>{cityName}</span>
+            </div>
+            
+            {/* Divisória sutil */}
+            <div className="border-b border-gray-200 mt-2"></div>
           </div>
 
-          <div className="flex  gap-2 text-[#535353]">
-            <ul className='flex gap-2'>
-              {serviceIcons.map((service, index) => {
-                const Icon = iconsMap[service.icon as keyof typeof iconsMap];
-                return Icon ? <li className="p-1 rounded-lg shadow-md" key={index}>
-                  <Icon />
-                </li> : null;
-              })}
-              {services.map((service, index) => {
-                return <p key={index} className='hidden'>{service.name}</p>
-              })}
-            </ul>
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-gray-500 hover:text-[var(--main-color)] transition-colors">Ver detalhes</span>
+            <svg className="w-3 h-3 text-gray-500 hover:text-[var(--main-color)] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
           </div>
+          
+          <p className='hidden'>{description}</p>
+          {services.map((service, index) => {
+            return <p key={index} className='hidden'>{service.name}</p>
+          })}
         </div>
       </div>
     </a>
