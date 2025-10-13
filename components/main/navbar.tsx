@@ -22,7 +22,7 @@ const Navbar = () => {
     checkAuth();
   }, []);
   return (
-    <div className="flex items-center px-4 justify-center h-[6rem] bg-[var(--main-color)] text-white relative">
+    <div className="flex items-center px-4 sm:px-16 justify-center h-[6rem] bg-[var(--main-color)] text-white relative">
       <div className="flex items-center justify-between w-full max-w-[95rem]">
         <div>
           <Link href="/"><Image src='/logo.png' alt='' width={120} height={20} /></Link>

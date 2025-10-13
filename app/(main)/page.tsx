@@ -49,40 +49,42 @@ export default async function Home() {
   }
 
   return (
-    <div role='main' className="flex flex-col items-center ">
-    <div className="relative w-screen h-[27rem] sm:h-[45rem] overflow-hidden">
-  <Image
-    src="/regiao-vulcanica.jpg"
-    alt="Região Vulcânica"
-    fill
-    className="object-cover z-10"
-    priority
-    sizes="100vw"
-    quality={85}
-  />
-  <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/80 z-10"></div>
-  <MainPageSearch />
-</div>
-      <div className="flex flex-col items-center justify-start w-[100vw] sm:w-[95rem] sm:max-w-[100vw] px-[5rem] py-[2rem] gap-4 min-h-[28rem] bg-[#fff] rounded-2xl sm:-translate-y-[5rem] z-[999] shadow-lg overflow-clip">
-        <div role="category-selector" className="flex ">
-          <ul className="flex items-center justify-center sm:mx-0 max-w-[100vw] sm:max-w-[90rem] ">
+    <div role='main' className="flex flex-col items-center">
+      {/* Hero Section */}
+      <div className="relative w-screen h-[27rem] sm:h-[45rem] overflow-hidden">
+        <Image
+          src="/regiao-vulcanica.jpg"
+          alt="Região Vulcânica"
+          fill
+          className="object-cover z-10"
+          priority
+          sizes="100vw"
+          quality={85}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/80 z-10"></div>
+        <MainPageSearch />
+      </div>
+      
+      {/* Main Content */}
+      <div className="flex flex-col items-center justify-start w-full max-w-[100vw] sm:max-w-[95rem] mx-auto px-4 sm:px-16 py-4 sm:py-8 gap-4 min-h-[28rem] bg-[#fff] rounded-2xl sm:-translate-y-[5rem] z-[999] shadow-lg overflow-clip">
+        <div role="category-selector" className="flex w-full">
+          <ul className="flex items-center justify-center w-full">
             <ServiceTagCarousel services={services}/>
           </ul>
         </div>
-        <div role="suggestion" className="mt-2 flex flex-col gap-8">
-          <div className="flex flex-col">
-          <p className='text-3xl font-bold'>Explore</p>
-            <div className="mt-2 flex flex-row gap-10">
-            <Carousel title="Nossos afiliados" members={allMembers || []}></Carousel>
+        <div role="suggestion" className="mt-2 flex flex-col gap-8 w-full">
+          <div className="flex flex-col w-full">
+            <p className='text-3xl font-bold'>Explore</p>
+            <div className="mt-2 flex flex-row gap-10 w-full">
+              <Carousel title="Nossos afiliados" members={allMembers || []}></Carousel>
             </div>
-            <div className="mt-8 flex flex-row gap-10">
-            <Carousel title="Em Poços de Caldas" members={pdcMembers || []}></Carousel>
+            <div className="mt-8 flex flex-row gap-10 w-full">
+              <Carousel title="Em Poços de Caldas" members={pdcMembers || []}></Carousel>
             </div>
-            <div className="mt-8 flex flex-row gap-10">
-            <Carousel title="Em Andradas" members={andMembers || []}></Carousel>
+            <div className="mt-8 flex flex-row gap-10 w-full">
+              <Carousel title="Em Andradas" members={andMembers || []}></Carousel>
             </div>
           </div>
-          
         </div>
         <div className="mt-3 mb-2"><a href="/search?query=*"><button className="btn-more shadow-lg">Explore mais destinos</button></a></div>
       </div>

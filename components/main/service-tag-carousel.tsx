@@ -22,7 +22,7 @@ const ServiceTagCarousel = ({ services }: Props) => {
   }, [emblaApi]);
 
   return (
-    <div className="flex items-center max-w-[100vw] sm:w-[90rem] px-2 w-full gap-4">
+    <div className="flex items-center w-full gap-4">
       <button
         onClick={scrollPrev}
         className="text-[#cacaca] bg-[#eeeeee] p-2 rounded-full shadow-md hover:-translate-y-0.5 transition active:bg-[#f7f7f7]"

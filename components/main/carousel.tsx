@@ -13,7 +13,18 @@ type Member = {
 
 
 const Carousel = ({ title, members }: CarouselProps) => {
-  const [emblaRef, emblaApi] = useEmblaCarousel();
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    align: 'start',
+    slidesToScroll: 1,
+    skipSnaps: false,
+    dragFree: false,
+    containScroll: 'trimSnaps',
+    breakpoints: {
+      '(min-width: 640px)': {
+        slidesToScroll: 1
+      }
+    }
+  });
   const [prevBtnEnabled, setPrevBtnEnabled] = useState(false);
   const [nextBtnEnabled, setNextBtnEnabled] = useState(false);
   
@@ -39,12 +50,12 @@ const Carousel = ({ title, members }: CarouselProps) => {
   }, [emblaApi, onSelect]);
 
   return (
-    <div className='embla flex flex-col gap-4 mb-4'>
-      <div role="title-box" className="flex flex-row items-center justify-between text-xl font-bold">
+    <div className='embla flex flex-col gap-4 mb-4 w-full'>
+      <div role="title-box" className="flex flex-row items-center justify-between w-full">
         <div role="title">
-          <p className='text-2xl'>{title}</p>
+          <p className='text-2xl font-bold'>{title}</p>
         </div>
-        <div role="buttons" className="flex items-center flex-row gap-2">
+        <div role="buttons" className="flex items-center justify-center flex-row gap-2">
           <button 
             onClick={scrollPrev} 
             disabled={!prevBtnEnabled}
@@ -70,10 +81,10 @@ const Carousel = ({ title, members }: CarouselProps) => {
         </div>
       </div>
 
-      <div className="embla__viewport overflow-hidden w-[90vw] sm:max-w-[90rem]" ref={emblaRef}>
-        <div className='embla__container py-2 flex gap-10'>
+      <div className="embla__viewport overflow-hidden w-full" ref={emblaRef}>
+        <div className='embla__container py-2 flex'>
           {members?.map((member) => (
-            <div className='embla__slide flex-1 sm:flex-auto sm:flex' key={member.id}>
+            <div className='embla__slide flex-[0_0_100%] sm:flex-[0_0_24%] sm:mr-4' key={member.id}>
               <SuggestionItem title={member.name} id={member.id} image_url={member.image} slug={member.slug}/>
             </div>
           ))}

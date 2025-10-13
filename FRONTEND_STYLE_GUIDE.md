@@ -66,6 +66,45 @@
 
 ## Layouts
 
+### Sistema de Largura Consistente ⭐ **CRÍTICO**
+**ESTE É O PADRÃO FUNDAMENTAL DO SITE - DEVE SER SEGUIDO EM TODOS OS COMPONENTES**
+
+#### Container Principal Padrão
+```css
+className="flex flex-col items-center"
+```
+
+#### Largura e Padding Padrão
+```css
+className="w-full max-w-[95rem] mx-auto px-4 sm:px-16 py-4 sm:py-8"
+```
+
+#### Breakpoints de Largura
+- **Mobile (< 640px)**: `w-full` + `px-4` (16px padding)
+- **Desktop (≥ 640px)**: `max-w-[95rem]` (1520px) + `px-16` (64px padding)
+
+#### Aplicação por Componente
+- **Navbar**: `max-w-[95rem]` (já implementado)
+- **Páginas**: `w-full max-w-[95rem] mx-auto`
+- **Cards/Sections**: `w-full max-w-[95rem] mx-auto`
+- **Footer**: `max-w-[95rem]` (já implementado)
+
+#### ❌ NÃO USAR (Padrões Antigos)
+```css
+// INCORRETO - Causa overflow
+w-[100vw] sm:w-[95rem]
+px-[1rem] sm:px-[4rem]
+px-[5rem] // Inconsistente
+```
+
+#### ✅ USAR SEMPRE (Padrão Atualizado)
+```css
+// CORRETO - Responsivo e consistente
+w-full max-w-[95rem] mx-auto
+px-4 sm:px-16
+py-4 sm:py-8
+```
+
 ### Grid
 - **Mobile**: `grid-cols-1`
 - **Tablet**: `md:grid-cols-2`
@@ -144,14 +183,39 @@ border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focu
 
 ## Regras Gerais
 
-1. **Consistência**: Use sempre as mesmas cores e espaçamentos
-2. **Responsividade**: Mobile-first approach
-3. **Acessibilidade**: Contraste adequado e hover states
-4. **Performance**: Transições suaves mas não excessivas
-5. **Hierarquia**: Títulos maiores, textos menores
-6. **Espaçamento**: Use o sistema de grid do Tailwind
-7. **Cores**: Prefira `var(--main-color)` ao invés de hex direto
-8. **Sombras**: `shadow-lg` para cards, `shadow-sm` para elementos pequenos
+1. **⭐ CONSISTÊNCIA DE LARGURA**: **PRIORIDADE MÁXIMA** - Use sempre `w-full max-w-[95rem] mx-auto px-4 sm:px-16`
+2. **Consistência**: Use sempre as mesmas cores e espaçamentos
+3. **Responsividade**: Mobile-first approach
+4. **Acessibilidade**: Contraste adequado e hover states
+5. **Performance**: Transições suaves mas não excessivas
+6. **Hierarquia**: Títulos maiores, textos menores
+7. **Espaçamento**: Use o sistema de grid do Tailwind
+8. **Cores**: Prefira `var(--main-color)` ao invés de hex direto
+9. **Sombras**: `shadow-lg` para cards, `shadow-sm` para elementos pequenos
+
+## ⚠️ CRITICAL: Sistema de Largura Consistente
+
+### Por que é Importante?
+- **Evita overflow**: Previne que conteúdo saia da tela
+- **Responsividade**: Funciona em todos os tamanhos de tela
+- **Consistência visual**: Alinhamento uniforme em todo o site
+- **UX melhorada**: Experiência fluida entre páginas
+
+### Checklist de Implementação
+- [ ] Container principal: `flex flex-col items-center`
+- [ ] Largura: `w-full max-w-[95rem] mx-auto`
+- [ ] Padding horizontal: `px-4 sm:px-16`
+- [ ] Padding vertical: `py-4 sm:py-8`
+- [ ] Teste em mobile (< 640px)
+- [ ] Teste em desktop (> 640px)
+- [ ] Verifique se não há overflow horizontal
+
+### Componentes que DEVEM seguir este padrão:
+- ✅ Navbar (já correto)
+- ❌ Página Principal (precisa correção)
+- ❌ Página de Afiliados (precisa correção)
+- ✅ Footer (já correto)
+- ❌ Todos os cards e seções (precisam correção)
 
 ## Padrões de Nomenclatura
 

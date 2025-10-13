@@ -1,4 +1,3 @@
-import { IoShareSocial } from 'react-icons/io5';
 import { getMemberServices, fetchAllMembers } from '@/service/memberServices';
 import { FaCircle, FaDotCircle, FaWhatsapp } from 'react-icons/fa';
 import { getImages } from '@/service/imagesServices';
@@ -12,6 +11,7 @@ import ContactArea from '@/components/main/contact-area';
 import MapComponent from '@/components/main/map-component';
 import Carousel from '@/components/main/carousel';
 import ExploreButton from '@/components/main/explore-button';
+import ShareButton from '@/components/main/share-button';
 
 interface MemberPageProps {
   params: Promise<{ slug: string }>;
@@ -44,15 +44,11 @@ export default async function MemberPage({ params }: MemberPageProps) {
 
 
   return (
-    <div role='main' className="flex flex-col items-center ">
-      <div className="flex flex-col justify-start w-[100vw] sm:w-[95rem] px-[1rem] sm:px-[4rem] py-[1rem] sm:py-[2rem] gap-4  mt-4 sm:mt-5 bg-[#fff] rounded-t-2xl shadow-lg">
-        <div role="header" className="flex col items-center justify-between w-full">
-          <p className='text-3xl font-bold'>{member.name}
-          </p>
-          <a href='' className='flex items-center gap-2 text-x'>
-            <p className='hidden sm:visible'>Compartilhar </p>
-            <IoShareSocial className='text-xl sm:text-x' />
-          </a>
+    <div role='main' className="flex flex-col items-center">
+      <div className="flex flex-col justify-start w-full max-w-[100vw] sm:max-w-[95rem] mx-auto px-4 sm:px-16 py-4 sm:py-8 gap-4 mt-4 sm:mt-5 bg-[#fff] rounded-t-2xl shadow-lg">
+        <div role="header" className="flex flex-row items-center justify-between w-full gap-4">
+          <p className='text-2xl sm:text-3xl lg:text-4xl font-bold break-words flex-1'>{member.name}</p>
+          <ShareButton />
         </div>
         <DesktopMainImages member_id={member.id as string}></DesktopMainImages>
         <div className='flex flex-col gap-2 sm:flex-row sm:justify-between items-center '>
@@ -68,9 +64,9 @@ export default async function MemberPage({ params }: MemberPageProps) {
         </div>
       </div>
       <div className='hline' />
-      <div role='content' className='flex flex-col sm:flex-row gap-1 w-[100vw] sm:gap-8 sm:w-[95rem]'>
-        <div role='left-side' className='flex-3'>
-          <div className="flex flex-col justify-start px-[1rem] sm:px-[4rem] py-[1rem] sm:py-[2rem] gap-4  bg-[#fff] sm:rounded-b-2xl shadow-lg">
+      <div role='content' className='flex flex-col sm:flex-row gap-4 sm:gap-8 w-full max-w-[100vw] sm:max-w-[95rem] mx-auto'>
+        <div role='left-side' className='flex-1 sm:flex-[3]'>
+          <div className="flex flex-col justify-start px-4 sm:px-16 py-4 sm:py-8 gap-4 bg-[#fff] sm:rounded-b-2xl shadow-lg">
             <div>
               <p className='text-xl font-bold mb-1'>Aqui você encontra...</p>
 
@@ -86,14 +82,14 @@ export default async function MemberPage({ params }: MemberPageProps) {
             </span>
           </div>
         </div>
-        <div role='right-side' className='flex-2'>
-          <div className="flex flex-col justify-start px-[1rem] sm:px-[4rem] py-[1rem] sm:py-[2rem] gap-4  bg-[#fff] sm:rounded-b-2xl shadow-lg">
+        <div role='right-side' className='flex-1 sm:flex-[2]'>
+          <div className="flex flex-col justify-start px-4 sm:px-16 py-4 sm:py-8 gap-4 bg-[#fff] sm:rounded-b-2xl shadow-lg">
             <ContactArea {...member} />
           </div>
         </div>
       </div>
         <MapComponent {...member} />
-      <div className="flex flex-col justify-center items-center w-full sm:w-[95rem]  mt-5 mb-5 px-[1rem] sm:px-[4rem] py-[1rem] sm:py-[2rem] gap-4  bg-[#fff] rounded-2xl shadow-lg">
+      <div className="flex flex-col justify-center items-center w-full max-w-[100vw] sm:max-w-[95rem] mx-auto mt-5 mb-5 px-4 sm:px-16 py-4 sm:py-8 gap-4 bg-[#fff] rounded-2xl shadow-lg">
         <Carousel title="Veja mais" members={allMembers || []} />
         <ExploreButton />
       </div>
