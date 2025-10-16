@@ -6,6 +6,7 @@ import { Location } from '@/model/Location';
 
 
 const MapComponent = async (member: Member) => {
+  if (!member.id) return null;
   const location: Location | null = await getMemberLocation(member.id);
   
   if (!location) return null;

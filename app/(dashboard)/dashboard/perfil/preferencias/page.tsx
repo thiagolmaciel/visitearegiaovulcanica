@@ -115,7 +115,7 @@ const PreferenciasPage = () => {
   )
 }
 
-function yarnDeleteAccountButton() {
+function DeleteAccountButton() {
   const [dialogOpen, setDialogOpen] = React.useState(false);
 
   async function handleDeleteAccount() {

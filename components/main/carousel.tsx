@@ -85,7 +85,7 @@ const Carousel = ({ title, members }: CarouselProps) => {
         <div className='embla__container py-2 flex'>
           {members?.map((member) => (
             <div className='embla__slide flex-[0_0_100%] sm:flex-[0_0_24%] sm:mr-4' key={member.id}>
-              <SuggestionItem title={member.name} id={member.id} image_url={member.image} slug={member.slug}/>
+              <SuggestionItem title={member.name} id={member.id || ''} image_url={member.image} slug={member.slug || ''}/>
             </div>
           ))}
         </div>
