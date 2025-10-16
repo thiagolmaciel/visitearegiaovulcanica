@@ -7,7 +7,7 @@ import { useEffect, useState } from "react"
 import ServiceOption from "./service-option"
 
 type serviceSelectorProps = {
-    id: string,
+    id: string | undefined,
     onChange?: (services: string[]) => void
 }
 

@@ -1,5 +1,6 @@
 import Image from "next/image"
 import { FaFacebook, FaInstagram } from "react-icons/fa6"
+import Link from "next/link"
 
 const Footer = () => {
     return (
@@ -9,7 +10,8 @@ const Footer = () => {
                     <div role="left-side" >
                         <h3 className="font-bold mb-2">Sobre o Projeto</h3>
                         <ul className="flex flex-col gap-1">
-                            <li><a href="/sobre/conheca-a-iniciativa">Conheça a iniciativa</a></li>
+                            <li><Link href="/sobre/conheca-a-iniciativa">Conheça a iniciativa</Link></li>
+                            <li><Link href="/sobre">Sobre a plataforma</Link></li>
                             <li><a href="#">Apoie comunidades locais</a></li>
                             <li><a href="#">Notícias e atualizações</a></li>
                         </ul>
@@ -17,17 +19,17 @@ const Footer = () => {
                     <div role="middle-side">
                         <h3 className="font-bold mb-2">Atendimento</h3>
                         <ul className="flex flex-col gap-1">
-                            <li><a href="#">Contato</a></li>
-                            <li><a href="#">Anuncie seu agriturismo</a></li>
+                            <li><Link href="/sobre/contato">Contato</Link></li>
+                            <li><Link href="/sobre/anuncie-seu-agriturismo">Anuncie seu agriturismo</Link></li>
                             <li><a href="#">Outros afiliados comerciais</a></li>
                         </ul>
                     </div>
                     <div role="right-side">
                         <h3 className="font-bold mb-2">Destinos</h3>
                         <ul className="flex flex-col gap-1">
-                            <li><a href="#">São Paulo</a></li>
-                            <li><a href="#">Minas Gerais</a></li>
-                            <li><a href="#">Todos os locais</a></li>
+                            <li><Link href="/search?query=*&city=Poços de Caldas">Poços de Caldas</Link></li>
+                            <li><Link href="/search?query=*&city=Andradas">Andradas</Link></li>
+                            <li><Link href="/search">Todos os locais</Link></li>
                         </ul>
                     </div>
                 </div>

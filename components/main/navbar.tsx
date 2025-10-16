@@ -42,13 +42,13 @@ const Navbar = () => {
                   <TbWorld size={25} />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="bg-[var(--main-color)] border-[#3e523d] text-white">
-                  <DropdownMenuItem className="hover:bg-[#3e523d] focus:bg-[#3e523d] text-white">
-                    <a href="" className="active">
+                  <DropdownMenuItem className="hover:bg-[#3e523d] focus:bg-[#3e523d] text-white hover:text-white focus:text-white cursor-pointer">
+                    <a href="" className="active text-white">
                       Português - BR
                     </a>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="hover:bg-[#3e523d] focus:bg-[#3e523d] text-white">
-                    <a href="">English - USA</a>
+                  <DropdownMenuItem className="hover:bg-[#3e523d] focus:bg-[#3e523d] text-white hover:text-white focus:text-white cursor-pointer">
+                    <a href="" className="text-white">English - USA</a>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -59,11 +59,11 @@ const Navbar = () => {
                   <MdMenu size={25} />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="bg-[var(--main-color)] border-[#3e523d] text-white">
-                  <DropdownMenuItem className="hover:bg-[#3e523d] focus:bg-[#3e523d] text-white">
-                    <Link href="/auth/login">Acessar conta</Link>
+                  <DropdownMenuItem className="hover:bg-[#3e523d] focus:bg-[#3e523d] text-white hover:text-white focus:text-white cursor-pointer">
+                    <Link href="/auth/login" className="text-white">Acessar conta</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="hover:bg-[#3e523d] focus:bg-[#3e523d] text-white">
-                    <a href="">Suporte</a>
+                  <DropdownMenuItem className="hover:bg-[#3e523d] focus:bg-[#3e523d] text-white hover:text-white focus:text-white cursor-pointer">
+                    <a href="" className="text-white">Suporte</a>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

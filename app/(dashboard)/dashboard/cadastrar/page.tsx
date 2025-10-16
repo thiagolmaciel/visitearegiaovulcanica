@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -12,14 +12,43 @@ import { slugify } from '@/utils/slugify'
 import { ImageModel } from '@/model/ImageModel'
 import InfoTag from '@/components/dashboard/info-tag'
 import ServiceSelectorCreate from '@/components/dashboard/service-selector-create'
+import { createMember, getMemberByID } from '@/service/memberServices'
+import { Member, MemberWithProfileID } from '@/model/Member'
+import { createImages } from '@/service/imagesServices'
+import { createMemberServices } from '@/service/servicesServices'
+import { getUserId } from '@/service/userServices'
+import { createClient } from '@/lib/supabase/client'
 
 const CadastrarPage = () => {
   const router = useRouter()
+  const [userId, setUserId] = useState<string | null>(null);
   const [images, setImages] = useState<ImageModel[]>([])
   const [loading, setLoading] = useState(false)
   const [selectedServices, setSelectedServices] = useState<string[]>([])  
   const [filesToUpload, setFilesToUpload] = useState<File[]>([])
   const fileInputRef = React.useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try{
+        const supabase = await createClient();
+        const { data, error } = await supabase.auth.getClaims();
+        if (error || !data?.claims) {
+          router.push("/auth/login");
+        }
+        const id_user = data?.claims?.sub
+        if(!id_user){
+          router.push('/dashboard/meus-locais')
+          simpleToast('Erro ao obter o ID do usuário', 'error')
+          return
+        }
+        setUserId(id_user)
+      }catch(error){
+        console.log(error)
+      }
+    }
+    fetchUser()
+  }, [])
 
   function handleServicesChange(services: string[]) {
     setSelectedServices(services);
@@ -51,7 +80,29 @@ const CadastrarPage = () => {
     const website = form.get('website') as string
     const slug = slugify(name)
 
-    // Validações básicas
+    if(!userId){
+      router.push('/dashboard/meus-locais')
+      simpleToast('Erro ao obter o ID do usuário', 'error')
+      return
+    }
+
+    const profile_id = userId
+
+    const member: MemberWithProfileID = {
+      name,
+      description,
+      email,
+      whatsapp,
+      phone,
+      instagram,
+      facebook,
+      website,
+      slug,
+      image: '',
+      location_id: null,
+      profile_id: profile_id
+    }
+
     if (!name || !description || !email) {
       simpleToast('Nome, descrição e email são obrigatórios', 'error')
       setLoading(false)
@@ -59,7 +110,6 @@ const CadastrarPage = () => {
     }
 
     try {
-      // TODO: Implementar backend - por enquanto apenas template
       console.log('Dados do formulário:', {
         name,
         description,
@@ -71,10 +121,17 @@ const CadastrarPage = () => {
         website,
         slug,
         selectedServices,
-        filesToUpload: filesToUpload.length
+        filesToUpload: filesToUpload.length,
+        profile_id: profile_id
       })
 
-      // Simular delay de processamento
+      
+        const newMember = await createMember(member) 
+        await getMemberByID(newMember.id)
+      await createImages(newMember.id, filesToUpload);
+       await createMemberServices(newMember.id, selectedServices);
+      
+      
       await new Promise(resolve => setTimeout(resolve, 1000))
 
       router.push('/dashboard/meus-locais')

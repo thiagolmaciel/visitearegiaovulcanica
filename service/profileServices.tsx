@@ -26,4 +26,15 @@ export async function getMembersByProfileID(id: string) {
     }
     return members || [];
   }
+
+export async function getUserAvatar(authId: string) {
+    if (!authId) return '/avatar.jpg';
+    
+    const supabase = createClient();
+    const { data } = await supabase.storage
+        .from('avatars')
+        .getPublicUrl(`${authId}/avatar.jpg`);
+    
+    return data?.publicUrl || '/avatar.jpg';
+}
   

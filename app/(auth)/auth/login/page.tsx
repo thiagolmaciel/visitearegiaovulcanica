@@ -1,6 +1,7 @@
 import { LoginForm } from "@/components/auth/login-form";
 import Image from "next/image";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function Page() {
   
@@ -14,9 +15,20 @@ export default function Page() {
         </div>
       </div>
     </div>
-    <div role='right-side' className='flex items-center sm:w-2/5 justify-center px-2 py-5'>
+    <div role='right-side' className='flex items-center sm:w-2/5 justify-center px-2 py-5 relative'>
      <LoginForm />
-   
+     
+     {/* Back to site button - positioned at bottom left of right panel */}
+     <div className="absolute bottom-0 left-0 m-5">
+       <Link href={'/'}>
+         <Button
+           className="w-[7rem] font-bold text-[#3d3d3d]"
+           type="button"
+         >
+           Voltar ao site
+         </Button>
+       </Link>
+     </div>
     </div>
 
   </div>

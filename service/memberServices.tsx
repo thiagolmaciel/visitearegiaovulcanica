@@ -244,6 +244,18 @@ export async function deleteMemberById(member_id: string) {
     .eq('id', member_id)
   if (error) {
     simpleToast('Erro ao deletar local!', 'error')
+    throw error
+  }
+  
+  const { error: storageError } = await supabase
+    .storage
+    .from('members')
+    .remove([`images/${member_id}`]);
+
+  if (storageError) {
+    console.error("Erro ao deletar a pasta de fotos do membro:", storageError.message);
+    simpleToast('Erro ao deletar fotos do local!', 'error')
+    throw storageError;
   }
   console.log(member_id)
   simpleToast('Sucesso ao deletar local!', 'success')
@@ -260,4 +272,16 @@ export async function fetchMemberNameByID(member_id: string) {
     throw error
   }
   return name;
+}
+
+export async function createMember(member: Member) {
+  const { data, error } = await supabase
+  .from('members')
+  .insert(member)
+  .select() 
+
+if (error) throw error
+if (!data || data.length === 0) throw new Error('Falha ao criar membro')
+
+return data[0] 
 }

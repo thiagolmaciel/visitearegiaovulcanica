@@ -97,10 +97,9 @@ export function LoginForm() {
                         {isLoading ? "Entrando..." : "Entrar"}
                     </Button>
                 </div>
-
             </div>
-            {error && <ErrorAlert error={translateError(error)} />}
             
+            {error && <ErrorAlert error={translateError(error)} />}
         </form>
     );
 }

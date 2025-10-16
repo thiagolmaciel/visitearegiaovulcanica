@@ -18,6 +18,7 @@ interface OptionsButtonProps {
 }
 const OptionsButton = ({ member_id, member_name, onUpdate }: OptionsButtonProps) => {
     const [dialogOpen, setDialogOpen] = useState(false)
+    const [dropdownOpen, setDropdownOpen] = useState(false)
 
     async function handleDelete() {
         try {
@@ -33,11 +34,11 @@ const OptionsButton = ({ member_id, member_name, onUpdate }: OptionsButtonProps)
         <>
 
             <div className='hidden sm:flex'>
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild className='flex items-center justify-center rounded-lg h-8 w-5 shadow-md cursor-pointer hover:bg-muted'>
+                <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
+                    <DropdownMenuTrigger asChild className={`flex items-center justify-center rounded-lg h-8 w-5 shadow-md cursor-pointer ${dropdownOpen ? 'bg-gray-200' : 'bg-white'}`}>
                         <SlOptionsVertical className='text-muted-foreground' />
                     </DropdownMenuTrigger >
-                    <DropdownMenuContent >
+                    <DropdownMenuContent>
                         <DropdownMenuLabel>Opções</DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem asChild className='focus:outline-none focus:ring-0 cursor-pointer'>
@@ -62,18 +63,18 @@ const OptionsButton = ({ member_id, member_name, onUpdate }: OptionsButtonProps)
                 </DropdownMenu>
             </div>
             <div className='flex sm:hidden'>
-                <ul className='flex flex-row w-full justify-between'>
+                <ul className='flex flex-row gap-2'>
                     <li>
-                        <Button className='flex'>
-                            <FaPen />
+                        <Button size="sm" variant="outline" className='flex items-center gap-1 bg-white border-gray-300'>
+                            <FaPen size={12} />
                             Editar
                         </Button>
                     </li>
                     <li>
-                        <Button className='flex' onClick={() => setDialogOpen(true)}>
-                            <FaTrash />
+                        <Button size="sm" variant="outline" className='flex items-center gap-1 bg-white border-red-300 text-red-600 hover:bg-red-50' onClick={() => setDialogOpen(true)}>
+                            <FaTrash size={12} />
                             Deletar
-                            </Button>
+                        </Button>
                     </li>
                 </ul>
             </div>

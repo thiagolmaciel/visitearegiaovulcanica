@@ -45,7 +45,7 @@ export default async function MemberPage({ params }: MemberPageProps) {
 
   return (
     <div role='main' className="flex flex-col items-center">
-      <div className="flex flex-col justify-start w-full max-w-[100vw] sm:max-w-[95rem] mx-auto px-4 sm:px-16 py-4 sm:py-8 gap-4 mt-4 sm:mt-5 bg-[#fff] rounded-t-2xl shadow-lg">
+      <div className="flex flex-col justify-start w-full max-w-[100vw] sm:max-w-[90vw] sm:mx-2 lg:w-[95rem] lg:max-w-[90vw] lg:mx-2 mx-auto lg:mx-2  px-4 sm:px-8 lg:px-16 py-4 sm:py-8 gap-4 mt-4 sm:mt-5 bg-[#fff] rounded-t-2xl shadow-lg">
         <div role="header" className="flex flex-row items-center justify-between w-full gap-4">
           <p className='text-2xl sm:text-3xl lg:text-4xl font-bold break-words flex-1'>{member.name}</p>
           <ShareButton />
@@ -64,7 +64,7 @@ export default async function MemberPage({ params }: MemberPageProps) {
         </div>
       </div>
       <div className='hline' />
-      <div role='content' className='flex flex-col sm:flex-row gap-4 sm:gap-8 w-full max-w-[100vw] sm:max-w-[95rem] mx-auto'>
+      <div role='content' className='flex flex-col sm:flex-row gap-4 sm:gap-8 w-full max-w-[100vw] sm:max-w-[90vw] lg:max-w-[90vw] lg:w-[95rem] mx-auto lg:mx-2'>
         <div role='left-side' className='flex-1 sm:flex-[3]'>
           <div className="flex flex-col justify-start px-4 sm:px-16 py-4 sm:py-8 gap-4 bg-[#fff] sm:rounded-b-2xl shadow-lg">
             <div>

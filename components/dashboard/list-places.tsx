@@ -29,29 +29,48 @@ const ListPlaces = ({ id }: ListPlacesProps) => {
 
   return (
     <div className='w-full'>
-      <div className="flex w-full items-center justify-between">
-      <p className="text-[#747474]">Gerencie e visualize seus locais de agriturismo aqui</p>
-      <CreateMemberButton 
-        id={id} 
-        onUpdate={fetchMembers}/>
+      <div className="flex w-full items-center justify-between mb-6">
+        <p className="text-[#747474]">Gerencie e visualize seus locais de agriturismo aqui</p>
+        <CreateMemberButton 
+          id={id} 
+          onUpdate={fetchMembers}/>
+      </div>
+      
+      {members.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-12 text-center">
+          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+            <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            </svg>
+          </div>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">Nenhum local cadastrado</h3>
+          <p className="text-gray-500 mb-4">Comece criando seu primeiro agriturismo</p>
         </div>
-      <ul className="flex flex-col w-full gap-4 sm:flex-row sm:flex-wrap sm:gap-5 mt-6">
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {members.map((member) => (
-            <div key={member.id} className="flex sm:flex-row flex-col gap-3">
-              <SuggestionItem
-                title={member.name}
-                id={member.id}
-                image_url={member.image}
-                slug={member.slug}
-              />
-              <OptionsButton
-                member_id={member.id}
-                member_name={member.name}
-                onUpdate={fetchMembers}
-              />
+            <div key={member.id} className="group relative">
+              <div className="relative">
+                <SuggestionItem
+                  title={member.name}
+                  id={member.id}
+                  image_url={member.image}
+                  slug={member.slug}
+                />
+                
+                {/* Options Button - Top Left Corner - Always Visible */}
+                <div className="absolute top-3 left-3 z-10">
+                  <OptionsButton
+                    member_id={member.id}
+                    member_name={member.name}
+                    onUpdate={fetchMembers}
+                  />
+                </div>
+              </div>
             </div>
           ))}
-      </ul>
+        </div>
+      )}
     </div>
   );
 };

@@ -72,8 +72,8 @@ const SuggestionItem = ({ image_url, description, title, slug, id }: SuggestionI
 
   if(loading){
     return (
-      <div className="flex flex-col gap-3 w-[90vw] sm:w-[20rem] bg-white rounded-2xl shadow-lg overflow-hidden">
-        <div className="flex h-[18rem] w-[90vw] sm:h-[14rem] sm:w-[20rem] bg-gray-100 flex items-center justify-center">
+      <div className="flex flex-col gap-3 w-full bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div className="flex h-[14rem] w-full bg-gray-100 flex items-center justify-center">
           <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-gray-500"></div>
         </div>
         <div className="p-4 flex flex-col gap-3">
@@ -92,8 +92,8 @@ const SuggestionItem = ({ image_url, description, title, slug, id }: SuggestionI
   }
   return (
     <a href={`/afiliados/${slug}`}>
-      <div className="flex flex-col gap-3 w-[90vw] sm:w-[20rem] bg-white rounded-2xl shadow-lg overflow-hidden hover:-translate-y-1 transition-all ease-in-out duration-300 cursor-pointer">
-        <div className="relative h-[18rem] w-[90vw] sm:h-[14rem] sm:w-[20rem] overflow-hidden group">
+      <div className="flex flex-col gap-3 w-full bg-white rounded-2xl shadow-lg overflow-hidden hover:-translate-y-1 transition-all ease-in-out duration-300 cursor-pointer">
+        <div className="relative h-[14rem] w-full overflow-hidden group">
           <Image 
             src={image.url} 
             alt={title} 

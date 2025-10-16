@@ -7,8 +7,8 @@ import { getImagesByID } from "@/service/imagesServices";
 import { Service } from "@/model/Service";
 import Carousel from "@/components/main/carousel";
 import ServiceTagCarousel from "@/components/main/service-tag-carousel";
-
 import MainPageSearch from "@/components/main/main-page-search";
+import LoadingPage from "@/components/main/loading-page";
 
 export const metadata: Metadata = {
   title: "VisiteRV - Explore a Região Vulcânica",
@@ -50,13 +50,16 @@ export default async function Home() {
 
   return (
     <div role='main' className="flex flex-col items-center">
+      {/* Loading Page */}
+      <LoadingPage />
+      
       {/* Hero Section */}
       <div className="relative w-screen h-[27rem] sm:h-[45rem] overflow-hidden">
         <Image
           src="/regiao-vulcanica.jpg"
           alt="Região Vulcânica"
           fill
-          className="object-cover z-10"
+          className="object-cover z-10 select-none pointer-events-none"
           priority
           sizes="100vw"
           quality={85}
@@ -66,7 +69,7 @@ export default async function Home() {
       </div>
       
       {/* Main Content */}
-      <div className="flex flex-col items-center justify-start w-full max-w-[100vw] sm:max-w-[95rem] mx-auto px-4 sm:px-16 py-4 sm:py-8 gap-4 min-h-[28rem] bg-[#fff] rounded-2xl sm:-translate-y-[5rem] z-[999] shadow-lg overflow-clip">
+      <div className="flex flex-col items-center justify-start w-full max-w-[100vw] sm:max-w-[90vw] lg:max-w-[90vw] lg:w-[95rem] mx-auto lg:mx-2  px-4 sm:px-16 py-4 sm:py-8 gap-4 min-h-[28rem] bg-[#fff] rounded-2xl sm:-translate-y-[5rem] z-[999] shadow-lg overflow-clip">
         <div role="category-selector" className="flex w-full">
           <ul className="flex items-center justify-center w-full">
             <ServiceTagCarousel services={services}/>

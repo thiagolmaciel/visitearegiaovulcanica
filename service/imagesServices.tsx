@@ -62,7 +62,7 @@ export async function getImagesByID(id: string) {
 }
 
 export async function updateImages(
-  id: string,
+  id: string | undefined,
   files: File[],
   imagesToDelete: { name: string; url: string | null }[]
 ) {
@@ -81,6 +81,22 @@ export async function updateImages(
     else console.log("Imagem deletada:", pathToDelete);
   }
 
+  for (const file of files) {
+    const safeName = sanitizeFileName(file.name);
+    const pathToUpload = `images/${id}/${safeName}`;
+    console.log("Uploading file to:", pathToUpload);
+
+    const { data, error } = await supabase
+      .storage
+      .from('members')
+      .upload(pathToUpload, file, { upsert: true });
+
+    if (error) console.error("Erro ao fazer upload da imagem:", error.message);
+    else console.log("Upload concluído com sucesso:", data);
+  }
+}
+
+export async function createImages(id: string, files: File[]) {
   for (const file of files) {
     const safeName = sanitizeFileName(file.name);
     const pathToUpload = `images/${id}/${safeName}`;

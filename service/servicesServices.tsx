@@ -9,7 +9,7 @@ export async function getAllServices(){
     if (!(!data || error)) return data;
 }
 
-export async function updateMemberServices(memberId: string, services: string[]){
+export async function updateMemberServices(memberId: string | undefined, services: string[]){
    const {error} = await supabase
     .from('member_services')
     .delete()
@@ -32,5 +32,15 @@ export async function updateMemberServices(memberId: string, services: string[])
     if (insertError) {
         console.error("Erro ao adicionar serviços ao membro:", insertError);
         throw insertError;
+    }
+}
+
+export async function createMemberServices(memberId: string, services: string[]){
+    const {error} = await supabase
+    .from('member_services')
+    .insert(services.map(id => ({ member_id: memberId, service_id: id })));
+    if (error) {
+        console.error("Erro ao adicionar serviços ao membro:", error);
+        throw error;
     }
 }
