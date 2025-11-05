@@ -1,7 +1,6 @@
 'use client'
 import Image from "next/image";
 import Link from "next/link";
-import { TbWorld } from "react-icons/tb";
 import { DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenu } from "../ui/dropdown-menu";
 import { MdMenu, MdClose } from "react-icons/md";
 import { createClient } from "@/lib/supabase/client";
@@ -36,23 +35,6 @@ const Navbar = () => {
                 Dashboard
               </Link>
             )}    
-            <li className="flex items-center">
-              <DropdownMenu>
-                <DropdownMenuTrigger className="shadow-none hover:shadow-sm transition-all ease-in duration-300 bg-[#3e523d] p-3 rounded-full hover:bg-[#4a5f49]">
-                  <TbWorld size={25} />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-[var(--main-color)] border-[#3e523d] text-white">
-                  <DropdownMenuItem className="hover:bg-[#3e523d] focus:bg-[#3e523d] text-white hover:text-white focus:text-white cursor-pointer">
-                    <a href="" className="active text-white">
-                      Português - BR
-                    </a>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="hover:bg-[#3e523d] focus:bg-[#3e523d] text-white hover:text-white focus:text-white cursor-pointer">
-                    <a href="" className="text-white">English - USA</a>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </li>
             <li className="flex items-center">
               <DropdownMenu>
                 <DropdownMenuTrigger className="shadow-none hover:shadow-sm transition-all ease-in duration-300 bg-[#3e523d] p-3 rounded-full hover:bg-[#4a5f49]">
@@ -107,15 +89,6 @@ const Navbar = () => {
             >
               Suporte
             </a>
-            <div className="border-t border-[#3e523d] pt-3">
-              <p className="px-3 py-2 text-sm text-gray-300">Idioma</p>
-              <button className="block px-3 py-2 hover:bg-[#3e523d] rounded-md transition-colors w-full text-left">
-                Português - BR
-              </button>
-              <button className="block px-3 py-2 hover:bg-[#3e523d] rounded-md transition-colors w-full text-left">
-                English - USA
-              </button>
-            </div>
           </div>
         </div>
       )}
