@@ -25,6 +25,8 @@ interface ServiceIcon {
 const SuggestionItem = ({ image_url, description, title, slug, id }: SuggestionItemProps) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [cityName, setCityName] = useState<string>('Carregando...');
+  const [stateName, setStateName] = useState<string>('');
+  const [cityNameOnly, setCityNameOnly] = useState<string>('');
   const [serviceIcons, setServiceIcons] = useState<ServiceIcon[]>([]);
   const [services, setServices] = useState<Service[]>([]);
   const [image, setImage] = useState<ImageModel>({ url: '/house.jpg', name: 'house' });
@@ -33,9 +35,14 @@ const SuggestionItem = ({ image_url, description, title, slug, id }: SuggestionI
     (async () => {
       const city = await getCityByID(id);
       if (city) {
-        setCityName(`${city.name} - ${abrevToName(city.state_id)}`);
+        const state = abrevToName(city.state_id);
+        setStateName(state);
+        setCityNameOnly(city.name);
+        setCityName(`${city.name} - ${state}`);
       } else {
         setCityName('Localização não disponível');
+        setStateName('');
+        setCityNameOnly('');
       }
       const icons = await getMemberServicesIcons(id);
       const services = await getMemberServices(id);
@@ -145,10 +152,15 @@ const SuggestionItem = ({ image_url, description, title, slug, id }: SuggestionI
             </svg>
           </div>
           
-          <p className='hidden'>{description}</p>
-          {services.map((service, index) => {
-            return <p key={index} className='hidden'>{service.name}</p>
-          })}
+          {/* Hidden data attributes for filtering */}
+          <div className='hidden' data-member-id={id} data-member-name={title.toLowerCase()}>
+            <p data-filter-type="description">{description}</p>
+            <p data-filter-type="state">{stateName}</p>
+            <p data-filter-type="city">{cityNameOnly}</p>
+            {services.map((service, index) => (
+              <p key={index} data-filter-type="service">{service.name}</p>
+            ))}
+          </div>
         </div>
       </div>
     </a>

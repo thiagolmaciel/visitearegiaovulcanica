@@ -224,7 +224,6 @@ const EditarPage = () => {
               Seus serviços
             </Label>
           </div>
-          {selectedServices as string[]}
           <ServiceSelector id={member.id} onChange={handleServicesChange} />
         </div>
 
@@ -274,7 +273,16 @@ const EditarPage = () => {
           </div>
         </div>
 
-        <Button type="submit">Salvar alterações</Button>
+        <div className="flex justify-between gap-4">
+          <Button 
+            type="button" 
+            variant="outline"
+            onClick={() => router.push('/dashboard/meus-locais')}
+          >
+            Voltar
+          </Button>
+          <Button type="submit">Salvar alterações</Button>
+        </div>
       </form>
     </div>
   )

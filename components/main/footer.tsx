@@ -1,10 +1,9 @@
-import Image from "next/image"
 import { FaFacebook, FaInstagram } from "react-icons/fa6"
 import Link from "next/link"
 
 const Footer = () => {
     return (
-        <div role='footer' className="flex justify-center w-full bg-[var(--main-color)] py-8 sm:py-12 absolute bottom-0">
+        <div role='footer' className="flex justify-center w-full bg-[var(--main-color)] py-8 sm:py-12 mt-auto">
             <div role='footer-content' className="flex flex-col gap-4 px-4 sm:px-8 w-full max-w-[95rem] text-[#ffffff]">
                 <div role="top-side" className="flex flex-col gap-6 sm:flex-row sm:gap-20 sm:mb-5">
                     <div role="left-side" >
@@ -34,7 +33,7 @@ const Footer = () => {
                     </div>
                 </div>
                 <div role="bottom-side" className="flex flex-col sm:flex-row sm:justify-between gap-4 border-t pt-4 border-[#627460]">
-                    <div role='left-side' className="flex flex-col sm:flex-row gap-2 sm:gap-4">
+                    <div role='left-side' className="flex flex-col sm:flex-row gap-2 sm:gap-4 items-center sm:items-start">
                         <ul className="flex flex-col sm:flex-row gap-2 sm:gap-4 text-sm sm:text-base">
                             <li>© 2025, Região Vulcânica</li>
                             <li className="hidden sm:inline">·</li>

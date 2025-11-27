@@ -127,6 +127,35 @@ export async function fetchAllMembers() {
   return members
 }
 
+export async function fetchMembersByServiceId(serviceId: string) {
+  const { data: member_services, error: member_services_Error } = await supabase
+    .from('member_services')
+    .select('member_id')
+    .eq('service_id', serviceId);
+
+  if (member_services_Error || !member_services) {
+    console.error('Erro ao buscar member_services: ', member_services_Error);
+    return [];
+  }
+
+  const memberIDs = member_services.map((ms) => ms.member_id);
+  if (memberIDs.length === 0) {
+    return [];
+  }
+
+  const { data: members, error: members_Error } = await supabase
+    .from('members')
+    .select('*')
+    .in('id', memberIDs);
+
+  if (members_Error || !members) {
+    console.error('Erro ao buscar members: ', members_Error);
+    return [];
+  }
+
+  return members;
+}
+
 export async function fetchMembersByCityId(city_id: string) {
   const { data, error } = await supabase
     .from("members")

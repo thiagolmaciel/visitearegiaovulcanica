@@ -25,41 +25,41 @@ const ContactArea = (member: Member) => {
             {/* <div role='whatsapp' className='flex items-center gap-4 w-full px-2 py-2 text-xl rounded-xl text-white font-bold bg-[var(--main-color)] justify-center'>
                 <p>Enviar Mensagem</p> <FaWhatsapp />
             </div> */}
-            <div className='flex flex-col gap-3'>
+            <div className='flex flex-col gap-3 w-full'>
                 <p className='text-xl font-bold'>Contato</p>
-                <ul className='flex flex-col sm:flex-col sm:gap-3 gap-5'>
+                <ul className='flex flex-col sm:flex-col sm:gap-3 gap-5 w-full'>
                     {member.phone && (
-                        <li className='flex flex-row gap-4 items-center'><FaPhone /> <p>{formatPhone(member.phone)}</p></li>
+                        <li className='flex flex-row gap-4 items-center w-full min-w-0'><FaPhone className='flex-shrink-0' /> <p className='break-words break-all min-w-0 flex-1'>{formatPhone(member.phone)}</p></li>
 
                     )
                     }
                     {member.whatsapp && (
-                        <li className='flex flex-row gap-4 items-center'><FaWhatsapp /> <p>{formatPhone(member.whatsapp)}</p></li>
+                        <li className='flex flex-row gap-4 items-center w-full min-w-0'><FaWhatsapp className='flex-shrink-0' /> <p className='break-words break-all min-w-0 flex-1'>{formatPhone(member.whatsapp)}</p></li>
                     )
                     }
                     {member.email && (
-                        <li className='flex flex-row gap-4 items-center'><MdEmail /> <p>{member.email}</p></li>
+                        <li className='flex flex-row gap-4 items-center w-full min-w-0'><MdEmail className='flex-shrink-0' /> <p className='break-words break-all min-w-0 flex-1'>{member.email}</p></li>
                     )
                     }
                 </ul>
                 <div className="hline !mb-0" />
-                <ul className='flex sm:flex-row gap-8   '>
+                <ul className='flex flex-col sm:flex-row gap-4 sm:gap-8 w-full'>
                     {member.instagram && (
-                        <li> <a href={member.instagram} target="_blank" className='flex flex-row gap-4 items-center'><FaInstagram /><p>Instagram</p></a></li>
+                        <li className='w-full sm:w-auto'> <a href={member.instagram} target="_blank" className='flex flex-row gap-4 items-center'><FaInstagram className='flex-shrink-0' /><p>Instagram</p></a></li>
                     )
                     }
                     {member.facebook && (
-                        <li><a href={member.facebook} target="_blank" className='flex flex-row gap-4 items-center'><FaFacebook /> <p>Facebook</p></a></li>
+                        <li className='w-full sm:w-auto'><a href={member.facebook} target="_blank" className='flex flex-row gap-4 items-center'><FaFacebook className='flex-shrink-0' /> <p>Facebook</p></a></li>
                     )
                     }
                 </ul>
                 {member.website && (
                     <>
                     <div className="hline !mb-0" />
-                    <span>
-                        <a href={member.website} target="_blank" className='flex flex-row gap-4 items-center'>
-                            <BiWorld />
-                            <p>Visite o Site!</p>
+                    <span className='w-full min-w-0'>
+                        <a href={member.website} target="_blank" className='flex flex-row gap-4 items-center w-full min-w-0'>
+                            <BiWorld className='flex-shrink-0' />
+                            <p className='break-words min-w-0 flex-1'>Visite o Site!</p>
                         </a>
                     </span>
                     </>

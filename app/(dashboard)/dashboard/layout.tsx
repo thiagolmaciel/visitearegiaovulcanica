@@ -29,13 +29,13 @@ export default function DashboardLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.className} antialiased`}>
+      <body className={`${geistSans.className} antialiased bg-gray-50`}>
         <Navbar />
         <Toaster
           position="top-center"
           richColors
         />
-        <div className="p-standard pb-12">{children}</div>
+        <div className="p-standard pb-12 pt-8 min-h-screen">{children}</div>
       </body>
     </html>
   );

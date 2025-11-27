@@ -21,21 +21,34 @@ const links = [
 
 const GuideBlocks = () => {
     return (
-        <div className='flex flex-col sm:flex-row gap-6'>
+        <div className='grid grid-cols-1 sm:grid-cols-2 gap-6'>
             {links.map((link, index) => (
-                <div key={index}>
-                    <Link href={link.href}>
-                        <Card className='flex max-w-sm w-full max-h-svh h-full cursor-pointer hover:-translate-y-3 hover:bg-zinc-100  transition-all ease-in-out'>
-                            <div className='flex flex-col items-center justify-center space-y-1.5 pl-6'>
-                            {link.icon}
+                <Link key={index} href={link.href}>
+                    <Card className='group h-full cursor-pointer hover:-translate-y-2 hover:shadow-lg border-2 border-transparent hover:border-[var(--main-color)]/20 transition-all ease-in-out duration-300 bg-white'>
+                        <CardHeader className='pb-3'>
+                            <div className='flex items-start gap-4'>
+                                <div className='w-12 h-12 bg-[var(--main-color)]/10 rounded-lg flex items-center justify-center group-hover:bg-[var(--main-color)]/20 transition-colors'>
+                                    <div className='text-[var(--main-color)] group-hover:scale-110 transition-transform'>
+                                        {link.icon}
+                                    </div>
+                                </div>
+                                <div className='flex-1'>
+                                    <CardTitle className='text-lg mb-2 group-hover:text-[var(--main-color)] transition-colors'>
+                                        {link.name}
+                                    </CardTitle>
+                                    <CardDescription className='text-sm leading-relaxed'>
+                                        {link.description}
+                                    </CardDescription>
+                                </div>
+                                <div className='text-gray-400 group-hover:text-[var(--main-color)] transition-colors'>
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </div>
                             </div>
-                            <CardHeader>
-                                <CardTitle>{link.name}</CardTitle>
-                                <CardDescription>{link.description}</CardDescription>
-                            </CardHeader>
-                        </Card>
-                    </Link>
-                </div>
+                        </CardHeader>
+                    </Card>
+                </Link>
             ))}
         </div>
     )

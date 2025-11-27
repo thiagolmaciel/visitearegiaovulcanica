@@ -29,8 +29,8 @@ const ListPlaces = ({ id }: ListPlacesProps) => {
 
   return (
     <div className='w-full'>
-      <div className="flex w-full items-center justify-between mb-6">
-        <p className="text-[#747474]">Gerencie e visualize seus locais de agriturismo aqui</p>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <p className="text-gray-600">Gerencie e visualize seus locais de agriturismo aqui</p>
         <CreateMemberButton 
           id={id} 
           onUpdate={fetchMembers}/>

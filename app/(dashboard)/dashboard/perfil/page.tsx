@@ -1,10 +1,9 @@
 import InfoTag from '@/components/dashboard/info-tag';
 import { createClient } from '@/lib/supabase/server';
-import { getProfile, getUserAvatar } from '@/service/profileServices';
+import { getProfile } from '@/service/profileServices';
 import { redirect } from 'next/navigation';
 import React from 'react'
 import { User, Mail, Phone, MapPin, Calendar } from 'lucide-react';
-import Image from 'next/image';
 import Link from 'next/link';
 
 const PerfilPage = async () => {
@@ -15,7 +14,6 @@ const PerfilPage = async () => {
   }
   const id_user = data.claims.sub
   const profile = await getProfile(id_user)
-  const avatarUrl = await getUserAvatar(id_user)
 
   return (
     <div className="flex-1 w-full flex flex-col gap-8">
@@ -32,14 +30,8 @@ const PerfilPage = async () => {
           <div className="flex flex-col gap-6">
             {/* Profile Header */}
             <div className="flex items-center gap-4">
-              <div className="w-20 h-20 bg-gray-100 rounded-full overflow-hidden flex items-center justify-center">
-                <Image 
-                  src={avatarUrl} 
-                  alt="Avatar do usuário" 
-                  width={80} 
-                  height={80}
-                  className="w-full h-full object-cover"
-                />
+              <div className="w-20 h-20 bg-[var(--main-color)]/10 rounded-full overflow-hidden flex items-center justify-center">
+                <User className="w-10 h-10 text-[var(--main-color)]" />
               </div>
               <div className="flex flex-col">
                 <h3 className="text-lg font-semibold text-gray-800">

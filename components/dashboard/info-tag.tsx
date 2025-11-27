@@ -6,10 +6,10 @@ interface InfoTagProps{
 }
 const InfoTag = ({message}: InfoTagProps) => {
   return (
-    <div className="bg-accent text-sm p-3 px-5 rounded-md text-foreground flex gap-3 items-center">
-    <InfoIcon size="16" strokeWidth={2} />
-    {message}
-  </div>
+    <div className="bg-blue-50 border border-blue-200 text-sm p-4 rounded-lg text-gray-700 flex gap-3 items-start shadow-sm">
+      <InfoIcon size="18" strokeWidth={2} className="text-blue-600 flex-shrink-0 mt-0.5" />
+      <p className="flex-1">{message}</p>
+    </div>
   )
 }
 

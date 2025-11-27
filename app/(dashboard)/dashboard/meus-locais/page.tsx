@@ -16,10 +16,15 @@ const MeusLocaisPage = async () => {
   const profile = await getProfile(id_user)
   return (
     <div className="flex-1 w-full flex flex-col gap-8">
-      <InfoTag message='Nesta área estão seus locais públicos, os customize cuidadosamente.'></InfoTag>
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">Meus Locais</h1>
+          <p className="text-gray-600 text-lg">Gerencie e personalize seus agriturismos</p>
+        </div>
+        <InfoTag message='Nesta área estão seus locais públicos, os customize cuidadosamente.'></InfoTag>
+      </div>
     
-      <div className="flex flex-col gap-2 items-start">
-        <h2 className="font-bold text-xl">Seus agriturismos</h2>
+      <div className="flex flex-col gap-6">
         <ListPlaces id={id_user}></ListPlaces>
       </div>
     </div>

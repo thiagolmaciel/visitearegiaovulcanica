@@ -5,48 +5,130 @@ import { fetchAllMembers } from '@/service/memberServices';
 import { searchMembers } from '@/service/searchServices';
 import React, { useEffect, useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
+import { useSearchParams } from 'next/navigation';
 
 const SearchPage = () => {
+  const searchParams = useSearchParams();
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [searchResult, setSearchResult] = useState<any[]>([]);
   const [searchInput, setSearchInput] = useState("");
 
+  // Initialize filters from URL parameters
+  useEffect(() => {
+    const serviceParam = searchParams.get('service');
+    if (serviceParam) {
+      const decodedService = decodeURIComponent(serviceParam);
+      setSelectedFilters([decodedService]);
+    }
+  }, [searchParams]);
+
   
   function handleSearchInput(value: string){
-    setSearchInput(value)
-    value = value.toLowerCase();
-    const allItems = document.querySelectorAll<HTMLDivElement>("[id^='member-']");
-    if(value !== ""){
-      allItems.forEach(item => {
-        const text = item.textContent?.toLowerCase() || "";
-        if(text.includes(value)){
-          item.style.display = "flex";
-        }
-        else{
-          item.style.display = "none";
-        }
-      });
-    }
-    else{
-      allItems.forEach(item => {
-        item.style.display = "flex";
-      });
-    }
+    setSearchInput(value);
+    // The filter effect will handle the display logic
   }
 
-  useEffect(() => {
-    const allItems = document.querySelectorAll<HTMLDivElement>("[id^='member-']");
+  const applyFilters = () => {
+    const allItems = document.querySelectorAll<HTMLLIElement>("[id^='member-']");
+    const states = ['São Paulo', 'Minas Gerais'];
+    
+    if (allItems.length === 0) {
+      return false; // Items not rendered yet
+    }
+    
+    let allDataLoaded = true;
     
     allItems.forEach(item => {
-      const text = item.textContent?.toLowerCase() || "";
-      const searchMatch = text.includes(searchInput.toLowerCase());
-      const filterMatch = selectedFilters.length === 0 
-        ? true 
-        : selectedFilters.some(filter => text.includes(filter.toLowerCase()));
+      // Get all filter data elements
+      const filterData = item.querySelectorAll<HTMLElement>("[data-filter-type]");
+      
+      // If no filter data exists yet (still loading), mark as not ready
+      if (filterData.length === 0) {
+        allDataLoaded = false;
+        // Hide items that are still loading if filters are active
+        if (selectedFilters.length > 0 || searchInput !== "") {
+          item.style.display = "none";
+        } else {
+          item.style.display = "flex";
+        }
+        return;
+      }
+      
+      // Build searchable text from description and name
+      const memberName = item.querySelector("[data-member-name]")?.getAttribute("data-member-name") || "";
+      const description = Array.from(filterData)
+        .find(el => el.getAttribute("data-filter-type") === "description")?.textContent?.toLowerCase() || "";
+      const searchableText = `${memberName} ${description}`;
+      
+      // Check search input match
+      const searchMatch = searchInput === "" || searchableText.includes(searchInput.toLowerCase());
+      
+      // Check filter match - check each filter against appropriate data-filter-type
+      let filterMatch = true;
+      if (selectedFilters.length > 0) {
+        // Check each filter - it must match at least one data-filter-type
+        filterMatch = selectedFilters.every(filter => {
+          const filterLower = filter.toLowerCase().trim();
+          
+          // Check if it's a state filter
+          if (states.includes(filter)) {
+            const stateEl = Array.from(filterData).find(el => 
+              el.getAttribute("data-filter-type") === "state"
+            );
+            const stateText = stateEl?.textContent?.toLowerCase().trim() || "";
+            return stateText === filterLower;
+          }
+          
+          // Check if it's a city filter
+          const cityEl = Array.from(filterData).find(el => 
+            el.getAttribute("data-filter-type") === "city"
+          );
+          const cityText = cityEl?.textContent?.toLowerCase().trim() || "";
+          if (cityText === filterLower) {
+            return true;
+          }
+          
+          // Check if it's a service filter
+          const serviceMatch = Array.from(filterData).some(el => {
+            const filterType = el.getAttribute("data-filter-type");
+            const text = el.textContent?.toLowerCase().trim() || "";
+            return filterType === "service" && text === filterLower;
+          });
+          if (serviceMatch) {
+            return true;
+          }
+          
+          // If none match, this filter doesn't match
+          return false;
+        });
+      }
   
       item.style.display = searchMatch && filterMatch ? "flex" : "none";
     });
-  }, [selectedFilters, searchInput]);
+    
+    return allDataLoaded;
+  };
+
+  useEffect(() => {
+    // Initial attempt
+    let attemptCount = 0;
+    const maxAttempts = 10;
+    
+    const tryApplyFilters = () => {
+      attemptCount++;
+      const allLoaded = applyFilters();
+      
+      // If data not all loaded and we haven't exceeded max attempts, try again
+      if (!allLoaded && attemptCount < maxAttempts) {
+        setTimeout(tryApplyFilters, 200);
+      }
+    };
+    
+    // Start with a small delay to let DOM render
+    const timer = setTimeout(tryApplyFilters, 100);
+    
+    return () => clearTimeout(timer);
+  }, [selectedFilters, searchInput, searchResult]);
 
   useEffect(() => {
     const loadMembers = async () => {

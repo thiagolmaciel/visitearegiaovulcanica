@@ -1,10 +1,9 @@
 import InfoTag from '@/components/dashboard/info-tag';
 import { createClient } from '@/lib/supabase/server';
-import { getProfile, getUserAvatar } from '@/service/profileServices';
+import { getProfile } from '@/service/profileServices';
 import { redirect } from 'next/navigation';
 import React from 'react'
 import { User, Mail, Phone, MapPin, ArrowLeft } from 'lucide-react';
-import Image from 'next/image';
 import Link from 'next/link';
 
 const EditarPerfilPage = async () => {
@@ -15,7 +14,6 @@ const EditarPerfilPage = async () => {
   }
   const id_user = data.claims.sub
   const profile = await getProfile(id_user)
-  const avatarUrl = await getUserAvatar(id_user)
 
   return (
     <div className="flex-1 w-full flex flex-col gap-8">
@@ -38,24 +36,6 @@ const EditarPerfilPage = async () => {
         {/* Profile Information Card */}
         <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
           <div className="flex flex-col gap-6">
-            {/* Profile Header */}
-            <div className="flex items-center gap-4">
-              <div className="w-20 h-20 bg-gray-100 rounded-full overflow-hidden flex items-center justify-center">
-                <Image 
-                  src={avatarUrl} 
-                  alt="Avatar do usuário" 
-                  width={80} 
-                  height={80}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="flex flex-col">
-                <h3 className="text-lg font-semibold text-gray-800">Avatar</h3>
-                <button className="text-sm text-[var(--main-color)] hover:underline">
-                  Alterar foto
-                </button>
-              </div>
-            </div>
 
             {/* Edit Form */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

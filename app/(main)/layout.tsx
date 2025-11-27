@@ -25,9 +25,9 @@ export default function RootLayout({
         <link rel="preload" as="image" href="/house.jpg" />
         <link rel="preload" as="image" href="/logo.png" />
       </head>
-      <body className="min-h-[100vh] relative">
+      <body className="min-h-[100vh] flex flex-col">
         <Navbar />
-        <div className="flex justify-center pb-[40rem] sm:pb-[18rem]">
+        <div className="flex justify-center flex-1">
         {children}
         </div>
         <Footer />

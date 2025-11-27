@@ -297,9 +297,19 @@ const CadastrarPage = () => {
           </div>
         </div>
 
-        <Button type="submit" disabled={loading}>
-          {loading ? 'Cadastrando...' : 'Cadastrar local'}
-        </Button>
+        <div className="flex justify-between gap-4">
+          <Button 
+            type="button" 
+            variant="outline"
+            onClick={() => router.push('/dashboard/meus-locais')}
+            disabled={loading}
+          >
+            Voltar
+          </Button>
+          <Button type="submit" disabled={loading}>
+            {loading ? 'Cadastrando...' : 'Cadastrar local'}
+          </Button>
+        </div>
       </form>
     </div>
   )

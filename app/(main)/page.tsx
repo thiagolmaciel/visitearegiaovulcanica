@@ -5,10 +5,9 @@ import { fetchAllMembers, fetchMembersByCityId } from "@/service/memberServices"
 import { getAllServices } from "@/service/servicesServices";
 import { getImagesByID } from "@/service/imagesServices";
 import { Service } from "@/model/Service";
-import Carousel from "@/components/main/carousel";
-import ServiceTagCarousel from "@/components/main/service-tag-carousel";
 import MainPageSearch from "@/components/main/main-page-search";
 import LoadingPage from "@/components/main/loading-page";
+import FilteredMembersSection from "@/components/main/filtered-members-section";
 
 export const metadata: Metadata = {
   title: "VisiteRV - Explore a Região Vulcânica",
@@ -70,25 +69,12 @@ export default async function Home() {
       
       {/* Main Content */}
       <div className="flex flex-col items-center justify-start w-full max-w-[100vw] sm:max-w-[90vw] lg:max-w-[90vw] lg:w-[95rem] mx-auto lg:mx-2  px-4 sm:px-16 py-4 sm:py-8 gap-4 min-h-[28rem] bg-[#fff] rounded-2xl sm:-translate-y-[5rem] z-[999] shadow-lg overflow-clip">
-        <div role="category-selector" className="flex w-full">
-          <ul className="flex items-center justify-center w-full">
-            <ServiceTagCarousel services={services}/>
-          </ul>
-        </div>
-        <div role="suggestion" className="mt-2 flex flex-col gap-8 w-full">
-          <div className="flex flex-col w-full">
-            <p className='text-3xl font-bold'>Explore</p>
-            <div className="mt-2 flex flex-row gap-10 w-full">
-              <Carousel title="Nossos afiliados" members={allMembers || []}></Carousel>
-            </div>
-            <div className="mt-8 flex flex-row gap-10 w-full">
-              <Carousel title="Em Poços de Caldas" members={pdcMembers || []}></Carousel>
-            </div>
-            <div className="mt-8 flex flex-row gap-10 w-full">
-              <Carousel title="Em Andradas" members={andMembers || []}></Carousel>
-            </div>
-          </div>
-        </div>
+        <FilteredMembersSection 
+          services={services}
+          allMembers={allMembers}
+          pdcMembers={pdcMembers}
+          andMembers={andMembers}
+        />
         <div className="mt-3 mb-2"><a href="/search?query=*"><button className="btn-more shadow-lg">Explore mais destinos</button></a></div>
       </div>
     </div>
