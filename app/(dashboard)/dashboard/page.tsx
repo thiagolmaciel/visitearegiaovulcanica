@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getProfile } from "@/service/profileServices";
 import { getMembersByProfileID } from "@/service/profileServices";
+import { isAdmin } from "@/service/adminServices";
 import InfoTag from "@/components/dashboard/info-tag";
 import GuideBlocks from "@/components/dashboard/guide-blocks";
 import Link from "next/link";
@@ -13,7 +14,14 @@ export default async function DashboardPage() {
   if (error || !data?.claims) {
     redirect("/auth/login");
   }
-  const id_user = data.claims.sub
+  const id_user = data.claims.sub;
+  
+  // Check if user is admin - if so, redirect to admin dashboard
+  const userIsAdmin = await isAdmin(id_user);
+  if (userIsAdmin) {
+    redirect("/admin");
+  }
+  
   const profile = await getProfile(id_user)
   const members = await getMembersByProfileID(id_user);
   const membersCount = members?.length || 0;

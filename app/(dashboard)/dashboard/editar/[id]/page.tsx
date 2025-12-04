@@ -4,7 +4,7 @@ import { useParams, useRouter } from 'next/navigation'
 import InfoTag from '@/components/dashboard/info-tag'
 import { getMembersByProfileID } from '@/service/profileServices'
 import { Member } from '@/model/Member'
-import { getMemberByID, updateMember } from '@/service/memberServices'
+import { getMemberByID, updateMember, getMemberLocation } from '@/service/memberServices'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
@@ -18,6 +18,7 @@ import { FaX } from 'react-icons/fa6'
 import { FaPlus } from 'react-icons/fa'
 import ServiceSelector from '@/components/dashboard/service-selector'
 import { updateMemberServices } from '@/service/servicesServices'
+import { createClient } from '@/lib/supabase/client'
 
 const EditarPage = () => {
   const params = useParams()
@@ -29,6 +30,8 @@ const EditarPage = () => {
   const [selectedServices, setSelectedServices] = useState<string[]>([])  
   const [filesToUpload, setFilesToUpload] = useState<File[]>([])
   const [imagesToDelete, setImagesToDelete] = useState<ImageModel[]>([])
+  const [location, setLocation] = useState<any>(null)
+  const [cities, setCities] = useState<any[]>([])
   const fileInputRef = React.useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -47,6 +50,18 @@ const EditarPage = () => {
 
         const imgs = await getImagesByID(id)
         setImages(imgs ?? [])
+
+        // Buscar location
+        const loc = await getMemberLocation(id)
+        setLocation(loc)
+
+        // Buscar cidades
+        const supabase = createClient()
+        const { data: citiesData } = await supabase
+          .from('cities')
+          .select('*')
+          .order('name')
+        setCities(citiesData || [])
       } catch (error) {
         router.push('/dashboard/meus-locais')
         simpleToast('Erro ao carregar dados', 'error')
@@ -89,6 +104,12 @@ const EditarPage = () => {
     const website = form.get('website') as string
     const slug = slugify(name)
 
+    // Location data
+    const address = form.get('address') as string
+    const google_maps_link = form.get('google_maps_link') as string
+    const google_maps_embed = form.get('google_maps_embed') as string
+    const city_id = form.get('city_id') as string
+
     const updatedMember: Member = {
       id: member.id,
       name,
@@ -105,12 +126,53 @@ const EditarPage = () => {
     }
 
     try {
+      const supabase = createClient()
+
       await updateMember(updatedMember)
+
+      // Criar ou atualizar location
+      if (address || google_maps_link || google_maps_embed || city_id) {
+        if (location) {
+          // Atualizar location existente
+          await supabase
+            .from('locations')
+            .update({
+              address: address || null,
+              google_maps_link: google_maps_link || null,
+              google_maps_embed: google_maps_embed || null,
+              city_id: city_id || null,
+            })
+            .eq('member_id', member.id)
+        } else {
+          // Criar nova location
+          const { data: newLocation } = await supabase
+            .from('locations')
+            .insert({
+              member_id: member.id,
+              address: address || null,
+              google_maps_link: google_maps_link || null,
+              google_maps_embed: google_maps_embed || null,
+              city_id: city_id || null,
+            })
+            .select()
+            .single()
+
+          // Atualizar location_id no member
+          if (newLocation) {
+            await supabase
+              .from('members')
+              .update({ location_id: newLocation.id })
+              .eq('id', member.id)
+          }
+        }
+      }
+
       await updateImages(member.id, filesToUpload, imagesToDelete)
       await updateMemberServices(member.id, selectedServices);
       router.push('/dashboard/meus-locais')
       simpleToast('Local atualizado com sucesso', 'success')
     } catch (error) {
+      console.error('Erro ao atualizar local:', error)
       simpleToast('Erro ao atualizar local', 'error')
     }
   }
@@ -132,7 +194,7 @@ const EditarPage = () => {
             <Input
               type="text"
               defaultValue={member.name}
-              className="max-w-2xl w-full"
+              className="max-w-2xl w-full bg-white"
               placeholder="Nome do local"
               name="name"
             />
@@ -143,7 +205,7 @@ const EditarPage = () => {
             <Textarea
               defaultValue={member.description}
               rows={15}
-              className="max-w-3xl w-full"
+              className="max-w-3xl w-full bg-white"
               placeholder="Descrição do local"
               name="description"
             />
@@ -154,7 +216,7 @@ const EditarPage = () => {
             <Input
               type="text"
               defaultValue={member.email}
-              className="max-w-2xl w-full"
+              className="max-w-2xl w-full bg-white"
               placeholder="Email do local"
               name="email"
             />
@@ -165,7 +227,7 @@ const EditarPage = () => {
             <Input
               type="text"
               defaultValue={member.whatsapp}
-              className="max-w-2xl w-full"
+              className="max-w-2xl w-full bg-white"
               placeholder="Whatsapp do local"
               maxLength={11}
               name="whatsapp"
@@ -177,7 +239,7 @@ const EditarPage = () => {
             <Input
               type="text"
               defaultValue={member.phone}
-              className="max-w-2xl w-full"
+              className="max-w-2xl w-full bg-white"
               placeholder="Telefone do local"
               maxLength={10}
               name="phone"
@@ -189,7 +251,7 @@ const EditarPage = () => {
             <Input
               type="text"
               defaultValue={member.instagram}
-              className="max-w-2xl w-full"
+              className="max-w-2xl w-full bg-white"
               placeholder="instagram.com/meulocal"
               name="instagram"
             />
@@ -200,7 +262,7 @@ const EditarPage = () => {
             <Input
               type="text"
               defaultValue={member.facebook}
-              className="max-w-2xl w-full"
+              className="max-w-2xl w-full bg-white"
               placeholder="Facebook do local"
               name="facebook"
             />
@@ -211,10 +273,66 @@ const EditarPage = () => {
             <Input
               type="text"
               defaultValue={member.website}
-              className="max-w-2xl w-full"
+              className="max-w-2xl w-full bg-white"
               placeholder="site.com.br"
               name="website"
             />
+          </div>
+
+          {/* Seção de Localização */}
+          <div className="border-t border-gray-200 pt-6 mt-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Localização</h3>
+            
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-3">
+                <Label>Endereço</Label>
+                <Input
+                  type="text"
+                  defaultValue={location?.address || ''}
+                  className="max-w-2xl w-full bg-white"
+                  placeholder="Endereço completo"
+                  name="address"
+                />
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <Label>Cidade</Label>
+                <select
+                  name="city_id"
+                  defaultValue={location?.city_id || ''}
+                  className="max-w-2xl w-full px-3 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--main-color)]"
+                >
+                  <option value="">Selecione uma cidade</option>
+                  {cities.map((city) => (
+                    <option key={city.id} value={city.id}>
+                      {city.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <Label>Link do Google Maps</Label>
+                <Input
+                  type="url"
+                  defaultValue={location?.google_maps_link || ''}
+                  className="max-w-2xl w-full bg-white"
+                  placeholder="https://maps.google.com/..."
+                  name="google_maps_link"
+                />
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <Label>Embed do Google Maps</Label>
+                <Textarea
+                  defaultValue={location?.google_maps_embed || ''}
+                  rows={4}
+                  className="max-w-3xl w-full bg-white"
+                  placeholder="Código de incorporação do Google Maps"
+                  name="google_maps_embed"
+                />
+              </div>
+            </div>
           </div>
         </div>
 

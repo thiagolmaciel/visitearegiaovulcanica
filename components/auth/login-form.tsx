@@ -24,12 +24,20 @@ export function LoginForm() {
         setError(null);
 
         try {
-            const { error } = await supabase.auth.signInWithPassword({
+            const { data, error } = await supabase.auth.signInWithPassword({
                 email,
                 password,
             });
             if (error) throw error;
-            router.push("/dashboard");
+            
+            // Check if user is admin and redirect accordingly
+            if (data?.user) {
+                const isAdmin = data.user.user_metadata?.is_admin === true || 
+                               data.user.user_metadata?.is_admin === 'true';
+                router.push(isAdmin ? "/admin" : "/dashboard");
+            } else {
+                router.push("/dashboard");
+            }
         } catch (error: unknown) {
             setError(error instanceof Error ? error.message : "Erro ao entrar");
         } finally {

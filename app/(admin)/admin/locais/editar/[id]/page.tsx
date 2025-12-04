@@ -1,80 +1,106 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { Button } from '@/components/ui/button'
+import { useParams, useRouter } from 'next/navigation'
+import { Member } from '@/model/Member'
+import { getMemberByID, updateMember, getMemberLocation } from '@/service/memberServices'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { FaPlus, FaX } from 'react-icons/fa6'
-import Image from 'next/image'
+import { Label } from '@/components/ui/label'
 import { simpleToast } from '@/utils/simple-toast'
 import { slugify } from '@/utils/slugify'
+import { Button } from '@/components/ui/button'
+import { getImagesByID, updateImages } from '@/service/imagesServices'
 import { ImageModel } from '@/model/ImageModel'
-import InfoTag from '@/components/dashboard/info-tag'
-import ServiceSelectorCreate from '@/components/dashboard/service-selector-create'
-import { createMember, getMemberByID } from '@/service/memberServices'
-import { Member, MemberWithProfileID } from '@/model/Member'
-import { createImages } from '@/service/imagesServices'
-import { createMemberServices } from '@/service/servicesServices'
-import { getUserId } from '@/service/userServices'
+import Image from 'next/image'
+import { FaX, FaArrowLeft } from 'react-icons/fa6'
+import { FaPlus } from 'react-icons/fa'
+import ServiceSelector from '@/components/dashboard/service-selector'
+import { updateMemberServices } from '@/service/servicesServices'
 import { createClient } from '@/lib/supabase/client'
+import Link from 'next/link'
 
-const CadastrarPage = () => {
+const AdminEditarLocalPage = () => {
+  const params = useParams()
   const router = useRouter()
-  const [userId, setUserId] = useState<string | null>(null);
+  const [member, setMember] = useState<Member | null>(null)
   const [images, setImages] = useState<ImageModel[]>([])
-  const [loading, setLoading] = useState(false)
-  const [selectedServices, setSelectedServices] = useState<string[]>([])  
+  const [loading, setLoading] = useState(true)
+  const [memberServices, setMemberServices] = useState<string[]>([])
+  const [selectedServices, setSelectedServices] = useState<string[]>([])
   const [filesToUpload, setFilesToUpload] = useState<File[]>([])
+  const [imagesToDelete, setImagesToDelete] = useState<ImageModel[]>([])
+  const [allUsers, setAllUsers] = useState<any[]>([])
+  const [location, setLocation] = useState<any>(null)
   const [cities, setCities] = useState<any[]>([])
   const fileInputRef = React.useRef<HTMLInputElement>(null)
 
   useEffect(() => {
+    if (!params?.id) {
+      router.push('/admin/locais')
+      return
+    }
+
+    const id = params.id.toString()
+
     const fetchData = async () => {
-      try{
-        const supabase = await createClient();
-        const { data, error } = await supabase.auth.getClaims();
-        if (error || !data?.claims) {
-          router.push("/auth/login");
-        }
-        const id_user = data?.claims?.sub
-        if(!id_user){
-          router.push('/dashboard/meus-locais')
-          simpleToast('Erro ao obter o ID do usuário', 'error')
-          return
-        }
-        setUserId(id_user)
+      setLoading(true)
+      try {
+        const data = await getMemberByID(id)
+        setMember(data ?? null)
+
+        const imgs = await getImagesByID(id)
+        setImages(imgs ?? [])
+
+        // Buscar location
+        const loc = await getMemberLocation(id)
+        setLocation(loc)
+
+        // Buscar usuários
+        const supabaseClient = createClient()
+        const { data: usersData } = await supabaseClient
+          .from('profiles')
+          .select('*')
+          .order('updated_at', { ascending: false })
+        setAllUsers(usersData || [])
 
         // Buscar cidades
+        const supabase = createClient()
         const { data: citiesData } = await supabase
           .from('cities')
           .select('*')
           .order('name')
         setCities(citiesData || [])
-      }catch(error){
-        console.log(error)
+      } catch (error) {
+        router.push('/admin/locais')
+        simpleToast('Erro ao carregar dados', 'error')
+      } finally {
+        setLoading(false)
       }
     }
+
     fetchData()
-  }, [router])
+  }, [params?.id, router])
+
+  if (loading || !member) {
+    return <p>Carregando...</p>
+  }
 
   function handleServicesChange(services: string[]) {
-    setSelectedServices(services);
+    setSelectedServices(services)
   }
 
   async function handleRemoveImage(image: ImageModel) {
     setImages(prev => prev.filter(img => img !== image))
+    if (image.url) setImagesToDelete(prev => [...prev, image])
     setFilesToUpload(prev => prev.filter(f => f.name !== image.name))
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setLoading(true)
-    
     const form = new FormData(e.currentTarget)
-    if (!form) {
-      simpleToast('Erro no formulário', 'error')
-      setLoading(false)
+    if (!form || !member) {
+      simpleToast('Erro')
       return
     }
 
@@ -86,6 +112,7 @@ const CadastrarPage = () => {
     const instagram = form.get('instagram') as string
     const facebook = form.get('facebook') as string
     const website = form.get('website') as string
+    const profile_id = form.get('profile_id') as string
     const slug = slugify(name)
 
     // Location data
@@ -94,114 +121,147 @@ const CadastrarPage = () => {
     const google_maps_embed = form.get('google_maps_embed') as string
     const city_id = form.get('city_id') as string
 
-    if(!userId){
-      router.push('/dashboard/meus-locais')
-      simpleToast('Erro ao obter o ID do usuário', 'error')
-      return
-    }
-
-    const profile_id = userId
-
-    const member: MemberWithProfileID = {
+    const updatedMember: Member = {
+      id: member.id,
       name,
       description,
-      email: email || '',
-      whatsapp: whatsapp || '',
-      phone: phone || '',
-      instagram: instagram || '',
-      facebook: facebook || '',
-      website: website || '',
+      email,
+      whatsapp,
+      phone,
+      instagram,
+      facebook,
+      website,
       slug,
-      image: '',
-      location_id: null,
-      profile_id: profile_id
-    }
-
-    if (!name || !description) {
-      simpleToast('Nome e descrição são obrigatórios', 'error')
-      setLoading(false)
-      return
-    }
-
-    if (selectedServices.length === 0) {
-      simpleToast('Selecione pelo menos uma categoria', 'error')
-      setLoading(false)
-      return
+      location_id: member.location_id,
+      image: member.image,
     }
 
     try {
       const supabase = createClient()
 
-      const newMember = await createMember(member) 
-      await getMemberByID(newMember.id)
+      // Atualizar member
+      await updateMember(updatedMember)
 
-      // Criar location se dados foram fornecidos
+      // Atualizar profile_id se foi alterado
+      if (profile_id && profile_id !== '') {
+        await supabase
+          .from('members')
+          .update({ profile_id })
+          .eq('id', member.id)
+      }
+
+      // Criar ou atualizar location
       if (address || google_maps_link || google_maps_embed || city_id) {
-        const { data: newLocation } = await supabase
-          .from('locations')
-          .insert({
-            member_id: newMember.id,
-            address: address || null,
-            google_maps_link: google_maps_link || null,
-            google_maps_embed: google_maps_embed || null,
-            city_id: city_id || null,
-          })
-          .select()
-          .single()
-
-        // Atualizar location_id no member
-        if (newLocation) {
+        if (location) {
+          // Atualizar location existente
           await supabase
-            .from('members')
-            .update({ location_id: newLocation.id })
-            .eq('id', newMember.id)
+            .from('locations')
+            .update({
+              address: address || null,
+              google_maps_link: google_maps_link || null,
+              google_maps_embed: google_maps_embed || null,
+              city_id: city_id || null,
+            })
+            .eq('member_id', member.id)
+        } else {
+          // Criar nova location
+          const { data: newLocation } = await supabase
+            .from('locations')
+            .insert({
+              member_id: member.id,
+              address: address || null,
+              google_maps_link: google_maps_link || null,
+              google_maps_embed: google_maps_embed || null,
+              city_id: city_id || null,
+            })
+            .select()
+            .single()
+
+          // Atualizar location_id no member
+          if (newLocation) {
+            await supabase
+              .from('members')
+              .update({ location_id: newLocation.id })
+              .eq('id', member.id)
+          }
         }
       }
 
-      await createImages(newMember.id, filesToUpload);
-      await createMemberServices(newMember.id, selectedServices);
+      await updateImages(member.id, filesToUpload, imagesToDelete)
+      await updateMemberServices(member.id, selectedServices)
       
-      await new Promise(resolve => setTimeout(resolve, 1000))
-
-      router.push('/dashboard/meus-locais')
-      simpleToast('Local cadastrado com sucesso!', 'success')
+      router.push('/admin/locais')
+      simpleToast('Local atualizado com sucesso', 'success')
     } catch (error) {
-      console.error('Erro ao cadastrar local:', error)
-      simpleToast('Erro ao cadastrar local', 'error')
+      console.error('Erro ao atualizar local:', error)
+      simpleToast('Erro ao atualizar local', 'error')
     } finally {
       setLoading(false)
     }
   }
 
+  // Buscar profile_id atual do member
+  // O profile_id vem do member quando buscamos com getMemberByID
+  const currentProfileId = (member as any)?.profile_id || ''
+
   return (
     <div className="flex-1 w-full flex flex-col gap-8">
-      <InfoTag message="Cadastre aqui seu novo local" />
-      <div className="flex flex-col gap-2 items-start">
-        <h2 className="font-bold text-xl">Novo Agriturismo</h2>
-        <p className="text-muted-foreground">
-          Preencha todas as informações do seu local. Todas estas informações serão públicas
-        </p>
+      <div className="flex flex-col gap-4">
+        <Link 
+          href="/admin/locais"
+          className="inline-flex items-center gap-2 text-[var(--main-color)] hover:underline text-sm font-medium mb-2"
+        >
+          <FaArrowLeft />
+          Voltar para locais
+        </Link>
+        <div className="flex flex-col gap-2">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
+            Editar Local: <span className="text-[var(--main-color)]">{member.name}</span>
+          </h1>
+          <p className="text-gray-600 text-lg">
+            Edite as informações do local. Todas estas informações serão públicas
+          </p>
+        </div>
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
         <div className="flex flex-1 flex-col gap-6 flex-grow">
+          {/* Seleção de proprietário */}
           <div className="flex flex-col gap-3">
-            <Label>Nome *</Label>
+            <Label>Proprietário (Usuário)</Label>
+            <select
+              name="profile_id"
+              defaultValue={currentProfileId}
+              className="max-w-2xl w-full px-3 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--main-color)]"
+            >
+              <option value="">Sem proprietário</option>
+              {allUsers.map((user) => (
+                <option key={user.id} value={user.id}>
+                  {user.full_name || user.email} ({user.email})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <Label>Nome <span className="text-red-500">*</span></Label>
             <Input
               type="text"
+              defaultValue={member.name}
               className="max-w-2xl w-full bg-white"
-              placeholder="Nome do local"
+              placeholder="Nome do local *"
               name="name"
               required
             />
           </div>
 
           <div className="flex flex-col gap-3">
-            <Label>Descrição *</Label>
+            <Label>Descrição <span className="text-red-500">*</span></Label>
             <Textarea
+              defaultValue={member.description}
               rows={15}
               className="max-w-3xl w-full bg-white"
-              placeholder="Descrição do local"
+              placeholder="Descrição do local *"
               name="description"
               required
             />
@@ -211,6 +271,7 @@ const CadastrarPage = () => {
             <Label>Email</Label>
             <Input
               type="email"
+              defaultValue={member.email}
               className="max-w-2xl w-full bg-white"
               placeholder="Email do local"
               name="email"
@@ -221,6 +282,7 @@ const CadastrarPage = () => {
             <Label>Whatsapp</Label>
             <Input
               type="text"
+              defaultValue={member.whatsapp}
               className="max-w-2xl w-full bg-white"
               placeholder="Whatsapp do local"
               maxLength={11}
@@ -232,6 +294,7 @@ const CadastrarPage = () => {
             <Label>Telefone</Label>
             <Input
               type="text"
+              defaultValue={member.phone}
               className="max-w-2xl w-full bg-white"
               placeholder="Telefone do local"
               maxLength={10}
@@ -243,6 +306,7 @@ const CadastrarPage = () => {
             <Label>Instagram</Label>
             <Input
               type="text"
+              defaultValue={member.instagram}
               className="max-w-2xl w-full bg-white"
               placeholder="instagram.com/meulocal"
               name="instagram"
@@ -253,6 +317,7 @@ const CadastrarPage = () => {
             <Label>Facebook</Label>
             <Input
               type="text"
+              defaultValue={member.facebook}
               className="max-w-2xl w-full bg-white"
               placeholder="Facebook do local"
               name="facebook"
@@ -263,6 +328,7 @@ const CadastrarPage = () => {
             <Label>Website</Label>
             <Input
               type="text"
+              defaultValue={member.website}
               className="max-w-2xl w-full bg-white"
               placeholder="site.com.br"
               name="website"
@@ -278,6 +344,7 @@ const CadastrarPage = () => {
                 <Label>Endereço</Label>
                 <Input
                   type="text"
+                  defaultValue={location?.address || ''}
                   className="max-w-2xl w-full bg-white"
                   placeholder="Endereço completo"
                   name="address"
@@ -288,6 +355,7 @@ const CadastrarPage = () => {
                 <Label>Cidade</Label>
                 <select
                   name="city_id"
+                  defaultValue={location?.city_id || ''}
                   className="max-w-2xl w-full px-3 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--main-color)]"
                 >
                   <option value="">Selecione uma cidade</option>
@@ -303,6 +371,7 @@ const CadastrarPage = () => {
                 <Label>Link do Google Maps</Label>
                 <Input
                   type="url"
+                  defaultValue={location?.google_maps_link || ''}
                   className="max-w-2xl w-full bg-white"
                   placeholder="https://maps.google.com/..."
                   name="google_maps_link"
@@ -312,6 +381,7 @@ const CadastrarPage = () => {
               <div className="flex flex-col gap-3">
                 <Label>Embed do Google Maps</Label>
                 <Textarea
+                  defaultValue={location?.google_maps_embed || ''}
                   rows={4}
                   className="max-w-3xl w-full bg-white"
                   placeholder="Código de incorporação do Google Maps"
@@ -328,12 +398,12 @@ const CadastrarPage = () => {
               Categorias <span className="text-red-500">*</span>
             </Label>
           </div>
-          <ServiceSelectorCreate onChange={handleServicesChange} />
+          <ServiceSelector id={member.id} onChange={handleServicesChange} />
         </div>
 
         <div>
           <div className="flex w-full justify-between items-center mb-4">
-            <Label htmlFor="images">Suas fotos</Label>
+            <Label htmlFor="images">Fotos</Label>
             <Button type="button" onClick={() => fileInputRef.current?.click()}>
               <FaPlus /> Adicionar foto
             </Button>
@@ -343,7 +413,7 @@ const CadastrarPage = () => {
             {images && images.map(image => (
               <div key={image.name} className="relative">
                 <FaX
-                  className="absolute right-0 m-2 p-1 text-white bg-black rounded-full shadow-md hover:cursor-pointer"
+                  className="absolute right-0 m-2 p-1 text-white bg-black rounded-full shadow-md hover:cursor-pointer z-10"
                   onClick={() => handleRemoveImage(image)}
                 />
                 <Image
@@ -351,7 +421,7 @@ const CadastrarPage = () => {
                   alt={image.name}
                   width={500}
                   height={500}
-                  className="object-cover"
+                  className="object-cover rounded-lg"
                 />
               </div>
             ))}
@@ -381,13 +451,13 @@ const CadastrarPage = () => {
           <Button 
             type="button" 
             variant="outline"
-            onClick={() => router.push('/dashboard/meus-locais')}
+            onClick={() => router.push('/admin/locais')}
             disabled={loading}
           >
             Voltar
           </Button>
           <Button type="submit" disabled={loading}>
-            {loading ? 'Cadastrando...' : 'Cadastrar local'}
+            {loading ? 'Salvando...' : 'Salvar alterações'}
           </Button>
         </div>
       </form>
@@ -395,4 +465,5 @@ const CadastrarPage = () => {
   )
 }
 
-export default CadastrarPage
+export default AdminEditarLocalPage
+

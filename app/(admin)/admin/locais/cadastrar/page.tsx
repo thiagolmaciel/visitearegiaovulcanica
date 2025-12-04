@@ -5,45 +5,40 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { FaPlus, FaX } from 'react-icons/fa6'
+import { FaPlus, FaX, FaArrowLeft } from 'react-icons/fa6'
 import Image from 'next/image'
 import { simpleToast } from '@/utils/simple-toast'
 import { slugify } from '@/utils/slugify'
 import { ImageModel } from '@/model/ImageModel'
-import InfoTag from '@/components/dashboard/info-tag'
 import ServiceSelectorCreate from '@/components/dashboard/service-selector-create'
 import { createMember, getMemberByID } from '@/service/memberServices'
 import { Member, MemberWithProfileID } from '@/model/Member'
 import { createImages } from '@/service/imagesServices'
 import { createMemberServices } from '@/service/servicesServices'
-import { getUserId } from '@/service/userServices'
 import { createClient } from '@/lib/supabase/client'
+import Link from 'next/link'
 
-const CadastrarPage = () => {
+const AdminCadastrarLocalPage = () => {
   const router = useRouter()
-  const [userId, setUserId] = useState<string | null>(null);
   const [images, setImages] = useState<ImageModel[]>([])
   const [loading, setLoading] = useState(false)
-  const [selectedServices, setSelectedServices] = useState<string[]>([])  
+  const [selectedServices, setSelectedServices] = useState<string[]>([])
   const [filesToUpload, setFilesToUpload] = useState<File[]>([])
+  const [allUsers, setAllUsers] = useState<any[]>([])
   const [cities, setCities] = useState<any[]>([])
   const fileInputRef = React.useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     const fetchData = async () => {
-      try{
-        const supabase = await createClient();
-        const { data, error } = await supabase.auth.getClaims();
-        if (error || !data?.claims) {
-          router.push("/auth/login");
-        }
-        const id_user = data?.claims?.sub
-        if(!id_user){
-          router.push('/dashboard/meus-locais')
-          simpleToast('Erro ao obter o ID do usuário', 'error')
-          return
-        }
-        setUserId(id_user)
+      try {
+        const supabase = createClient()
+        
+        // Buscar usuários
+        const { data: usersData } = await supabase
+          .from('profiles')
+          .select('*')
+          .order('updated_at', { ascending: false })
+        setAllUsers(usersData || [])
 
         // Buscar cidades
         const { data: citiesData } = await supabase
@@ -51,15 +46,15 @@ const CadastrarPage = () => {
           .select('*')
           .order('name')
         setCities(citiesData || [])
-      }catch(error){
-        console.log(error)
+      } catch (error) {
+        console.error('Erro ao carregar dados:', error)
       }
     }
     fetchData()
-  }, [router])
+  }, [])
 
   function handleServicesChange(services: string[]) {
-    setSelectedServices(services);
+    setSelectedServices(services)
   }
 
   async function handleRemoveImage(image: ImageModel) {
@@ -86,6 +81,7 @@ const CadastrarPage = () => {
     const instagram = form.get('instagram') as string
     const facebook = form.get('facebook') as string
     const website = form.get('website') as string
+    const profile_id = form.get('profile_id') as string
     const slug = slugify(name)
 
     // Location data
@@ -93,29 +89,6 @@ const CadastrarPage = () => {
     const google_maps_link = form.get('google_maps_link') as string
     const google_maps_embed = form.get('google_maps_embed') as string
     const city_id = form.get('city_id') as string
-
-    if(!userId){
-      router.push('/dashboard/meus-locais')
-      simpleToast('Erro ao obter o ID do usuário', 'error')
-      return
-    }
-
-    const profile_id = userId
-
-    const member: MemberWithProfileID = {
-      name,
-      description,
-      email: email || '',
-      whatsapp: whatsapp || '',
-      phone: phone || '',
-      instagram: instagram || '',
-      facebook: facebook || '',
-      website: website || '',
-      slug,
-      image: '',
-      location_id: null,
-      profile_id: profile_id
-    }
 
     if (!name || !description) {
       simpleToast('Nome e descrição são obrigatórios', 'error')
@@ -129,10 +102,26 @@ const CadastrarPage = () => {
       return
     }
 
+    const member: MemberWithProfileID = {
+      name,
+      description,
+      email: email || '',
+      whatsapp: whatsapp || '',
+      phone: phone || '',
+      instagram: instagram || '',
+      facebook: facebook || '',
+      website: website || '',
+      slug,
+      image: '',
+      location_id: null,
+      profile_id: profile_id || ''
+    }
+
     try {
       const supabase = createClient()
 
-      const newMember = await createMember(member) 
+      // Criar member
+      const newMember = await createMember(member)
       await getMemberByID(newMember.id)
 
       // Criar location se dados foram fornecidos
@@ -158,12 +147,12 @@ const CadastrarPage = () => {
         }
       }
 
-      await createImages(newMember.id, filesToUpload);
-      await createMemberServices(newMember.id, selectedServices);
+      await createImages(newMember.id, filesToUpload)
+      await createMemberServices(newMember.id, selectedServices)
       
       await new Promise(resolve => setTimeout(resolve, 1000))
 
-      router.push('/dashboard/meus-locais')
+      router.push('/admin/locais')
       simpleToast('Local cadastrado com sucesso!', 'success')
     } catch (error) {
       console.error('Erro ao cadastrar local:', error)
@@ -175,33 +164,57 @@ const CadastrarPage = () => {
 
   return (
     <div className="flex-1 w-full flex flex-col gap-8">
-      <InfoTag message="Cadastre aqui seu novo local" />
-      <div className="flex flex-col gap-2 items-start">
-        <h2 className="font-bold text-xl">Novo Agriturismo</h2>
-        <p className="text-muted-foreground">
-          Preencha todas as informações do seu local. Todas estas informações serão públicas
-        </p>
+      <div className="flex flex-col gap-4">
+        <Link 
+          href="/admin/locais"
+          className="inline-flex items-center gap-2 text-[var(--main-color)] hover:underline text-sm font-medium mb-2"
+        >
+          <FaArrowLeft />
+          Voltar para locais
+        </Link>
+        <div className="flex flex-col gap-2">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">Cadastrar Novo Local</h1>
+          <p className="text-gray-600 text-lg">
+            Preencha todas as informações do local. Todas estas informações serão públicas
+          </p>
+        </div>
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
         <div className="flex flex-1 flex-col gap-6 flex-grow">
+          {/* Seleção de proprietário */}
           <div className="flex flex-col gap-3">
-            <Label>Nome *</Label>
+            <Label>Proprietário (Usuário)</Label>
+            <select
+              name="profile_id"
+              className="max-w-2xl w-full px-3 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--main-color)]"
+            >
+              <option value="">Sem proprietário</option>
+              {allUsers.map((user) => (
+                <option key={user.id} value={user.id}>
+                  {user.full_name || user.email} ({user.email})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <Label>Nome <span className="text-red-500">*</span></Label>
             <Input
               type="text"
               className="max-w-2xl w-full bg-white"
-              placeholder="Nome do local"
+              placeholder="Nome do local *"
               name="name"
               required
             />
           </div>
 
           <div className="flex flex-col gap-3">
-            <Label>Descrição *</Label>
+            <Label>Descrição <span className="text-red-500">*</span></Label>
             <Textarea
               rows={15}
               className="max-w-3xl w-full bg-white"
-              placeholder="Descrição do local"
+              placeholder="Descrição do local *"
               name="description"
               required
             />
@@ -333,7 +346,7 @@ const CadastrarPage = () => {
 
         <div>
           <div className="flex w-full justify-between items-center mb-4">
-            <Label htmlFor="images">Suas fotos</Label>
+            <Label htmlFor="images">Fotos</Label>
             <Button type="button" onClick={() => fileInputRef.current?.click()}>
               <FaPlus /> Adicionar foto
             </Button>
@@ -343,7 +356,7 @@ const CadastrarPage = () => {
             {images && images.map(image => (
               <div key={image.name} className="relative">
                 <FaX
-                  className="absolute right-0 m-2 p-1 text-white bg-black rounded-full shadow-md hover:cursor-pointer"
+                  className="absolute right-0 m-2 p-1 text-white bg-black rounded-full shadow-md hover:cursor-pointer z-10"
                   onClick={() => handleRemoveImage(image)}
                 />
                 <Image
@@ -351,7 +364,7 @@ const CadastrarPage = () => {
                   alt={image.name}
                   width={500}
                   height={500}
-                  className="object-cover"
+                  className="object-cover rounded-lg"
                 />
               </div>
             ))}
@@ -381,7 +394,7 @@ const CadastrarPage = () => {
           <Button 
             type="button" 
             variant="outline"
-            onClick={() => router.push('/dashboard/meus-locais')}
+            onClick={() => router.push('/admin/locais')}
             disabled={loading}
           >
             Voltar
@@ -395,4 +408,5 @@ const CadastrarPage = () => {
   )
 }
 
-export default CadastrarPage
+export default AdminCadastrarLocalPage
+
