@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { FaMapMarkerAlt, FaEye, FaExchangeAlt, FaUnlink } from 'react-icons/fa'
+import { FaMapMarkerAlt, FaEye, FaExchangeAlt, FaUnlink, FaPlus } from 'react-icons/fa'
 import Link from 'next/link'
 import Image from 'next/image'
 import { simpleToast } from '@/utils/simple-toast'
@@ -79,8 +79,17 @@ export default function UserLocaisManager({ userId, userMembers, allUsers }: Use
     <div className="flex flex-col gap-6">
         <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-gray-900">Locais do Usuário</h2>
-        <div className="text-sm text-gray-600">
-          {userMembers.length} {userMembers.length === 1 ? 'local' : 'locais'}
+        <div className="flex items-center gap-4">
+          <div className="text-sm text-gray-600">
+            {userMembers.length} {userMembers.length === 1 ? 'local' : 'locais'}
+          </div>
+          <Link
+            href={`/admin/locais/cadastrar?userId=${userId}`}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--main-color)] hover:bg-[var(--main-color)]/90 text-white rounded-lg text-sm font-medium transition-colors"
+          >
+            <FaPlus />
+            Criar Local
+          </Link>
         </div>
       </div>
 

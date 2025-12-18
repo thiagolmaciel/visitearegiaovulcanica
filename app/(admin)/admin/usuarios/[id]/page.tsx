@@ -1,11 +1,13 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { createClient as createAdminClient } from "@supabase/supabase-js";
 import { isAdmin, getAllUsers } from "@/service/adminServices";
 import { getProfile } from "@/service/profileServices";
 import { getMembersByProfileID } from "@/service/profileServices";
-import { FaUsers, FaArrowLeft, FaMapMarkerAlt } from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
 import Link from "next/link";
 import UserLocaisManager from "@/components/admin/user-locais-manager";
+import EditUserInfo from "@/components/admin/edit-user-info";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -60,6 +62,34 @@ export default async function EditUserPage({ params }: PageProps) {
     redirect("/admin/usuarios");
   }
 
+  // Get email from auth.users (not from profiles table)
+  let userEmail = '';
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  
+  if (serviceRoleKey && supabaseUrl) {
+    try {
+      const adminClient = createAdminClient(supabaseUrl, serviceRoleKey, {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false,
+        },
+      });
+      
+      const { data: authUser, error: authError } = await adminClient.auth.admin.getUserById(id);
+      if (!authError && authUser?.user) {
+        userEmail = authUser.user.email || '';
+      }
+    } catch (error) {
+      console.error('Erro ao buscar email do usuário:', error);
+    }
+  }
+  
+  // Fallback: try to get from profile if available (for backwards compatibility)
+  if (!userEmail && (userProfile as any).email) {
+    userEmail = (userProfile as any).email;
+  }
+
   // Fetch images for each member (same pattern as admin/locais/page.tsx)
   const membersWithImages = await Promise.all(
     userMembers.map(async (member: any) => {
@@ -91,28 +121,23 @@ export default async function EditUserPage({ params }: PageProps) {
         </Link>
         <div className="flex flex-col gap-2">
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
-            Editar Usuário: <span className="text-[var(--main-color)]">{userProfile.full_name || userProfile.email}</span>
+            Usuário: <span className="text-[var(--main-color)]">{userProfile.full_name || userEmail}</span>
           </h1>
           <p className="text-gray-600 text-lg">Gerencie as informações e locais deste usuário</p>
         </div>
       </div>
 
-      {/* User Info Card */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <div className="flex items-start gap-4">
-          <div className="w-16 h-16 rounded-full bg-[var(--main-color)]/10 flex items-center justify-center flex-shrink-0">
-            <FaUsers className="text-[var(--main-color)] text-2xl" />
-          </div>
-          <div className="flex-1">
-            <h2 className="text-xl font-bold text-gray-900 mb-2">
-              {userProfile.full_name || 'Sem nome'}
-            </h2>
-            <div className="space-y-1 text-sm text-gray-600">
-              <div><strong>Email:</strong> {userProfile.email || 'N/A'}</div>
-              <div><strong>ID:</strong> <span className="font-mono text-xs">{userProfile.id}</span></div>
-              <div><strong>Total de Locais:</strong> {userMembers.length}</div>
-            </div>
-          </div>
+      {/* User Info Card - Editable */}
+      <EditUserInfo 
+        userId={id}
+        initialEmail={userEmail}
+        initialFullName={userProfile.full_name}
+      />
+
+      {/* User Stats */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+        <div className="text-sm text-gray-600">
+          <strong>Total de Locais:</strong> {userMembers.length}
         </div>
       </div>
 

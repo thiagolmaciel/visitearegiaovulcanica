@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -20,12 +20,14 @@ import Link from 'next/link'
 
 const AdminCadastrarLocalPage = () => {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [images, setImages] = useState<ImageModel[]>([])
   const [loading, setLoading] = useState(false)
   const [selectedServices, setSelectedServices] = useState<string[]>([])
   const [filesToUpload, setFilesToUpload] = useState<File[]>([])
   const [allUsers, setAllUsers] = useState<any[]>([])
   const [cities, setCities] = useState<any[]>([])
+  const [selectedUserId, setSelectedUserId] = useState<string>('')
   const fileInputRef = React.useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -46,12 +48,22 @@ const AdminCadastrarLocalPage = () => {
           .select('*')
           .order('name')
         setCities(citiesData || [])
+
+        // Pre-select user if userId is provided in query params
+        const userId = searchParams.get('userId')
+        if (userId && usersData) {
+          // Verify the user exists in the list
+          const userExists = usersData.some(user => user.id === userId)
+          if (userExists) {
+            setSelectedUserId(userId)
+          }
+        }
       } catch (error) {
         console.error('Erro ao carregar dados:', error)
       }
     }
     fetchData()
-  }, [])
+  }, [searchParams])
 
   function handleServicesChange(services: string[]) {
     setSelectedServices(services)
@@ -187,6 +199,8 @@ const AdminCadastrarLocalPage = () => {
             <Label>Proprietário (Usuário)</Label>
             <select
               name="profile_id"
+              value={selectedUserId}
+              onChange={(e) => setSelectedUserId(e.target.value)}
               className="max-w-2xl w-full px-3 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--main-color)]"
             >
               <option value="">Sem proprietário</option>
