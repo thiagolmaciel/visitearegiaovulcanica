@@ -20,6 +20,20 @@ const FilteredMembersSection = ({ services, allMembers, pdcMembers, andMembers }
   const [filteredAndMembers, setFilteredAndMembers] = useState<Member[] | null>(andMembers);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Filter out services: doces, queijaria, turismo (but not enoturismo), hipismo
+  const excludedServiceNames = ['doces', 'queijaria', 'hipismo'];
+  const filteredServices = services.filter(service => {
+    const serviceNameLower = service.name.toLowerCase();
+    // Exclude exact matches or specific patterns, but allow enoturismo
+    if (serviceNameLower === 'turismo' || 
+        (serviceNameLower.includes('turismo') && !serviceNameLower.includes('enoturismo'))) {
+      return false;
+    }
+    return !excludedServiceNames.some(excluded => 
+      serviceNameLower.includes(excluded.toLowerCase())
+    );
+  });
+
   useEffect(() => {
     const filterMembers = async () => {
       if (!selectedServiceId) {
@@ -69,7 +83,7 @@ const FilteredMembersSection = ({ services, allMembers, pdcMembers, andMembers }
       <div role="category-selector" className="flex w-full">
         <ul className="flex items-center justify-center w-full">
           <ServiceTagCarousel 
-            services={services}
+            services={filteredServices}
             onServiceSelect={setSelectedServiceId}
             selectedServiceId={selectedServiceId}
             navigateToSearch={true}

@@ -7,10 +7,10 @@ type CategoryItemProps = {
 const CategoryItem = ({ icon, name, isSelected = false }: CategoryItemProps) => {
     const Icon = icon;
   return (
-    <li className={`flex items-center justify-center gap-1 text-md font-semibold py-2 px-3 rounded-full shadow-md hover:-translate-y-0.5 transition-all ease-in-out duration-100 cursor-pointer ${
+    <li className={`flex items-center justify-center gap-1 text-md py-2 px-3 rounded-full shadow-lg transition-colors ease-in-out duration-100 cursor-pointer ${
       isSelected 
-        ? 'bg-[var(--main-color)] text-white' 
-        : 'text-[#353535] bg-[#eeeeee] active:bg-[#f7f7f7]'
+        ? 'bg-[var(--main-color)]/80 text-white hover:bg-[var(--main-color)]/70' 
+        : 'bg-[var(--main-color)] text-white hover:bg-[var(--main-color)]/90'
     }`}>
       <Icon />
       <p className="">{name}</p>

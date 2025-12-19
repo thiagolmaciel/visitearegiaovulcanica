@@ -59,10 +59,10 @@ const Carousel = ({ title, members }: CarouselProps) => {
           <button 
             onClick={scrollPrev} 
             disabled={!prevBtnEnabled}
-            className={`embla__prev flex items-center justify-center gap-1 text-md font-semibold transition-all ease-in-out duration-100 ${
+            className={`embla__prev flex items-center justify-center gap-1 text-md transition-colors ease-in-out duration-100 p-2 rounded-full shadow-md ${
               prevBtnEnabled 
-                ? 'text-[#cacaca] hover:text-[#b9b9b9] cursor-pointer' 
-                : 'text-[#e5e5e5] cursor-not-allowed'
+                ? 'bg-gray-400 text-white hover:bg-gray-500 cursor-pointer' 
+                : 'bg-gray-300 text-white cursor-not-allowed'
             }`}
           >
             <FaCircleChevronLeft />
@@ -70,10 +70,10 @@ const Carousel = ({ title, members }: CarouselProps) => {
           <button 
             onClick={scrollNext} 
             disabled={!nextBtnEnabled}
-            className={`embla__next flex items-center justify-center gap-1 text-md font-semibold transition-all ease-in-out duration-100 ${
+            className={`embla__next flex items-center justify-center gap-1 text-md transition-colors ease-in-out duration-100 p-2 rounded-full shadow-md ${
               nextBtnEnabled 
-                ? 'text-[#cacaca] hover:text-[#b9b9b9] cursor-pointer' 
-                : 'text-[#e5e5e5] cursor-not-allowed'
+                ? 'bg-gray-400 text-white hover:bg-gray-500 cursor-pointer' 
+                : 'bg-gray-300 text-white cursor-not-allowed'
             }`}
           >
             <FaCircleChevronRight />

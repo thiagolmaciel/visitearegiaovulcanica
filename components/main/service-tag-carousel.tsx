@@ -3,7 +3,7 @@ import useEmblaCarousel from 'embla-carousel-react';
 import React, { useCallback } from 'react';
 import { Service } from '@/model/Service';
 import iconsMap from '@/lib/iconsMap';
-import { FaCircleChevronLeft, FaCircleChevronRight } from 'react-icons/fa6';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa6';
 import CategoryItem from './category-item';
 import { useRouter } from 'next/navigation';
 
@@ -47,13 +47,13 @@ const ServiceTagCarousel = ({ services, onServiceSelect, selectedServiceId, navi
     <div className="flex items-center w-full gap-4">
       <button
         onClick={scrollPrev}
-        className="text-[#cacaca] bg-[#eeeeee] p-2 rounded-full shadow-md hover:-translate-y-0.5 transition active:bg-[#f7f7f7]"
+        className="bg-[var(--main-color)] text-white w-10 h-10 flex items-center justify-center rounded-full shadow-lg hover:bg-[var(--main-color)]/90 hover:-translate-y-0.5 transition"
       >
-        <FaCircleChevronLeft />
+        <FaChevronLeft className="w-4 h-4" />
       </button>
 
       <div className="flex-1 overflow-hidden h-13" ref={emblaRef}>
-        <div className="embla__container flex items-center h-full gap-2">
+        <div className="embla__container flex items-center h-full gap-4">
           {services.map((service) => {
             const Icon = iconsMap[service.icon as keyof typeof iconsMap];
             const isSelected = selectedServiceId === service.id;
@@ -72,9 +72,9 @@ const ServiceTagCarousel = ({ services, onServiceSelect, selectedServiceId, navi
 
       <button
         onClick={scrollNext}
-        className="text-[#cacaca] bg-[#eeeeee] p-2 rounded-full shadow-md hover:-translate-y-0.5 transition active:bg-[#f7f7f7]"
+        className="bg-[var(--main-color)] text-white w-10 h-10 flex items-center justify-center rounded-full shadow-lg hover:bg-[var(--main-color)]/90 hover:-translate-y-0.5 transition"
       >
-        <FaCircleChevronRight />
+        <FaChevronRight className="w-4 h-4" />
       </button>
     </div>
   );
