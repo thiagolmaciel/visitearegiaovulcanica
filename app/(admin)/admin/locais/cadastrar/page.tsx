@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -18,7 +18,7 @@ import { createMemberServices } from '@/service/servicesServices'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 
-const AdminCadastrarLocalPage = () => {
+const AdminCadastrarLocalPageContent = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [images, setImages] = useState<ImageModel[]>([])
@@ -419,6 +419,23 @@ const AdminCadastrarLocalPage = () => {
         </div>
       </form>
     </div>
+  )
+}
+
+const AdminCadastrarLocalPage = () => {
+  return (
+    <Suspense fallback={
+      <div className="flex-1 w-full flex flex-col gap-8">
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-2">
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">Cadastrar Novo Local</h1>
+            <p className="text-gray-600 text-lg">Carregando...</p>
+          </div>
+        </div>
+      </div>
+    }>
+      <AdminCadastrarLocalPageContent />
+    </Suspense>
   )
 }
 

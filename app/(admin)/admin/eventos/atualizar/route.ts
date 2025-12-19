@@ -55,7 +55,7 @@ export async function PUT(request: NextRequest) {
     // Verificar se o evento existe
     const { data: existingEvent, error: fetchError } = await supabase
       .from("events")
-      .select("id")
+      .select("id, start_date, end_date")
       .eq("id", eventId)
       .single();
 
@@ -142,6 +142,7 @@ export async function PUT(request: NextRequest) {
     );
   }
 }
+
 
 
 

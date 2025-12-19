@@ -3,11 +3,11 @@ import FilterComponent from '@/components/main/filter-component';
 import SuggestionItem from '@/components/main/suggestion-item';
 import { fetchAllMembers } from '@/service/memberServices';
 import { searchMembers } from '@/service/searchServices';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import { useSearchParams } from 'next/navigation';
 
-const SearchPage = () => {
+const SearchPageContent = () => {
   const searchParams = useSearchParams();
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [searchResult, setSearchResult] = useState<any[]>([]);
@@ -189,6 +189,20 @@ const SearchPage = () => {
         />
       </div>
     </div>
+  );
+};
+
+const SearchPage = () => {
+  return (
+    <Suspense fallback={
+      <div className='flex flex-col sm:flex-row w-[100vw] sm:w-[95rem] min-h-[26rem] sm:min-h-[50rem] gap-4 my-3 sm:my-5'>
+        <div className='flex flex-col flex-1 sm:basis-3/4 gap-2'>
+          <div className='text-center py-8'>Carregando...</div>
+        </div>
+      </div>
+    }>
+      <SearchPageContent />
+    </Suspense>
   );
 };
 
