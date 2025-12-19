@@ -67,7 +67,7 @@ const SobrePage = () => {
           </Link>
 
           {/* Destinos */}
-          <Link href="/search">
+          <Link href="/busca">
             <Card className="shadow-lg border-0 bg-white hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer">
               <CardContent className="p-6 text-center">
                 <div className="w-12 h-12 rounded-full bg-[var(--main-color)] flex items-center justify-center mx-auto mb-4">

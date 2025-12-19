@@ -1,10 +1,81 @@
+"use client"
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { Textarea } from '@/components/ui/textarea'
 import Link from 'next/link'
-import React from 'react'
+import React, { useState } from 'react'
+import { simpleToast } from '@/utils/simple-toast'
 
 const ContatoPage = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  })
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    
+    // Validate form
+    if (!formData.name.trim() || !formData.email.trim() || !formData.subject.trim() || !formData.message.trim()) {
+      simpleToast('Por favor, preencha todos os campos', 'error')
+      return
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(formData.email)) {
+      simpleToast('Por favor, insira um email válido', 'error')
+      return
+    }
+
+    setIsLoading(true)
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Erro ao enviar mensagem')
+      }
+
+      // Success
+      simpleToast(data.message || 'Mensagem enviada com sucesso!', 'success')
+      
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
+      })
+    } catch (error: any) {
+      console.error('Error submitting form:', error)
+      simpleToast(error.message || 'Erro ao enviar mensagem. Tente novamente mais tarde.', 'error')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   return (
     <div className="flex flex-col items-center w-full min-h-screen">
       <div className="w-full max-w-[100vw] sm:max-w-[95rem] mx-auto px-4 sm:px-16 py-8 sm:py-12 pb-16 sm:pb-20">
@@ -29,22 +100,32 @@ const ContatoPage = () => {
               <CardTitle className="text-2xl font-bold text-[var(--main-color)] text-center">Envie uma Mensagem</CardTitle>
             </CardHeader>
             <CardContent className="p-8">
-              <form className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Nome</label>
                     <Input 
                       type="text" 
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
                       placeholder="Seu nome completo"
                       className="w-full"
+                      required
+                      disabled={isLoading}
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
                     <Input 
                       type="email" 
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
                       placeholder="seu@email.com"
                       className="w-full"
+                      required
+                      disabled={isLoading}
                     />
                   </div>
                 </div>
@@ -53,24 +134,35 @@ const ContatoPage = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Assunto</label>
                   <Input 
                     type="text" 
+                    name="subject"
+                    value={formData.subject}
+                    onChange={handleChange}
                     placeholder="Assunto da mensagem"
                     className="w-full"
+                    required
+                    disabled={isLoading}
                   />
                 </div>
                 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Mensagem</label>
-                  <textarea 
-                    className="w-full h-32 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--main-color)] focus:border-transparent resize-none"
+                  <Textarea 
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    className="w-full h-32"
                     placeholder="Digite sua mensagem aqui..."
+                    required
+                    disabled={isLoading}
                   />
                 </div>
                 
                 <Button 
                   type="submit" 
                   className="w-full bg-[var(--main-color)] hover:bg-[var(--main-color)]/90 text-white font-semibold py-3"
+                  disabled={isLoading}
                 >
-                  Enviar Mensagem
+                  {isLoading ? 'Enviando...' : 'Enviar Mensagem'}
                 </Button>
               </form>
             </CardContent>
@@ -80,9 +172,37 @@ const ContatoPage = () => {
           <div className="space-y-6">
             <Card className="shadow-xl border-0 bg-white">
               <CardContent className="p-8">
-                <h3 className="text-xl font-bold text-[var(--main-color)] mb-6">Informações de Contato</h3>
+                <h3 className="text-xl font-bold text-[var(--main-color)] mb-6">Endereço</h3>
                 
                 <div className="space-y-4">
+                  <div className="mb-4">
+                    <p className="text-gray-700 font-medium mb-3">Venha nos visitar:</p>
+                  </div>
+                  
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-full bg-[var(--main-color)] flex items-center justify-center flex-shrink-0">
+                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-gray-600">Avenida João Pinheiro, 757 - Centro<br />Poços de Caldas, MG - Brasil</p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="shadow-xl border-0 bg-white">
+              <CardContent className="p-8">
+                <h3 className="text-xl font-bold text-[var(--main-color)] mb-6">Contato</h3>
+                
+                <div className="space-y-4">
+                  <div className="mb-4">
+                    <p className="text-gray-700 font-medium mb-3">Saiba mais, entre em contato conosco:</p>
+                  </div>
+                  
                   <div className="flex items-start gap-3">
                     <div className="w-10 h-10 rounded-full bg-[var(--main-color)] flex items-center justify-center flex-shrink-0">
                       <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -91,7 +211,7 @@ const ContatoPage = () => {
                     </div>
                     <div>
                       <h4 className="font-semibold text-[var(--main-color)]">Email</h4>
-                      <p className="text-gray-600">contato@visiteregiavulcanica.com.br</p>
+                      <p className="text-gray-600">contato@regiaovulcanica.org.br</p>
                     </div>
                   </div>
 
@@ -103,20 +223,7 @@ const ContatoPage = () => {
                     </div>
                     <div>
                       <h4 className="font-semibold text-[var(--main-color)]">Telefone</h4>
-                      <p className="text-gray-600">(35) 99999-9999</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-full bg-[var(--main-color)] flex items-center justify-center flex-shrink-0">
-                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-[var(--main-color)]">Endereço</h4>
-                      <p className="text-gray-600">IFSP - Campus São João da Boa Vista<br />São João da Boa Vista, SP</p>
+                      <p className="text-gray-600">+55 (35) 99819 6519</p>
                     </div>
                   </div>
                 </div>

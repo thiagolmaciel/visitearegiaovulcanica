@@ -47,14 +47,46 @@ export async function updateSession(request: NextRequest) {
   const { data } = await supabase.auth.getClaims();
   const user = data?.claims;
 
+  // Check maintenance mode (only for public routes, not admin/auth routes)
+  const isPublicRoute = request.nextUrl.pathname === "/" ||
+    request.nextUrl.pathname.startsWith("/busca") ||
+    request.nextUrl.pathname.startsWith("/afiliados") ||
+    request.nextUrl.pathname.startsWith("/sobre");
+  
+  const isAdminRoute = request.nextUrl.pathname.startsWith("/admin");
+  const isAuthRoute = request.nextUrl.pathname.startsWith("/auth") || 
+    request.nextUrl.pathname.startsWith("/login");
+  const isMaintenancePage = request.nextUrl.pathname.startsWith("/manutencao");
+
+  if (isPublicRoute && !isAdminRoute && !isAuthRoute && !isMaintenancePage) {
+    try {
+      // Verificar modo de manutenção diretamente no middleware
+      const { data: settings } = await supabase
+        .from('system_settings')
+        .select('*')
+        .eq('key', 'main')
+        .single();
+
+      if (settings?.value?.maintenanceMode) {
+        const url = request.nextUrl.clone();
+        url.pathname = "/manutencao";
+        return NextResponse.redirect(url);
+      }
+    } catch (error) {
+      // Se a tabela não existir ou houver erro, continuar normalmente
+      // Não logar erro para não poluir logs
+    }
+  }
+
   if (
     request.nextUrl.pathname !== "/" &&
     !user &&
     !request.nextUrl.pathname.startsWith("/login") &&
-    !request.nextUrl.pathname.startsWith("/search") &&
+    !request.nextUrl.pathname.startsWith("/busca") &&
     !request.nextUrl.pathname.startsWith("/afiliados") &&
     !request.nextUrl.pathname.startsWith("/sobre") &&
-    !request.nextUrl.pathname.startsWith("/auth")
+    !request.nextUrl.pathname.startsWith("/auth") &&
+    !request.nextUrl.pathname.startsWith("/manutencao")
   ) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone();

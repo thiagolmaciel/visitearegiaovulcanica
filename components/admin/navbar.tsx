@@ -8,7 +8,7 @@ import { MdMoreVert } from 'react-icons/md'
 import { usePathname, useRouter } from 'next/navigation'
 import { simpleToast } from '@/utils/simple-toast'
 import { handleLogout } from '@/app/(auth)/auth/logout/logout'
-import { FaUsers, FaMapMarkerAlt, FaCog, FaHome, FaChartBar } from 'react-icons/fa'
+import { FaUsers, FaMapMarkerAlt, FaCog, FaHome, FaChartBar, FaCalendarAlt } from 'react-icons/fa'
 
 const Navbar = () => {
   const pathname = usePathname()
@@ -24,6 +24,7 @@ const Navbar = () => {
     { href: '/admin', label: 'Home', icon: FaHome },
     { href: '/admin/usuarios', label: 'Usuários', icon: FaUsers },
     { href: '/admin/locais', label: 'Locais', icon: FaMapMarkerAlt },
+    { href: '/admin/eventos', label: 'Eventos', icon: FaCalendarAlt },
     { href: '/admin/estatisticas', label: 'Estatísticas', icon: FaChartBar },
     { href: '/admin/configuracoes', label: 'Configurações', icon: FaCog },
   ]

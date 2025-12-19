@@ -17,7 +17,7 @@ const SearchForm = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!query.trim()) return;
-    router.push(`/search?query=${encodeURIComponent(query.trim())}`);
+    router.push(`/busca?query=${encodeURIComponent(query.trim())}`);
   };
 
   return (

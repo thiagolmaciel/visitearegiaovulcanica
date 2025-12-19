@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { isAdmin, getAdminStats } from "@/service/adminServices";
+import { isAdmin, getAdminStats, getGrowthData } from "@/service/adminServices";
 import { FaChartBar, FaUsers, FaMapMarkerAlt, FaArrowUp } from "react-icons/fa";
+import GrowthChart from "@/components/admin/growth-chart";
 
 export default async function AdminEstatisticasPage() {
   const supabase = await createClient();
@@ -19,6 +20,7 @@ export default async function AdminEstatisticasPage() {
   }
   
   const stats = await getAdminStats();
+  const growthData = await getGrowthData();
 
   return (
     <div className="flex-1 w-full flex flex-col gap-8">
@@ -86,25 +88,19 @@ export default async function AdminEstatisticasPage() {
         </div>
       </div>
 
-      {/* Charts Placeholder */}
+      {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-4">Crescimento de Usuários</h2>
-          <div className="h-64 flex items-center justify-center text-gray-400 border-2 border-dashed border-gray-200 rounded-lg">
-            <div className="text-center">
-              <FaChartBar className="text-4xl mx-auto mb-2" />
-              <p>Gráfico será implementado aqui</p>
-            </div>
+          <div className="h-64">
+            <GrowthChart data={growthData} type="users" />
           </div>
         </div>
 
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-4">Crescimento de Locais</h2>
-          <div className="h-64 flex items-center justify-center text-gray-400 border-2 border-dashed border-gray-200 rounded-lg">
-            <div className="text-center">
-              <FaChartBar className="text-4xl mx-auto mb-2" />
-              <p>Gráfico será implementado aqui</p>
-            </div>
+          <div className="h-64">
+            <GrowthChart data={growthData} type="members" />
           </div>
         </div>
       </div>

@@ -4,10 +4,12 @@ import { Metadata } from "next";
 import { fetchAllMembers, fetchMembersByCityId } from "@/service/memberServices";
 import { getAllServices } from "@/service/servicesServices";
 import { getImagesByID } from "@/service/imagesServices";
+import { getActiveEvents } from "@/service/eventServices";
 import { Service } from "@/model/Service";
 import MainPageSearch from "@/components/main/main-page-search";
 import LoadingPage from "@/components/main/loading-page";
 import FilteredMembersSection from "@/components/main/filtered-members-section";
+import EventsCarousel from "@/components/main/events-carousel";
 import HashFragmentHandler from "@/components/auth/hash-fragment-handler";
 
 export default async function Home() {
@@ -15,6 +17,7 @@ export default async function Home() {
   const pdcMembers = await fetchMembersByCityId('600f448c-da0f-49cf-8190-994630aab331');
   const andMembers = await fetchMembersByCityId('f1f58689-b3b2-461b-9da0-300d6d72b94b');
   const services: Service[] = await getAllServices() || [];
+  const activeEvents = await getActiveEvents();
 
   // Get images from the first few members for preloading
   const preloadImageUrls: string[] = [];
@@ -53,7 +56,14 @@ export default async function Home() {
           <MainPageSearch />
         </div>
         
-        {/* Main Content */}
+        {/* Events Section - Separada */}
+        {activeEvents.length > 0 && (
+          <div className="flex flex-col items-center justify-start w-full max-w-[100vw] sm:max-w-[90vw] lg:max-w-[90vw] lg:w-[95rem] mx-auto lg:mx-2 bg-[#fff] rounded-2xl sm:-translate-y-[5rem] z-[999] shadow-lg overflow-clip mb-8">
+            <EventsCarousel events={activeEvents} title="Próximos Eventos" />
+          </div>
+        )}
+        
+        {/* Main Content - Locais */}
         <div className="flex flex-col items-center justify-start w-full max-w-[100vw] sm:max-w-[90vw] lg:max-w-[90vw] lg:w-[95rem] mx-auto lg:mx-2  px-4 sm:px-16 py-4 sm:py-8 gap-4 min-h-[28rem] bg-[#fff] rounded-2xl sm:-translate-y-[5rem] z-[999] shadow-lg overflow-clip">
           <FilteredMembersSection 
             services={services}
@@ -61,7 +71,7 @@ export default async function Home() {
             pdcMembers={pdcMembers}
             andMembers={andMembers}
           />
-          <div className="mt-3 mb-2"><a href="/search?query=*"><button className="btn-more shadow-lg">Explore mais destinos</button></a></div>
+          <div className="mt-3 mb-2"><a href="/busca?query=*"><button className="btn-more shadow-lg">Explore mais destinos</button></a></div>
         </div>
       </div>
     </>

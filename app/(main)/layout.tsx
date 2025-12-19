@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Footer from "@/components/main/footer";
 import Navbar from "@/components/main/navbar";
+import { Toaster } from "@/components/ui/sonner";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -31,6 +32,7 @@ export default function RootLayout({
         {children}
         </div>
         <Footer />
+        <Toaster />
       </body>
     </html>
   );

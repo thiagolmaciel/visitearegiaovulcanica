@@ -13,6 +13,14 @@ const nextConfig = {
         hostname: 'kdwpecddwtaczhoorylb.supabase.co',
         pathname: '/storage/v1/object/sign/**', // (opcional) imagens privadas
       },
+      {
+        protocol: 'https',
+        hostname: 'www.prefeitura.sp.gov.br',
+      },
+      {
+        protocol: 'http',
+        hostname: 'www.prefeitura.sp.gov.br',
+      },
     ],
   },
   experimental: {

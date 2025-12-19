@@ -11,8 +11,7 @@ const Footer = () => {
                         <ul className="flex flex-col gap-1">
                             <li><Link href="/sobre/conheca-a-iniciativa">Conheça a iniciativa</Link></li>
                             <li><Link href="/sobre">Sobre a plataforma</Link></li>
-                            <li><a href="#">Apoie comunidades locais</a></li>
-                            <li><a href="#">Notícias e atualizações</a></li>
+                            <li><a href="https://regiaovulcanica.org.br/noticias.php" target="_blank" rel="noopener noreferrer">Notícias e atualizações</a></li>
                         </ul>
                     </div>
                     <div role="middle-side">
@@ -20,15 +19,15 @@ const Footer = () => {
                         <ul className="flex flex-col gap-1">
                             <li><Link href="/sobre/contato">Contato</Link></li>
                             <li><Link href="/sobre/anuncie-seu-agriturismo">Anuncie seu agriturismo</Link></li>
-                            <li><a href="#">Outros afiliados comerciais</a></li>
+                            <li><a href="https://regiaovulcanica.org.br/associados.php" target="_blank" rel="noopener noreferrer">Outros afiliados comerciais</a></li>
                         </ul>
                     </div>
                     <div role="right-side">
                         <h3 className="font-bold mb-2">Destinos</h3>
                         <ul className="flex flex-col gap-1">
-                            <li><Link href="/search?query=*&city=Poços de Caldas">Poços de Caldas</Link></li>
-                            <li><Link href="/search?query=*&city=Andradas">Andradas</Link></li>
-                            <li><Link href="/search">Todos os locais</Link></li>
+                            <li><Link href="/busca?query=*&city=Poços de Caldas">Poços de Caldas</Link></li>
+                            <li><Link href="/busca?query=*&city=Andradas">Andradas</Link></li>
+                            <li><Link href="/busca">Todos os locais</Link></li>
                         </ul>
                     </div>
                 </div>
@@ -37,9 +36,9 @@ const Footer = () => {
                         <ul className="flex flex-col sm:flex-row gap-2 sm:gap-4 text-sm sm:text-base">
                             <li>© 2025, Região Vulcânica</li>
                             <li className="hidden sm:inline">·</li>
-                            <li><a href="#" className="break-all sm:break-normal">contato@regiaovulcanica.org.br</a></li>
+                            <li><a href="mailto:contato@regiaovulcanica.org.br" className="break-all sm:break-normal">contato@regiaovulcanica.org.br</a></li>
                             <li className="hidden sm:inline">·</li>
-                            <li><a href="#">+55 (35) 99819 6519</a></li>
+                            <li><a href="tel:+5535998196519">+55 (35) 99819 6519</a></li>
                         </ul>
                     </div>
                     <div role='right-side' className="flex items-center justify-center sm:justify-end flex-row gap-4">

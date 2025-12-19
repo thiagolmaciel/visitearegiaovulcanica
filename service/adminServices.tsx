@@ -134,4 +134,44 @@ export async function getAdminStats() {
   };
 }
 
+/**
+ * Get historical growth data for charts (last 30 days)
+ */
+export async function getGrowthData() {
+  const supabase = await createClient();
+  
+  const data: { date: string; users: number; members: number }[] = [];
+  const today = new Date();
+  
+  // Get data for last 30 days
+  for (let i = 29; i >= 0; i--) {
+    const date = new Date(today);
+    date.setDate(date.getDate() - i);
+    date.setHours(0, 0, 0, 0);
+    
+    const nextDay = new Date(date);
+    nextDay.setDate(nextDay.getDate() + 1);
+    
+    // Count users created/updated up to this date
+    const { count: usersCount } = await supabase
+      .from('profiles')
+      .select('*', { count: 'exact', head: true })
+      .lte('updated_at', nextDay.toISOString());
+    
+    // Count members created up to this date
+    const { count: membersCount } = await supabase
+      .from('members')
+      .select('*', { count: 'exact', head: true })
+      .lte('created_at', nextDay.toISOString());
+    
+    data.push({
+      date: date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
+      users: usersCount || 0,
+      members: membersCount || 0,
+    });
+  }
+  
+  return data;
+}
+
 

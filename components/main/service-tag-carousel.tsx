@@ -32,7 +32,7 @@ const ServiceTagCarousel = ({ services, onServiceSelect, selectedServiceId, navi
     if (navigateToSearch) {
       // Navigate to search page with service filter
       const serviceName = encodeURIComponent(service.name);
-      router.push(`/search?service=${serviceName}`);
+      router.push(`/busca?service=${serviceName}`);
     } else if (onServiceSelect) {
       // Toggle: if same service is clicked, deselect it
       if (selectedServiceId === service.id) {
