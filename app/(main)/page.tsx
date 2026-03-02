@@ -58,7 +58,7 @@ export default async function Home() {
         
         {/* Events Section - Separada */}
         {activeEvents.length > 0 && (
-          <div className="flex flex-col items-center justify-start w-full max-w-[100vw] sm:max-w-[90vw] lg:max-w-[90vw] lg:w-[95rem] mx-auto lg:mx-2 bg-[#fff] rounded-2xl sm:-translate-y-[5rem] z-[999] shadow-lg overflow-clip mb-8">
+          <div className="flex flex-col items-center justify-start w-full max-w-[100vw] sm:max-w-[90vw] lg:max-w-[90vw] lg:w-[95rem] mx-auto lg:mx-2 bg-[#fff] rounded-2xl sm:rounded-2xl sm:-translate-y-[5rem] z-[999] shadow-lg sm:shadow-xl overflow-visible sm:overflow-clip mb-4 sm:mb-8 py-4 sm:py-0">
             <EventsCarousel events={activeEvents} title="Próximos Eventos" />
           </div>
         )}

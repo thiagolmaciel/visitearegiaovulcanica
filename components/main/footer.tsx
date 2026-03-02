@@ -33,34 +33,34 @@ const Footer = () => {
                             </ul>
                         </div>
                     </div>
-                    <div role="logos-side" className="flex items-center gap-4 sm:gap-6">
+                    <div role="logos-side" className="flex items-center justify-center sm:justify-end flex-wrap gap-4 sm:gap-6">
                         <Image
                             src="/logo_instituto_federal.png"
                             alt="Instituto Federal"
                             width={120}
                             height={60}
-                            className="h-auto object-contain opacity-90 hover:opacity-100 transition-opacity"
+                            className="h-auto w-20 sm:w-[120px] object-contain opacity-90 hover:opacity-100 transition-opacity"
                         />
                         <Image
                             src="/logo_vulcanica_branco.png"
                             alt="Região Vulcânica"
                             width={120}
                             height={60}
-                            className="h-auto object-contain opacity-90 hover:opacity-100 transition-opacity"
+                            className="h-auto w-20 sm:w-[120px] object-contain opacity-90 hover:opacity-100 transition-opacity"
                         />
                         <Image
                             src="/ministerio_desenvolvimento_agrario.png"
                             alt="Ministério do Desenvolvimento Agrário"
                             width={180}
                             height={90}
-                            className="h-auto object-contain opacity-90 hover:opacity-100 transition-opacity"
+                            className="h-auto w-28 sm:w-[180px] object-contain opacity-90 hover:opacity-100 transition-opacity"
                         />
                     </div>
                 </div>
                 <div role="bottom-side" className="flex flex-col gap-4 border-t pt-4 border-[#627460]">
-                    <div className="flex flex-col sm:flex-row sm:justify-between gap-4 items-center">
+                    <div className="flex flex-col sm:flex-row sm:justify-between gap-4 items-center sm:items-start">
                         <div role='left-side' className="flex flex-col sm:flex-row gap-2 sm:gap-4 items-center sm:items-start">
-                            <ul className="flex flex-col sm:flex-row gap-2 sm:gap-4 text-sm sm:text-base">
+                            <ul className="flex flex-col sm:flex-row gap-2 sm:gap-4 text-sm sm:text-base items-center sm:items-start text-center sm:text-left">
                                 <li>© 2025, Região Vulcânica</li>
                                 <li className="hidden sm:inline">·</li>
                                 <li><a href="mailto:contato@regiaovulcanica.org.br" className="break-all sm:break-normal">contato@regiaovulcanica.org.br</a></li>
@@ -69,8 +69,8 @@ const Footer = () => {
                             </ul>
                         </div>
                         <div role='right-side' className="flex items-center justify-center sm:justify-end flex-row gap-4">
-                            <a href="https://www.instagram.com/visitearegiaovulcanica/" target="_blank" className="text-xl"><FaInstagram></FaInstagram></a>
-                            <a href="https://www.facebook.com/regiaovulcanica" target="_blank" className="text-xl"><FaFacebook></FaFacebook></a>
+                            <a href="https://www.instagram.com/visitearegiaovulcanica/" target="_blank" rel="noopener noreferrer" className="text-xl hover:opacity-80 transition-opacity"><FaInstagram></FaInstagram></a>
+                            <a href="https://www.facebook.com/regiaovulcanica" target="_blank" rel="noopener noreferrer" className="text-xl hover:opacity-80 transition-opacity"><FaFacebook></FaFacebook></a>
                         </div>
                     </div>
                 </div>
