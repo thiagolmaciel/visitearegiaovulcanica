@@ -42,7 +42,7 @@ export async function isAdmin(userId: string): Promise<boolean> {
 export async function getAllUsers() {
   const supabase = await getServerClient();
   return await executeArrayQuery(
-    () => supabase.from('profiles').select('*').order('updated_at', { ascending: false }),
+    async () => await supabase.from('profiles').select('*').order('updated_at', { ascending: false }),
     'getAllUsers'
   );
 }
@@ -53,7 +53,7 @@ export async function getAllUsers() {
 export async function getAllMembers() {
   const supabase = await getServerClient();
   return await executeArrayQuery(
-    () => supabase.from('members').select('*').order('created_at', { ascending: false }),
+    async () => await supabase.from('members').select('*').order('created_at', { ascending: false }),
     'getAllMembers'
   );
 }

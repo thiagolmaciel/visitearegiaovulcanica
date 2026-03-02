@@ -1,16 +1,29 @@
 import { getClient, executeQuery } from "./base-client";
 
 /**
+ * Profile interface matching the Supabase profiles table
+ */
+export interface Profile {
+  id: string;
+  full_name?: string | null;
+  phone?: string | null;
+  location?: string | null;
+  email?: string | null;
+  updated_at?: string | null;
+  [key: string]: unknown;
+}
+
+/**
  * Gets a user profile by ID
  * @param id - The profile ID
  * @returns Profile data or null
  */
-export async function getProfile(id: string){
+export async function getProfile(id: string): Promise<Profile | null> {
   if (!id) return null;
   
   const supabase = getClient();
-  const result = await executeQuery(
-    () => supabase.from('profiles').select('*').eq('id', id).single(),
+  const result = await executeQuery<Profile>(
+    async () => await supabase.from('profiles').select('*').eq('id', id).single(),
     'getProfile'
   );
   return result.data;
@@ -27,7 +40,7 @@ export async function getMembersByProfileID(id: string) {
   const supabase = getClient();
   const { executeArrayQuery } = await import("./base-client");
   return await executeArrayQuery(
-    () => supabase.from('members').select('*').eq('profile_id', id),
+    async () => await supabase.from('members').select('*').eq('profile_id', id),
     'getMembersByProfileID'
   );
 }

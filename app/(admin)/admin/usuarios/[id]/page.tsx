@@ -131,7 +131,7 @@ export default async function EditUserPage({ params }: PageProps) {
       <EditUserInfo 
         userId={id}
         initialEmail={userEmail}
-        initialFullName={userProfile.full_name}
+        initialFullName={userProfile.full_name ?? null}
       />
 
       {/* User Stats */}

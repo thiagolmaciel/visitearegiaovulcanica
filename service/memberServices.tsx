@@ -1,6 +1,7 @@
 import { Service } from "@/model/Service";
 import { simpleToast } from "@/utils/simple-toast";
 import { Member } from "@/model/Member";
+import { Location } from "@/model/Location";
 import { getClient, executeQuery, executeArrayQuery } from "./base-client";
 import { logError } from "@/lib/error-handler";
 
@@ -10,10 +11,10 @@ import { logError } from "@/lib/error-handler";
  * @param memberId - The member ID
  * @returns The member or null if not found
  */
-export async function getMemberByID(memberId: string) {
+export async function getMemberByID(memberId: string): Promise<Member | null> {
   const supabase = getClient();
-  const result = await executeQuery(
-    () => supabase.from('members').select('*').eq('id', memberId).single(),
+  const result = await executeQuery<Member>(
+    async () => await supabase.from('members').select('*').eq('id', memberId).single(),
     'getMemberByID'
   );
   return result.data;
@@ -27,7 +28,7 @@ export async function getMemberByID(memberId: string) {
 export async function updateMember(member: Member) {
   const supabase = getClient();
   const result = await executeQuery(
-    () => supabase
+    async () => await supabase
     .from('members')
     .update({
       name: member.name,
@@ -60,7 +61,7 @@ export async function getMemberServices(memberId: string): Promise<Service[]> {
   
   // Get member service IDs
   const memberServicesResult = await executeArrayQuery<{ service_id: string }>(
-    () => supabase.from('member_services').select('service_id').eq('member_id', memberId),
+    async () => await supabase.from('member_services').select('service_id').eq('member_id', memberId),
     'getMemberServices - member_services'
   );
 
@@ -72,7 +73,7 @@ export async function getMemberServices(memberId: string): Promise<Service[]> {
   
   // Get full service details
   return await executeArrayQuery<Service>(
-    () => supabase.from('services').select('*').in('id', serviceIDs),
+    async () => await supabase.from('services').select('*').in('id', serviceIDs),
     'getMemberServices - services'
   );
 }
@@ -82,12 +83,12 @@ export async function getMemberServices(memberId: string): Promise<Service[]> {
  * @param memberId - The member ID
  * @returns Array of services with icon field only
  */
-export async function getMemberServicesIcons(memberId: string): Promise<Service[]> {
+export async function getMemberServicesIcons(memberId: string): Promise<Pick<Service, 'icon' | 'id'>[]> {
   const supabase = getClient();
   
   // Get member service IDs
   const memberServicesResult = await executeArrayQuery<{ service_id: string }>(
-    () => supabase.from('member_services').select('service_id').eq('member_id', memberId),
+    async () => await supabase.from('member_services').select('service_id').eq('member_id', memberId),
     'getMemberServicesIcons - member_services'
   );
 
@@ -98,8 +99,8 @@ export async function getMemberServicesIcons(memberId: string): Promise<Service[
   const serviceIDs = memberServicesResult.map((ms) => ms.service_id);
   
   // Get only icon field for performance
-  return await executeArrayQuery<Service>(
-    () => supabase.from('services').select('icon, id').in('id', serviceIDs),
+  return await executeArrayQuery<Pick<Service, 'icon' | 'id'>>(
+    async () => await supabase.from('services').select('icon, id').in('id', serviceIDs),
     'getMemberServicesIcons - services'
   );
 }
@@ -109,10 +110,10 @@ export async function getMemberServicesIcons(memberId: string): Promise<Service[
  * @param memberID - The member ID
  * @returns Location data or null
  */
-export async function getMemberLocation(memberID: string) {
+export async function getMemberLocation(memberID: string): Promise<Location | null> {
   const supabase = getClient();
-  const result = await executeQuery(
-    () => supabase.from('locations').select('*').eq('member_id', memberID).single(),
+  const result = await executeQuery<Location>(
+    async () => await supabase.from('locations').select('*').eq('member_id', memberID).single(),
     'getMemberLocation'
   );
   return result.data;
@@ -122,13 +123,12 @@ export async function getMemberLocation(memberID: string) {
  * Fetches all members
  * @returns Array of all members or null on error
  */
-export async function fetchAllMembers() {
+export async function fetchAllMembers(): Promise<Member[]> {
   const supabase = getClient();
-  const result = await executeQuery(
-    () => supabase.from('members').select('*'),
+  return await executeArrayQuery<Member>(
+    async () => await supabase.from('members').select('*'),
     'fetchAllMembers'
   );
-  return result.data;
 }
 
 /**
@@ -141,7 +141,7 @@ export async function fetchMembersByServiceId(serviceId: string) {
   
   // Get member IDs for this service
   const memberServicesResult = await executeArrayQuery<{ member_id: string }>(
-    () => supabase.from('member_services').select('member_id').eq('service_id', serviceId),
+    async () => await supabase.from('member_services').select('member_id').eq('service_id', serviceId),
     'fetchMembersByServiceId - member_services'
   );
 
@@ -153,7 +153,7 @@ export async function fetchMembersByServiceId(serviceId: string) {
   
   // Get full member details
   return await executeArrayQuery<Member>(
-    () => supabase.from('members').select('*').in('id', memberIDs),
+    async () => await supabase.from('members').select('*').in('id', memberIDs),
     'fetchMembersByServiceId - members'
   );
 }
@@ -166,7 +166,7 @@ export async function fetchMembersByServiceId(serviceId: string) {
 export async function fetchMembersByCityId(city_id: string) {
   const supabase = getClient();
   const result = await executeQuery(
-    () => supabase
+    async () => await supabase
     .from("members")
     .select(`
     *,
@@ -196,7 +196,7 @@ export async function fetchMembersByCityId(city_id: string) {
 export async function fetchMembersByStateId(state_id: string) {
   const supabase = getClient();
   const result = await executeQuery(
-    () => supabase
+    async () => await supabase
     .from("members")
     .select(`
     *,
@@ -260,10 +260,10 @@ export async function fetchMembersByStateName(name: string) {
  * @param name - The city name
  * @returns City data with ID or null
  */
-export async function getCityIdByName(name: string) {
+export async function getCityIdByName(name: string): Promise<{ id: string } | null> {
   const supabase = getClient();
-  const result = await executeQuery(
-    () => supabase.from('cities').select('id').ilike('name', name).single(),
+  const result = await executeQuery<{ id: string }>(
+    async () => await supabase.from('cities').select('id').ilike('name', name).single(),
     'getCityIdByName'
   );
   return result.data;
@@ -274,10 +274,10 @@ export async function getCityIdByName(name: string) {
  * @param name - The state name
  * @returns State data with ID or null
  */
-export async function getStateIdByName(name: string) {
+export async function getStateIdByName(name: string): Promise<{ id: string } | null> {
   const supabase = getClient();
-  const result = await executeQuery(
-    () => supabase.from('states').select('id').ilike('name', name).single(),
+  const result = await executeQuery<{ id: string }>(
+    async () => await supabase.from('states').select('id').ilike('name', name).single(),
     'getStateIdByName'
   );
   return result.data;
@@ -293,7 +293,7 @@ export async function getStateIdByName(name: string) {
 export async function fetchMembersByPartialQuery(query: string) {
   const supabase = getClient();
   return await executeArrayQuery<Member>(
-    () => supabase
+    async () => await supabase
     .from("members")
     .select("*")
       .or(`name.ilike.%${query}%,description.ilike.%${query}%`),
@@ -311,7 +311,7 @@ export async function deleteMemberById(member_id: string) {
   
   // Delete member record
   const deleteResult = await executeQuery(
-    () => supabase.from('members').delete().eq('id', member_id).select().single(),
+    async () => await supabase.from('members').delete().eq('id', member_id).select().single(),
     'deleteMemberById - member'
   );
 
@@ -343,7 +343,7 @@ export async function deleteMemberById(member_id: string) {
 export async function fetchMemberNameByID(member_id: string) {
   const supabase = getClient();
   const result = await executeQuery<{ name: string }>(
-    () => supabase.from('members').select("name").eq('id', member_id).single(),
+    async () => await supabase.from('members').select("name").eq('id', member_id).single(),
     'fetchMemberNameByID'
   );
   return result.data?.name || null;
@@ -358,7 +358,7 @@ export async function fetchMemberNameByID(member_id: string) {
 export async function createMember(member: Member) {
   const supabase = getClient();
   const result = await executeQuery<Member>(
-    () => supabase.from('members').insert(member).select().single(),
+    async () => await supabase.from('members').insert(member).select().single(),
     'createMember'
   );
 

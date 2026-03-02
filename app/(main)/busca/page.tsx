@@ -6,14 +6,7 @@ import React, { useEffect, useState, useMemo, Suspense } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import { useSearchParams } from 'next/navigation';
 import { logError } from '@/lib/error-handler';
-
-interface Member {
-  id: string;
-  name: string;
-  description?: string;
-  slug?: string;
-  image?: string;
-}
+import { Member } from '@/model/Member';
 
 const SearchPageContent = () => {
   const searchParams = useSearchParams();
@@ -102,7 +95,9 @@ const SearchPageContent = () => {
             </div>
           ) : (
           <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8 w-full">
-              {filteredMembers.map((member) => (
+              {filteredMembers
+                .filter((member): member is Member & { id: string } => !!member.id)
+                .map((member) => (
                 <li 
                   key={member.id} 
                   id={`member-${member.id}`}

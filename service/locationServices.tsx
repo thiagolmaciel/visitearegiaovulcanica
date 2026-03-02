@@ -1,16 +1,26 @@
 import { getClient, executeQuery, executeArrayQuery } from "./base-client";
 
 /**
+ * City interface matching the Supabase cities table
+ */
+export interface City {
+  id: string;
+  name: string;
+  state_id: string;
+  [key: string]: unknown;
+}
+
+/**
  * Gets city information by member ID
  * @param id - The member ID
  * @returns City data or null
  */
-export async function getCityByID(id: string){
+export async function getCityByID(id: string): Promise<City | null> {
   const supabase = getClient();
   
   // Get location with city_id
   const locationResult = await executeQuery<{ city_id: string }>(
-    () => supabase.from('locations').select('city_id').eq('member_id', id).single(),
+    async () => await supabase.from('locations').select('city_id').eq('member_id', id).single(),
     'getCityByID - location'
   );
 
@@ -21,8 +31,8 @@ export async function getCityByID(id: string){
   const cityId = locationResult.data.city_id;
   
   // Get city details
-  const cityResult = await executeQuery(
-    () => supabase.from('cities').select('*').eq('id', cityId).single(),
+  const cityResult = await executeQuery<City>(
+    async () => await supabase.from('cities').select('*').eq('id', cityId).single(),
     'getCityByID - city'
   );
   
@@ -36,7 +46,7 @@ export async function getCityByID(id: string){
   export async function getAllCities() {
   const supabase = getClient();
   const data = await executeArrayQuery<{ name: string }>(
-    () => supabase.from('cities').select('name'),
+    async () => await supabase.from('cities').select('name'),
     'getAllCities'
   );
     return data.map(city => city.name);
@@ -49,7 +59,7 @@ export async function getCityByID(id: string){
   export async function getAllStates() {
   const supabase = getClient();
   const data = await executeArrayQuery<{ name: string }>(
-    () => supabase.from('states').select('name'),
+    async () => await supabase.from('states').select('name'),
     'getAllStates'
   );
     return data.map(state => state.name.toLowerCase());
@@ -63,7 +73,7 @@ export async function getCityByID(id: string){
   export async function isCity(query: string) {
   const supabase = getClient();
   const data = await executeArrayQuery<{ name: string }>(
-    () => supabase.from("cities").select("name").ilike("name", query),
+    async () => await supabase.from("cities").select("name").ilike("name", query),
     'isCity'
   );
   return data.length > 0;
@@ -77,7 +87,7 @@ export async function getCityByID(id: string){
   export async function isState(query: string) {
   const supabase = getClient();
   const data = await executeArrayQuery<{ name: string }>(
-    () => supabase.from("states").select("name").ilike("name", query),
+    async () => await supabase.from("states").select("name").ilike("name", query),
     'isState'
   );
   return data.length > 0;

@@ -145,7 +145,7 @@ export default async function MemberPage({ params }: MemberPageProps) {
 
               <ul className='flex flex-row gap-8 my-8 flex-wrap'>
                 {services.map((service: Service) => (
-                  <li key={service.id}><ServiceTag {...service} /></li>
+                  <li key={service.id}><ServiceTag serviceobject={service} /></li>
                 ))}
               </ul>
             </div>

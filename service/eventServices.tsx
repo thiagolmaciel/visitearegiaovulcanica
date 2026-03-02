@@ -12,7 +12,7 @@ export async function getActiveEvents(): Promise<Event[]> {
   // Busca todos os eventos ativos e filtra no código
   // para incluir eventos que já começaram mas ainda não terminaram
   const data = await executeArrayQuery<Event>(
-    () => supabase
+    async () => await supabase
     .from("events")
     .select("*")
     .eq("status", "ativo")
@@ -50,7 +50,7 @@ export async function getActiveEvents(): Promise<Event[]> {
 export async function getAllEvents(): Promise<Event[]> {
   const supabase = await getServerClient();
   return await executeArrayQuery<Event>(
-    () => supabase
+    async () => await supabase
     .from("events")
     .select("*")
     .in("status", ["ativo", "finalizado"])
@@ -65,7 +65,7 @@ export async function getAllEvents(): Promise<Event[]> {
 export async function getEventsByCategory(category: string): Promise<Event[]> {
   const supabase = await getServerClient();
   return await executeArrayQuery<Event>(
-    () => supabase
+    async () => await supabase
     .from("events")
     .select("*")
     .eq("category", category)
@@ -82,7 +82,7 @@ export async function getEventsByCategory(category: string): Promise<Event[]> {
 export async function getEventById(id: string): Promise<Event | null> {
   const supabase = await getServerClient();
   const result = await executeQuery<Event>(
-    () => supabase.from("events").select("*").eq("id", id).single(),
+    async () => await supabase.from("events").select("*").eq("id", id).single(),
     'getEventById'
   );
   return result.data;
@@ -98,7 +98,7 @@ export async function getUpcomingEvents(days: number = 30): Promise<Event[]> {
   futureDate.setDate(now.getDate() + days);
 
   return await executeArrayQuery<Event>(
-    () => supabase
+    async () => await supabase
     .from("events")
     .select("*")
     .eq("status", "ativo")

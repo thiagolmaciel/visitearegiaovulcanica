@@ -8,7 +8,7 @@ import { Service } from "@/model/Service";
 export async function getAllServices(): Promise<Service[]> {
   const supabase = getClient();
   return await executeArrayQuery<Service>(
-    () => supabase.from('services').select('*'),
+    async () => await supabase.from('services').select('*'),
     'getAllServices'
   );
 }
@@ -28,7 +28,7 @@ export async function updateMemberServices(memberId: string | undefined, service
   
   // Delete existing services
   const deleteResult = await executeArrayQuery(
-    () => supabase.from('member_services').delete().eq('member_id', memberId).select(),
+    async () => await supabase.from('member_services').delete().eq('member_id', memberId).select(),
     'updateMemberServices - delete'
   );
     
@@ -38,7 +38,7 @@ export async function updateMemberServices(memberId: string | undefined, service
 
   // Insert new services
   const insertResult = await executeArrayQuery(
-    () => supabase.from('member_services').insert(services.map(id => ({ member_id: memberId, service_id: id }))).select(),
+    async () => await supabase.from('member_services').insert(services.map(id => ({ member_id: memberId, service_id: id }))).select(),
     'updateMemberServices - insert'
   );
 }
@@ -52,7 +52,7 @@ export async function updateMemberServices(memberId: string | undefined, service
 export async function createMemberServices(memberId: string, services: string[]){
   const supabase = getClient();
   await executeArrayQuery(
-    () => supabase.from('member_services').insert(services.map(id => ({ member_id: memberId, service_id: id }))).select(),
+    async () => await supabase.from('member_services').insert(services.map(id => ({ member_id: memberId, service_id: id }))).select(),
     'createMemberServices'
   );
 }

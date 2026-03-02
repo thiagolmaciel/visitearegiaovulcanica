@@ -132,7 +132,12 @@ const CadastrarPage = () => {
     try {
       const supabase = createClient()
 
-      const newMember = await createMember(member) 
+      const newMember = await createMember(member)
+      
+      if (!newMember.id) {
+        throw new Error('Falha ao criar membro: ID não retornado')
+      }
+      
       await getMemberByID(newMember.id)
 
       // Criar location se dados foram fornecidos
