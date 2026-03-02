@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { logError } from "@/lib/error-handler";
 
 const CONTACT_EMAIL = process.env.CONTACT_EMAIL || "contato@regiaovulcanica.org.br";
 const FROM_EMAIL = process.env.FROM_EMAIL || "Contato Site <onboarding@resend.dev>";
@@ -57,7 +58,7 @@ export async function POST(request: NextRequest) {
         });
 
         if (error) {
-          console.error("Resend error:", error);
+          logError("Contact API - Resend", error);
           throw new Error(error.message || "Erro ao enviar email");
         }
 
@@ -66,7 +67,7 @@ export async function POST(request: NextRequest) {
           message: "Mensagem enviada com sucesso! Entraremos em contato em breve.",
         });
       } catch (resendError: any) {
-        console.error("Resend error:", resendError);
+        logError("Contact API - Resend catch", resendError);
         // Fall through to alternative methods
       }
     }
@@ -93,18 +94,19 @@ export async function POST(request: NextRequest) {
           });
 
         if (dbError) {
-          console.error("Database error:", dbError);
+          logError("Contact API - Database insert", dbError);
         }
       } catch (dbError) {
-        console.error("Database storage error:", dbError);
+        logError("Contact API - Database storage", dbError);
       }
     }
 
     // If no email service is configured, return success but log a warning
     if (!resendApiKey) {
-      console.warn(
-        "RESEND_API_KEY not configured. Message stored in database only (if configured)."
-      );
+      // Log warning in development only
+      if (process.env.NODE_ENV === 'development') {
+        logError("Contact API - Config", new Error("RESEND_API_KEY not configured. Message stored in database only (if configured)."));
+      }
       return NextResponse.json({
         success: true,
         message: "Mensagem recebida! Entraremos em contato em breve.",
@@ -117,7 +119,7 @@ export async function POST(request: NextRequest) {
       message: "Mensagem enviada com sucesso! Entraremos em contato em breve.",
     });
   } catch (error: any) {
-    console.error("Contact form error:", error);
+    logError("Contact API - General", error);
     return NextResponse.json(
       {
         error: error.message || "Erro ao enviar mensagem. Tente novamente mais tarde.",

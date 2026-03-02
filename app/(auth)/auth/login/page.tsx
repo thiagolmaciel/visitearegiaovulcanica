@@ -6,23 +6,23 @@ import { Button } from "@/components/ui/button";
 export default function Page() {
   
   return (
-    <div className='bg-white flex grow max-w-[70rem] sm:min-h-[40rem]  rounded-lg shadow-md flex-col sm:flex-row overflow-clip relative'>
-    <div role='left-side' className='bg-emerald-900 flex sm:w-3/5  py-4 sm:py-0 items-center justify-center relative overlay-clip'>
+    <div className='bg-white flex grow w-full max-w-[70rem] sm:min-h-[40rem] rounded-lg shadow-md flex-col sm:flex-row overflow-clip relative'>
+    <div role='left-side' className='bg-emerald-900 flex sm:w-3/5 py-4 sm:py-0 items-center justify-center relative overlay-clip min-h-[200px] sm:min-h-0'>
       <Image src='/background_login.png' alt='Foto-Regiao-Vulcanica' fill className="object-cover selection-none pointer-events-none opacity-20"></Image>
       <div className="wrapper max-w-[30rem] text-center flex flex-col items-center justify-center text-white z-50">
-        <div className="image-box h-40 w-60 relative">
-          <Image src='/logo.png' alt='Foto-Regiao-Vulcanica' fill className=" selection-none object-contain pointer-events-none "></Image>
+        <div className="image-box h-32 w-48 sm:h-40 sm:w-60 relative">
+          <Image src='/logo.png' alt='Foto-Regiao-Vulcanica' fill className="selection-none object-contain pointer-events-none"></Image>
         </div>
       </div>
     </div>
-    <div role='right-side' className='flex items-center sm:w-2/5 justify-center px-2 py-5 relative'>
+    <div role='right-side' className='flex items-center sm:w-2/5 justify-center px-4 sm:px-2 py-5 relative w-full'>
      <LoginForm />
      
      {/* Back to site button - positioned at bottom left of right panel */}
-     <div className="absolute bottom-0 left-0 m-5">
+     <div className="absolute bottom-0 left-0 m-3 sm:m-5">
        <Link href={'/'}>
          <Button
-           className="w-[7rem] font-bold text-[#3d3d3d]"
+           className="w-[6rem] sm:w-[7rem] font-bold text-[#3d3d3d] text-xs sm:text-sm"
            type="button"
          >
            Voltar ao site

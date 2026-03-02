@@ -1,9 +1,10 @@
 'use client'
 import useEmblaCarousel from 'embla-carousel-react'
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useState, useEffect, memo } from 'react';
 import SuggestionItem from './suggestion-item';
 import { FaCircleChevronLeft, FaCircleChevronRight } from 'react-icons/fa6';
 import { CarouselProps } from '@/model/CarouselProps';
+import type { EmblaCarouselType } from 'embla-carousel';
 
 type Member = {
   id: string;
@@ -36,7 +37,7 @@ const Carousel = ({ title, members }: CarouselProps) => {
     if (emblaApi) emblaApi.scrollNext();
   }, [emblaApi]);
 
-  const onSelect = useCallback((emblaApi: any) => {
+  const onSelect = useCallback((emblaApi: EmblaCarouselType) => {
     setPrevBtnEnabled(emblaApi.canScrollPrev());
     setNextBtnEnabled(emblaApi.canScrollNext());
   }, []);
@@ -94,4 +95,4 @@ const Carousel = ({ title, members }: CarouselProps) => {
   )
 }
 
-export default Carousel
+export default memo(Carousel)

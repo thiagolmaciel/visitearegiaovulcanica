@@ -1,46 +1,58 @@
-import { createClient } from "@/lib/supabase/client";
+import { getClient, executeArrayQuery } from "./base-client";
+import { Service } from "@/model/Service";
 
-const supabase = createClient();
-
-export async function getAllServices(){
-    const {data, error} = await supabase
-    .from('services')
-    .select('*')
-    if (!(!data || error)) return data;
+/**
+ * Gets all services
+ * @returns Array of all services
+ */
+export async function getAllServices(): Promise<Service[]> {
+  const supabase = getClient();
+  return await executeArrayQuery<Service>(
+    () => supabase.from('services').select('*'),
+    'getAllServices'
+  );
 }
 
+/**
+ * Updates member services (replaces all existing services)
+ * @param memberId - The member ID
+ * @param services - Array of service IDs
+ * @throws Error if update fails
+ */
 export async function updateMemberServices(memberId: string | undefined, services: string[]){
-   const {error} = await supabase
-    .from('member_services')
-    .delete()
-    .eq('member_id', memberId)
+  if (!memberId) {
+    throw new Error('Member ID is required');
+  }
 
-    if (error) {
-        console.error("Erro ao deletar serviços do membro:", error);
-        throw error;
-    }
+  const supabase = getClient();
+  
+  // Delete existing services
+  const deleteResult = await executeArrayQuery(
+    () => supabase.from('member_services').delete().eq('member_id', memberId).select(),
+    'updateMemberServices - delete'
+  );
     
     if (services.length === 0) {
         return;
     }
 
-    const { error: insertError } = await supabase
-        .from('member_services')
-        .insert(services.map(id => ({ member_id: memberId, service_id: id })));
-
-    console.log(services)
-    if (insertError) {
-        console.error("Erro ao adicionar serviços ao membro:", insertError);
-        throw insertError;
-    }
+  // Insert new services
+  const insertResult = await executeArrayQuery(
+    () => supabase.from('member_services').insert(services.map(id => ({ member_id: memberId, service_id: id }))).select(),
+    'updateMemberServices - insert'
+  );
 }
 
+/**
+ * Creates member services (adds new services without deleting existing ones)
+ * @param memberId - The member ID
+ * @param services - Array of service IDs
+ * @throws Error if creation fails
+ */
 export async function createMemberServices(memberId: string, services: string[]){
-    const {error} = await supabase
-    .from('member_services')
-    .insert(services.map(id => ({ member_id: memberId, service_id: id })));
-    if (error) {
-        console.error("Erro ao adicionar serviços ao membro:", error);
-        throw error;
-    }
+  const supabase = getClient();
+  await executeArrayQuery(
+    () => supabase.from('member_services').insert(services.map(id => ({ member_id: memberId, service_id: id }))).select(),
+    'createMemberServices'
+  );
 }

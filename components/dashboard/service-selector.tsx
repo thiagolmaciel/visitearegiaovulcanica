@@ -31,8 +31,6 @@ const ServiceSelector: React.FC<serviceSelectorProps> = ({ id, onChange }) => {
             setLoading(false);
             setSelectedServices(memberServices ?? []);
             onChange?.(memberServices?.map(service => service.id ?? []))
-            console.log(memberServices)
-            console.log(services)
         }
         fetchData()
     }

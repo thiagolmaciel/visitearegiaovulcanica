@@ -1,25 +1,16 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import ErrorAlert from "./error-alert";
+import translateError from "@/utils/translateError";
 
-export function UpdatePasswordForm({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<"div">) {
+export function UpdatePasswordForm() {
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -32,6 +23,12 @@ export function UpdatePasswordForm({
 
     if (!password || password.length < 6) {
       setError("A senha deve ter pelo menos 6 caracteres");
+      setIsLoading(false);
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("As senhas não coincidem");
       setIsLoading(false);
       return;
     }
@@ -49,40 +46,47 @@ export function UpdatePasswordForm({
   };
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">Redefinir Senha</CardTitle>
-          <CardDescription>
-            Digite sua nova senha abaixo.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleUpdatePassword}>
-            <div className="flex flex-col gap-6">
-              <div className="grid gap-2">
-                <Label htmlFor="password">Nova senha</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Digite sua nova senha"
-                  required
-                  minLength={6}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <p className="text-xs text-gray-500">
-                  A senha deve ter pelo menos 6 caracteres
-                </p>
-              </div>
-              {error && <p className="text-sm text-red-500">{error}</p>}
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Salvando..." : "Salvar nova senha"}
-              </Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+    <form role="update-password" className="flex items-center justify-center flex-col gap-4 w-full max-w-md">
+      <div className="self-start w-full">
+        <h2 className="text-xl sm:text-2xl font-bold">
+          Redefinir <span className="text-emerald-900">senha</span>
+        </h2>
+        <h3 className="text-sm sm:text-base text-gray-500">Digite sua nova senha abaixo</h3>
+      </div>
+
+      <Input
+        type="password"
+        placeholder="Nova senha"
+        name="password"
+        required
+        minLength={6}
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        className="w-full min-w-0 sm:min-w-[20rem] border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-emerald-900"
+      />
+      <Input
+        type="password"
+        placeholder="Confirmar nova senha"
+        name="confirm-password"
+        required
+        minLength={6}
+        value={confirmPassword}
+        onChange={(e) => setConfirmPassword(e.target.value)}
+        className="w-full min-w-0 sm:min-w-[20rem] border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-emerald-900"
+      />
+
+      <div className="w-full flex flex-row items-center justify-end">
+        <Button
+          className="w-full sm:w-[7rem] font-bold"
+          disabled={isLoading}
+          type="submit"
+          onClick={handleUpdatePassword}
+        >
+          {isLoading ? "Salvando..." : "Salvar"}
+        </Button>
+      </div>
+      
+      {error && <ErrorAlert error={translateError(error)} />}
+    </form>
   );
 }

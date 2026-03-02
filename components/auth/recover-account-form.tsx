@@ -137,12 +137,12 @@ export function RecoverAccountForm({
       {step === 'email' && (
         <form
           role="recover-account-email"
-          className="flex items-center justify-center flex-col gap-4"
+          className="flex items-center justify-center flex-col gap-4 w-full max-w-md"
           onSubmit={handleSendCode}
         >
-          <div className="self-start">
-            <h2 className="text-2xl font-bold">Recuperar Conta</h2>
-            <h3 className="text-gray-500 text-sm">
+          <div className="self-start w-full">
+            <h2 className="text-xl sm:text-2xl font-bold">Recuperar Conta</h2>
+            <h3 className="text-sm sm:text-base text-gray-500">
               Digite seu email e enviaremos um código de verificação
             </h3>
           </div>
@@ -153,14 +153,16 @@ export function RecoverAccountForm({
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            className="w-full min-w-0 sm:min-w-[20rem] border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-emerald-900"
           />
 
-          <div className="flex flex-row items-center justify-between w-full">
-            <Link href={'/auth/login'} className="text-sm text-gray-400">Voltar</Link>
-
-            <div>
+          <div className="w-full flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-0">
+            <div className="flex justify-center sm:justify-start">
+              <Link href={'/auth/login'} className="text-sm text-gray-400">Voltar</Link>
+            </div>
+            <div className="flex justify-center sm:justify-end">
               <Button
-                className="w-[5rem] font-bold"
+                className="w-full sm:w-[5rem] font-bold"
                 disabled={isLoading}
                 type="submit"
               >
@@ -175,12 +177,12 @@ export function RecoverAccountForm({
       {step === 'code' && (
         <form
           role="recover-account-code"
-          className="flex items-center justify-center flex-col gap-4"
+          className="flex items-center justify-center flex-col gap-4 w-full max-w-md"
           onSubmit={handleVerifyCode}
         >
-          <div className="self-start">
-            <h2 className="text-2xl font-bold">Verificar Código</h2>
-            <h3 className="text-gray-500 text-sm">
+          <div className="self-start w-full">
+            <h2 className="text-xl sm:text-2xl font-bold">Verificar Código</h2>
+            <h3 className="text-sm sm:text-base text-gray-500">
               Digite o código de 6 dígitos enviado para {email}
             </h3>
           </div>
@@ -192,22 +194,23 @@ export function RecoverAccountForm({
             value={code}
             onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
             maxLength={6}
-            className="text-center text-2xl tracking-widest font-mono"
+            className="w-full min-w-0 sm:min-w-[20rem] border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-emerald-900 text-center text-xl sm:text-2xl tracking-widest font-mono"
           />
 
-          <div className="flex flex-row items-center justify-between w-full">
+          <div className="w-full flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-0">
             <Button
               type="button"
               variant="outline"
               onClick={() => setStep('email')}
               disabled={isLoading}
+              className="w-full sm:w-auto"
             >
               Voltar
             </Button>
 
-            <div>
+            <div className="flex justify-center sm:justify-end w-full sm:w-auto">
               <Button
-                className="w-[5rem] font-bold"
+                className="w-full sm:w-[5rem] font-bold"
                 disabled={isLoading || code.length !== 6}
                 type="submit"
               >
@@ -222,12 +225,12 @@ export function RecoverAccountForm({
       {step === 'password' && (
         <form
           role="recover-account-password"
-          className="flex items-center justify-center flex-col gap-4"
+          className="flex items-center justify-center flex-col gap-4 w-full max-w-md"
           onSubmit={handleResetPassword}
         >
-          <div className="self-start">
-            <h2 className="text-2xl font-bold">Nova Senha</h2>
-            <h3 className="text-gray-500 text-sm">
+          <div className="self-start w-full">
+            <h2 className="text-xl sm:text-2xl font-bold">Nova Senha</h2>
+            <h3 className="text-sm sm:text-base text-gray-500">
               Digite sua nova senha
             </h3>
           </div>
@@ -242,6 +245,7 @@ export function RecoverAccountForm({
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               minLength={6}
+              className="w-full min-w-0 sm:min-w-[20rem] border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-emerald-900"
             />
           </div>
 
@@ -255,22 +259,24 @@ export function RecoverAccountForm({
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               minLength={6}
+              className="w-full min-w-0 sm:min-w-[20rem] border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-emerald-900"
             />
           </div>
 
-          <div className="flex flex-row items-center justify-between w-full">
+          <div className="w-full flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-0">
             <Button
               type="button"
               variant="outline"
               onClick={() => setStep('code')}
               disabled={isLoading}
+              className="w-full sm:w-auto"
             >
               Voltar
             </Button>
 
-            <div>
+            <div className="flex justify-center sm:justify-end w-full sm:w-auto">
               <Button
-                className="w-[5rem] font-bold"
+                className="w-full sm:w-[5rem] font-bold"
                 disabled={isLoading}
                 type="submit"
               >

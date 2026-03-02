@@ -17,7 +17,7 @@ A iniciativa da plataforma **Visite a Região Vulcânica** nasce no âmbito do *
 - **[Supabase](https://supabase.com)** - Backend como serviço (autenticação e banco de dados)
 - **[Tailwind CSS](https://tailwindcss.com)** - Framework CSS utilitário
 - **[TypeScript](https://www.typescriptlang.org)** - Tipagem estática
-- **[shadcn/ui](https://ui.shadcn.com)** - Componentes UI
+- **[HeroUI](https://heroui.com)** - Componentes UI
 - **[Radix UI](https://www.radix-ui.com)** - Componentes acessíveis
 - **[Embla Carousel](https://www.embla-carousel.com)** - Carrossel de imagens
 
@@ -49,8 +49,12 @@ A iniciativa da plataforma **Visite a Região Vulcânica** nasce no âmbito do *
    Crie um arquivo `.env.local` na raiz do projeto com as seguintes variáveis:
 
    ```bash
-   NEXT_PUBLIC_SUPABASE_URL=https://kdwpecddwtaczhoorylb.supabase.co
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=sua_chave_anon_aqui
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url_here
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key_here
+   SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
+   RESEND_API_KEY=your_resend_api_key_here  # Optional: for contact form emails
+   CONTACT_EMAIL=contato@regiaovulcanica.org.br  # Optional: contact form recipient
+   FROM_EMAIL=Contato Site <onboarding@resend.dev>  # Optional: email sender
    ```
 
    > **Nota**: As chaves do Supabase podem ser encontradas nas configurações da API do seu projeto no [dashboard do Supabase](https://supabase.com/dashboard).
@@ -133,6 +137,21 @@ yarn lint         # Executa o linter
 
 - [Guia Técnico](./docs/guia-tecnico.md) - Documentação técnica detalhada
 - [Guia de Estilo Frontend](./FRONTEND_STYLE_GUIDE.md) - Padrões de design e UI
+- [Tarefas Pendentes](./TAREFAS_PENDENTES.md) - Funcionalidades incompletas e pendentes
+- [Configuração de Email no Supabase](./docs/SUPABASE_EMAIL_CONFIG.md) - Como configurar emails de autenticação
+- [Guia de Testes de Autenticação](./docs/AUTH_TESTING_GUIDE.md) - Como testar todos os fluxos de auth
+
+## 🚀 Funcionalidades Futuras / Em Desenvolvimento
+
+As seguintes funcionalidades estão planejadas ou parcialmente implementadas:
+
+### Sistema Administrativo
+- **Backup Automático**: Interface presente, mas funcionalidade de backup real ainda não implementada
+- **Autenticação de Dois Fatores (2FA)**: Toggle funcional, mas integração com serviço 2FA pendente
+- **Sistema de Logs de Auditoria**: Toggle funcional, mas sistema de logs não implementado
+- **Sistema de Notificações por Email**: Toggle funcional, mas envio de emails não configurado (Resend já está no projeto)
+
+Para mais detalhes, consulte [TAREFAS_PENDENTES.md](./TAREFAS_PENDENTES.md).
 
 ## 🤝 Contribuindo
 

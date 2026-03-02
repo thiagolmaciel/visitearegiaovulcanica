@@ -5,6 +5,7 @@ import ServiceTagCarousel from './service-tag-carousel';
 import { Service } from '@/model/Service';
 import { fetchMembersByServiceId } from '@/service/memberServices';
 import { Member } from '@/model/Member';
+import { logError } from '@/lib/error-handler';
 
 type FilteredMembersSectionProps = {
   services: Service[];
@@ -65,7 +66,7 @@ const FilteredMembersSection = ({ services, allMembers, pdcMembers, andMembers }
         setFilteredPdcMembers(pdcFiltered);
         setFilteredAndMembers(andFiltered);
       } catch (error) {
-        console.error('Error filtering members:', error);
+        logError('FilteredMembersSection - filterMembers', error, { serviceId: selectedServiceId });
         // On error, reset to original
         setFilteredAllMembers(allMembers);
         setFilteredPdcMembers(pdcMembers);

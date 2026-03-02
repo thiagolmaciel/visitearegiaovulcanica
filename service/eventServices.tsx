@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { getServerClient, executeArrayQuery, executeQuery } from "./base";
 import { Event } from "@/model/Event";
 
 /**
@@ -6,23 +6,19 @@ import { Event } from "@/model/Event";
  * Inclui eventos que já começaram mas ainda não terminaram
  */
 export async function getActiveEvents(): Promise<Event[]> {
-  const supabase = await createClient();
+  const supabase = await getServerClient();
   const now = new Date().toISOString();
   
   // Busca todos os eventos ativos e filtra no código
   // para incluir eventos que já começaram mas ainda não terminaram
-  const { data, error } = await supabase
+  const data = await executeArrayQuery<Event>(
+    () => supabase
     .from("events")
     .select("*")
     .eq("status", "ativo")
-    .order("start_date", { ascending: true });
-
-  if (error) {
-    console.error("Erro ao buscar eventos:", error);
-    return [];
-  }
-
-  if (!data) return [];
+      .order("start_date", { ascending: true }),
+    'getActiveEvents'
+  );
 
   // Filtra eventos que:
   // 1. Ainda não começaram (start_date >= now), OU
@@ -52,87 +48,65 @@ export async function getActiveEvents(): Promise<Event[]> {
  * Busca todos os eventos (ativos e finalizados)
  */
 export async function getAllEvents(): Promise<Event[]> {
-  const supabase = await createClient();
-  
-  const { data, error } = await supabase
+  const supabase = await getServerClient();
+  return await executeArrayQuery<Event>(
+    () => supabase
     .from("events")
     .select("*")
     .in("status", ["ativo", "finalizado"])
-    .order("start_date", { ascending: false });
-
-  if (error) {
-    console.error("Erro ao buscar eventos:", error);
-    return [];
-  }
-
-  return data || [];
+      .order("start_date", { ascending: false }),
+    'getAllEvents'
+  );
 }
 
 /**
  * Busca eventos por categoria
  */
 export async function getEventsByCategory(category: string): Promise<Event[]> {
-  const supabase = await createClient();
-  
-  const { data, error } = await supabase
+  const supabase = await getServerClient();
+  return await executeArrayQuery<Event>(
+    () => supabase
     .from("events")
     .select("*")
     .eq("category", category)
     .eq("status", "ativo")
     .gte("start_date", new Date().toISOString())
-    .order("start_date", { ascending: true });
-
-  if (error) {
-    console.error("Erro ao buscar eventos por categoria:", error);
-    return [];
-  }
-
-  return data || [];
+      .order("start_date", { ascending: true }),
+    'getEventsByCategory'
+  );
 }
 
 /**
  * Busca um evento por ID
  */
 export async function getEventById(id: string): Promise<Event | null> {
-  const supabase = await createClient();
-  
-  const { data, error } = await supabase
-    .from("events")
-    .select("*")
-    .eq("id", id)
-    .single();
-
-  if (error) {
-    console.error("Erro ao buscar evento:", error);
-    return null;
-  }
-
-  return data;
+  const supabase = await getServerClient();
+  const result = await executeQuery<Event>(
+    () => supabase.from("events").select("*").eq("id", id).single(),
+    'getEventById'
+  );
+  return result.data;
 }
 
 /**
  * Busca eventos próximos (próximos 30 dias)
  */
 export async function getUpcomingEvents(days: number = 30): Promise<Event[]> {
-  const supabase = await createClient();
+  const supabase = await getServerClient();
   const now = new Date();
   const futureDate = new Date();
   futureDate.setDate(now.getDate() + days);
 
-  const { data, error } = await supabase
+  return await executeArrayQuery<Event>(
+    () => supabase
     .from("events")
     .select("*")
     .eq("status", "ativo")
     .gte("start_date", now.toISOString())
     .lte("start_date", futureDate.toISOString())
-    .order("start_date", { ascending: true });
-
-  if (error) {
-    console.error("Erro ao buscar eventos próximos:", error);
-    return [];
-  }
-
-  return data || [];
+      .order("start_date", { ascending: true }),
+    'getUpcomingEvents'
+  );
 }
 
 

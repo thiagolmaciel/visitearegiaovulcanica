@@ -5,6 +5,7 @@ import SuggestionItem from '../main/suggestion-item';
 import OptionsButton from './options-button';
 import CreateMemberButton from './create-member-button';
 import EditMemberButton from './edit-member-button';
+import { logError } from '@/lib/error-handler';
 
 interface ListPlacesProps {
   id: string;
@@ -18,7 +19,7 @@ const ListPlaces = ({ id }: ListPlacesProps) => {
       const data = await getMembersByProfileID(id);
       setMembers(data || []);
     } catch (error) {
-      console.error('Erro ao buscar membros:', error);
+      logError('ListPlaces - fetchMembers', error, { profileId: id });
       setMembers([]);
     }
   };

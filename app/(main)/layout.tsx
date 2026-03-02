@@ -12,6 +12,32 @@ export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
   title: "VisiteRV",
   description: "Te ajudando a desbravar essa região!",
+  icons: {
+    icon: "/favicon.png",
+    apple: "/favicon.png",
+  },
+  openGraph: {
+    title: "VisiteRV",
+    description: "Te ajudando a desbravar essa região!",
+    url: defaultUrl,
+    siteName: "VisiteRV",
+    images: [
+      {
+        url: "/logo.png",
+        width: 663,
+        height: 369,
+        alt: "VisiteRV Logo",
+      },
+    ],
+    locale: "pt_BR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "VisiteRV",
+    description: "Te ajudando a desbravar essa região!",
+    images: ["/logo.png"],
+  },
 };
 
 export default function RootLayout({
@@ -22,6 +48,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="icon" href="/favicon.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/favicon.png" />
         <link rel="preload" as="image" href="/regiao-vulcanica.jpg" />
         <link rel="preload" as="image" href="/house.jpg" />
         <link rel="preload" as="image" href="/logo.png" />

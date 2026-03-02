@@ -69,7 +69,8 @@ const ContatoPage = () => {
         message: ''
       })
     } catch (error: any) {
-      console.error('Error submitting form:', error)
+      const { logError } = await import('@/lib/error-handler');
+      logError('ContatoPage - handleSubmit', error);
       simpleToast(error.message || 'Erro ao enviar mensagem. Tente novamente mais tarde.', 'error')
     } finally {
       setIsLoading(false)

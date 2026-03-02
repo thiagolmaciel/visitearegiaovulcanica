@@ -50,7 +50,7 @@ const EventsCarousel = ({ events, title = "Próximos Eventos" }: EventsCarouselP
     skipSnaps: false,
     dragFree: false,
     containScroll: 'trimSnaps',
-    loop: false,
+    loop: events.length > 1, // Enable loop only if there's more than one event
   });
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
@@ -65,19 +65,19 @@ const EventsCarousel = ({ events, title = "Próximos Eventos" }: EventsCarouselP
       onSelect(emblaApi);
       emblaApi.on('select', onSelect);
       emblaApi.on('reInit', onSelect);
+      
+      // Reinitialize carousel when events change
+      emblaApi.reInit();
     }
-  }, [emblaApi, onSelect]);
+  }, [emblaApi, onSelect, events.length]);
 
-  // Auto-scroll quando houver mais de um evento
+  // Auto-scroll quando houver mais de um evento - com loop infinito
   useEffect(() => {
     if (events.length <= 1 || !emblaApi) return;
 
     const interval = setInterval(() => {
-      if (emblaApi.canScrollNext()) {
-        emblaApi.scrollNext();
-      } else {
-        emblaApi.scrollTo(0); // Volta ao início quando chega no fim
-      }
+      // Com loop habilitado, scrollNext sempre funciona e volta ao início automaticamente
+      emblaApi.scrollNext();
     }, 5000); // Muda a cada 5 segundos
 
     return () => clearInterval(interval);
@@ -92,11 +92,11 @@ const EventsCarousel = ({ events, title = "Próximos Eventos" }: EventsCarouselP
   }
 
   return (
-    <div className='embla flex flex-col gap-4 w-full px-4 sm:px-0'>
+    <div className='embla flex flex-col w-full px-4 sm:px-0'>
       <div className="embla__viewport overflow-hidden w-full relative" ref={emblaRef}>
         <div className='embla__container flex'>
           {events.map((event) => (
-            <div className='embla__slide flex-[0_0_100%] sm:flex-[0_0_100%] lg:flex-[0_0_100%] flex-shrink-0 px-2 sm:px-0' key={event.id}>
+            <div className='embla__slide flex-[0_0_100%] min-w-0 flex-shrink-0 px-2 sm:px-0' key={event.id}>
               <div 
                 onClick={() => {
                   setSelectedEvent(event);
@@ -285,19 +285,26 @@ const EventsCarousel = ({ events, title = "Próximos Eventos" }: EventsCarouselP
         </div>
       </div>
       
-      {/* Bullets Navigation */}
+      {/* Bullets Navigation - Clickable selection */}
       {events.length > 1 && (
-        <div className="flex justify-center items-center gap-2 mt-2">
+        <div className="flex justify-center items-center gap-2 my-3 sm:my-4">
           {events.map((_, index) => (
             <button
               key={index}
-              onClick={() => scrollTo(index)}
-              className={`transition-all duration-300 rounded-full ${
+              onClick={() => {
+                scrollTo(index);
+                // Pause auto-scroll temporarily when user clicks
+                if (emblaApi) {
+                  emblaApi.scrollTo(index, true); // true = jump (no animation)
+                }
+              }}
+              className={`transition-all duration-300 rounded-full cursor-pointer ${
                 index === selectedIndex
                   ? 'w-8 h-2 bg-[var(--main-color)]'
                   : 'w-2 h-2 bg-gray-300 hover:bg-gray-400'
               }`}
               aria-label={`Go to slide ${index + 1}`}
+              type="button"
             />
           ))}
         </div>

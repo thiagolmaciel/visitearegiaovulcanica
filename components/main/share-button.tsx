@@ -1,6 +1,7 @@
 'use client'
 import { IoShareSocial } from 'react-icons/io5';
 import { useState } from 'react';
+import { logError } from '@/lib/error-handler';
 
 interface ShareButtonProps {
   title?: string; // Share title/content
@@ -49,7 +50,7 @@ const ShareButton = ({
             }
           } catch (e) {
             // If image sharing fails, continue without it
-            console.log('Image sharing not supported, continuing without image');
+            // Silently continue - this is expected behavior
           }
         }
         
@@ -63,14 +64,14 @@ const ShareButton = ({
     } catch (error) {
       // User cancelled or error occurred
       if ((error as Error).name !== 'AbortError') {
-        console.error('Error sharing:', error);
+        logError('ShareButton - share', error);
         // Fallback: try to copy to clipboard
         try {
           await navigator.clipboard.writeText(shareText);
           setCopied(true);
           setTimeout(() => setCopied(false), 2000);
         } catch (clipboardError) {
-          console.error('Error copying to clipboard:', clipboardError);
+          logError('ShareButton - clipboard', clipboardError);
         }
       }
     }

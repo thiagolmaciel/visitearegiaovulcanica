@@ -1,4 +1,5 @@
-import { createClient } from "@/lib/supabase/server";
+import { getServerClient, executeArrayQuery, executeQuery } from "./base";
+import { logError } from "@/lib/error-handler";
 
 /**
  * Check if the current user is an admin
@@ -7,14 +8,14 @@ import { createClient } from "@/lib/supabase/server";
  * Use the SQL functions in supabase_admin_functions.sql to grant/revoke admin status
  */
 export async function isAdmin(userId: string): Promise<boolean> {
-  const supabase = await createClient();
+  const supabase = await getServerClient();
   
   try {
     // Get user with full metadata
     const { data: { user }, error } = await supabase.auth.getUser();
     
     if (error || !user) {
-      console.error('Error getting user:', error);
+      logError('isAdmin', error, { userId });
       return false;
     }
     
@@ -30,7 +31,7 @@ export async function isAdmin(userId: string): Promise<boolean> {
     
     return isAdminStatus;
   } catch (error) {
-    console.error('Error in isAdmin check:', error);
+    logError('isAdmin - exception', error, { userId });
     return false;
   }
 }
@@ -39,67 +40,29 @@ export async function isAdmin(userId: string): Promise<boolean> {
  * Get all users/profiles
  */
 export async function getAllUsers() {
-  const supabase = await createClient();
-  
-  try {
-    const { data: profiles, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .order('updated_at', { ascending: false });
-    
-    if (error) {
-      console.error('Error fetching users:', {
-        message: error.message,
-        details: error.details,
-        hint: error.hint,
-        code: error.code,
-        fullError: error
-      });
-      return [];
-    }
-    
-    return profiles || [];
-  } catch (error) {
-    console.error('Exception in getAllUsers:', error);
-    return [];
-  }
+  const supabase = await getServerClient();
+  return await executeArrayQuery(
+    () => supabase.from('profiles').select('*').order('updated_at', { ascending: false }),
+    'getAllUsers'
+  );
 }
 
 /**
  * Get all members/locations
  */
 export async function getAllMembers() {
-  const supabase = await createClient();
-  
-  try {
-    const { data: members, error } = await supabase
-      .from('members')
-      .select('*')
-      .order('created_at', { ascending: false });
-    
-    if (error) {
-      console.error('Error fetching members:', {
-        message: error.message,
-        details: error.details,
-        hint: error.hint,
-        code: error.code,
-        fullError: error
-      });
-      return [];
-    }
-    
-    return members || [];
-  } catch (error) {
-    console.error('Exception in getAllMembers:', error);
-    return [];
-  }
+  const supabase = await getServerClient();
+  return await executeArrayQuery(
+    () => supabase.from('members').select('*').order('created_at', { ascending: false }),
+    'getAllMembers'
+  );
 }
 
 /**
  * Get dashboard statistics
  */
 export async function getAdminStats() {
-  const supabase = await createClient();
+  const supabase = await getServerClient();
   
   // Get total users
   const { count: totalUsers } = await supabase
@@ -138,7 +101,7 @@ export async function getAdminStats() {
  * Get historical growth data for charts (last 30 days)
  */
 export async function getGrowthData() {
-  const supabase = await createClient();
+  const supabase = await getServerClient();
   
   const data: { date: string; users: number; members: number }[] = [];
   const today = new Date();

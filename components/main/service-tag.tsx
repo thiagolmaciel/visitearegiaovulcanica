@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 import iconsMap from '@/lib/iconsMap';
 import { Service } from '@/model/Service';
 
-const ServiceTag = (serviceobject: Service) => {
+interface ServiceTagProps {
+  serviceobject: Service;
+}
+
+const ServiceTag = ({ serviceobject }: ServiceTagProps) => {
     const Icon = iconsMap[serviceobject.icon as keyof typeof iconsMap];
     if (!Icon) return <p>Ícone não encontrado</p>;
 
@@ -28,4 +32,4 @@ const ServiceTag = (serviceobject: Service) => {
     );
 };
 
-export default ServiceTag;
+export default memo(ServiceTag);

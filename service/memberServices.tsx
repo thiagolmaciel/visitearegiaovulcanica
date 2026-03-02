@@ -1,28 +1,33 @@
 import { Service } from "@/model/Service";
-import { createClient } from "@/lib/supabase/client";
 import { simpleToast } from "@/utils/simple-toast";
 import { Member } from "@/model/Member";
+import { getClient, executeQuery, executeArrayQuery } from "./base-client";
+import { logError } from "@/lib/error-handler";
 
-const supabase = createClient();
 
-
+/**
+ * Gets a member by ID
+ * @param memberId - The member ID
+ * @returns The member or null if not found
+ */
 export async function getMemberByID(memberId: string) {
-  const { data: member, error: member_Error } = await supabase
-    .from('members')
-    .select('*')
-    .eq('id', memberId)
-    .single();
-
-  if (member_Error || !member) {
-    console.error('Erro ao buscar membro: ', member_Error);
-    return null;
-  }
-  return member
+  const supabase = getClient();
+  const result = await executeQuery(
+    () => supabase.from('members').select('*').eq('id', memberId).single(),
+    'getMemberByID'
+  );
+  return result.data;
 }
 
+/**
+ * Updates a member
+ * @param member - The member data to update
+ * @returns Error if update fails, null on success
+ */
 export async function updateMember(member: Member) {
-  console.log(member)
-  const { error } = await supabase
+  const supabase = getClient();
+  const result = await executeQuery(
+    () => supabase
     .from('members')
     .update({
       name: member.name,
@@ -37,127 +42,131 @@ export async function updateMember(member: Member) {
       location_id: member.location_id,
       image: member.image
     })
-    .eq('id', member.id);
-  if (error) {
-    return error
-  }
+      .eq('id', member.id)
+      .select()
+      .single(),
+    'updateMember'
+  );
+  return result.error;
 }
 
+/**
+ * Gets all services for a member
+ * @param memberId - The member ID
+ * @returns Array of services
+ */
 export async function getMemberServices(memberId: string): Promise<Service[]> {
-  const { data: member_services, error: member_services_Error } = await supabase
-    .from('member_services')
-    .select('service_id')
-    .eq('member_id', memberId);
+  const supabase = getClient();
+  
+  // Get member service IDs
+  const memberServicesResult = await executeArrayQuery<{ service_id: string }>(
+    () => supabase.from('member_services').select('service_id').eq('member_id', memberId),
+    'getMemberServices - member_services'
+  );
 
-  if (member_services_Error || !member_services) {
-    console.error('Erro ao buscar member_services: ', member_services_Error);
+  if (memberServicesResult.length === 0) {
     return [];
   }
 
-  const serviceIDs = member_services.map((ms) => ms.service_id);
-  if (serviceIDs.length === 0) {
-    return [];
-  }
-
-  const { data: services, error: services_Error } = await supabase
-    .from('services')
-    .select('*')
-    .in('id', serviceIDs);
-
-  if (services_Error || !services) {
-    console.error('Erro ao buscar services: ', services_Error);
-    return [];
-  }
-
-  return services as Service[];
+  const serviceIDs = memberServicesResult.map((ms) => ms.service_id);
+  
+  // Get full service details
+  return await executeArrayQuery<Service>(
+    () => supabase.from('services').select('*').in('id', serviceIDs),
+    'getMemberServices - services'
+  );
 }
 
+/**
+ * Gets service icons for a member (optimized version that only fetches icons)
+ * @param memberId - The member ID
+ * @returns Array of services with icon field only
+ */
 export async function getMemberServicesIcons(memberId: string): Promise<Service[]> {
-  const { data: member_services, error: member_services_Error } = await supabase
-    .from('member_services')
-    .select('service_id')
-    .eq('member_id', memberId);
+  const supabase = getClient();
+  
+  // Get member service IDs
+  const memberServicesResult = await executeArrayQuery<{ service_id: string }>(
+    () => supabase.from('member_services').select('service_id').eq('member_id', memberId),
+    'getMemberServicesIcons - member_services'
+  );
 
-  if (member_services_Error || !member_services) {
-    console.error('Erro ao buscar member_services: ', member_services_Error);
+  if (memberServicesResult.length === 0) {
     return [];
   }
 
-  const serviceIDs = member_services.map((ms) => ms.service_id);
-  if (serviceIDs.length === 0) {
-    return [];
-  }
-
-  const { data: services, error: services_Error } = await supabase
-    .from('services')
-    .select('icon')
-    .in('id', serviceIDs);
-
-  if (services_Error || !services) {
-    console.error('Erro ao buscar services: ', services_Error);
-    return [];
-  }
-
-  return services as Service[];
+  const serviceIDs = memberServicesResult.map((ms) => ms.service_id);
+  
+  // Get only icon field for performance
+  return await executeArrayQuery<Service>(
+    () => supabase.from('services').select('icon, id').in('id', serviceIDs),
+    'getMemberServicesIcons - services'
+  );
 }
 
+/**
+ * Gets location for a member
+ * @param memberID - The member ID
+ * @returns Location data or null
+ */
 export async function getMemberLocation(memberID: string) {
-  const { data, error } = await supabase
-    .from('locations')
-    .select('*')
-    .eq('member_id', memberID)
-    .single();
-
-  if (!data) {
-    return null;
+  const supabase = getClient();
+  const result = await executeQuery(
+    () => supabase.from('locations').select('*').eq('member_id', memberID).single(),
+    'getMemberLocation'
+  );
+  return result.data;
   }
 
-  if (error) {
-    console.error('Erro ao buscar localização:', error?.message);
-    return null;
-  }
-
-
-  return data;
-}
-
+/**
+ * Fetches all members
+ * @returns Array of all members or null on error
+ */
 export async function fetchAllMembers() {
-  const { data: members, error } = await supabase.from('members').select('*');
-  if (!members || error) return null
-  return members
+  const supabase = getClient();
+  const result = await executeQuery(
+    () => supabase.from('members').select('*'),
+    'fetchAllMembers'
+  );
+  return result.data;
 }
 
+/**
+ * Fetches members by service ID
+ * @param serviceId - The service ID
+ * @returns Array of members
+ */
 export async function fetchMembersByServiceId(serviceId: string) {
-  const { data: member_services, error: member_services_Error } = await supabase
-    .from('member_services')
-    .select('member_id')
-    .eq('service_id', serviceId);
+  const supabase = getClient();
+  
+  // Get member IDs for this service
+  const memberServicesResult = await executeArrayQuery<{ member_id: string }>(
+    () => supabase.from('member_services').select('member_id').eq('service_id', serviceId),
+    'fetchMembersByServiceId - member_services'
+  );
 
-  if (member_services_Error || !member_services) {
-    console.error('Erro ao buscar member_services: ', member_services_Error);
+  if (memberServicesResult.length === 0) {
     return [];
   }
 
-  const memberIDs = member_services.map((ms) => ms.member_id);
-  if (memberIDs.length === 0) {
-    return [];
-  }
-
-  const { data: members, error: members_Error } = await supabase
-    .from('members')
-    .select('*')
-    .in('id', memberIDs);
-
-  if (members_Error || !members) {
-    console.error('Erro ao buscar members: ', members_Error);
-    return [];
-  }
-
-  return members;
+  const memberIDs = memberServicesResult.map((ms) => ms.member_id);
+  
+  // Get full member details
+  return await executeArrayQuery<Member>(
+    () => supabase.from('members').select('*').in('id', memberIDs),
+    'fetchMembersByServiceId - members'
+  );
 }
 
+/**
+ * Fetches members by city ID
+ * @param city_id - The city ID
+ * @returns Array of members
+ */
 export async function fetchMembersByCityId(city_id: string) {
-  const { data, error } = await supabase
+  const supabase = getClient();
+  const result = await executeQuery(
+    () => supabase
     .from("members")
     .select(`
     *,
@@ -167,20 +176,27 @@ export async function fetchMembersByCityId(city_id: string) {
       address
     )
   `)
-    .eq("locations.city_id", city_id);
+      .eq("locations.city_id", city_id),
+    'fetchMembersByCityId'
+  );
 
-  if (error) {
-    console.error("Erro ao buscar membros:", error);
+  if (!result.data) {
     return [];
   }
 
-  const filteredMembers = data.filter(member => member.locations?.city_id === city_id);
-
-  return filteredMembers;
+  // Filter to ensure city_id matches (Supabase join may return extra results)
+  return result.data.filter((member: any) => member.locations?.city_id === city_id);
 }
 
+/**
+ * Fetches members by state ID
+ * @param state_id - The state ID
+ * @returns Array of members
+ */
 export async function fetchMembersByStateId(state_id: string) {
-  const { data, error } = await supabase
+  const supabase = getClient();
+  const result = await executeQuery(
+    () => supabase
     .from("members")
     .select(`
     *,
@@ -198,119 +214,157 @@ export async function fetchMembersByStateId(state_id: string) {
       )
     )
   `)
-    .eq("locations.cities.states.id", state_id);
+      .eq("locations.cities.states.id", state_id),
+    'fetchMembersByStateId'
+  );
 
-  if (error) {
-    console.error("Erro ao buscar membros:", error);
+  if (!result.data) {
     return [];
   }
-  const filteredMembers = data.filter(member => member.locations?.cities?.states?.id === state_id);
-  return filteredMembers;
+
+  interface MemberWithState {
+    locations?: {
+      cities?: {
+        states?: { id: string };
+      };
+    };
+    [key: string]: unknown;
+  }
+  return result.data.filter((member: MemberWithState) => member.locations?.cities?.states?.id === state_id);
 }
 
+/**
+ * Fetches members by city name
+ * @param name - The city name
+ * @returns Array of members or null
+ */
 export async function fetchMembersByCityName(name: string) {
   const city = await getCityIdByName(name);
-  if (!city) return null
-  console.log('City.id = ' + city.id)
-  const data = await fetchMembersByCityId(city.id);
-  if (!data) return null
-  return data;
+  if (!city) return null;
+  return await fetchMembersByCityId(city.id);
 }
 
+/**
+ * Fetches members by state name
+ * @param name - The state name
+ * @returns Array of members or null
+ */
 export async function fetchMembersByStateName(name: string) {
   const state = await getStateIdByName(name);
-  if (!state) return null
-  const data = await fetchMembersByStateId(state.id);
-  if (!data) return null
-  return data;
+  if (!state) return null;
+  return await fetchMembersByStateId(state.id);
 }
 
+/**
+ * Gets city ID by name
+ * @param name - The city name
+ * @returns City data with ID or null
+ */
 export async function getCityIdByName(name: string) {
-  console.log(name)
-  const { data, error } = await supabase
-    .from('cities')
-    .select('id')
-    .ilike('name', name)
-    .single()
-  console.log(data)
-  if (!data || error) return null
-  return data
+  const supabase = getClient();
+  const result = await executeQuery(
+    () => supabase.from('cities').select('id').ilike('name', name).single(),
+    'getCityIdByName'
+  );
+  return result.data;
 }
 
+/**
+ * Gets state ID by name
+ * @param name - The state name
+ * @returns State data with ID or null
+ */
 export async function getStateIdByName(name: string) {
-  console.log(name)
-  const { data, error } = await supabase
-    .from('states')
-    .select('id')
-    .ilike('name', name)
-    .single()
-  console.log(data)
-  if (!data || error) return null
-  return data
+  const supabase = getClient();
+  const result = await executeQuery(
+    () => supabase.from('states').select('id').ilike('name', name).single(),
+    'getStateIdByName'
+  );
+  return result.data;
 }
 
 
 
+/**
+ * Fetches members by partial query (searches name and description)
+ * @param query - The search query
+ * @returns Array of matching members
+ */
 export async function fetchMembersByPartialQuery(query: string) {
-  const { data, error } = await supabase
+  const supabase = getClient();
+  return await executeArrayQuery<Member>(
+    () => supabase
     .from("members")
     .select("*")
-    .or(`name.ilike.%${query}%,description.ilike.%${query}%`);
-
-  if (error) {
-    console.error("Erro ao buscar membros por query parcial:", error);
-    return [];
-  }
-
-  return data || [];
+      .or(`name.ilike.%${query}%,description.ilike.%${query}%`),
+    'fetchMembersByPartialQuery'
+  );
 }
 
+/**
+ * Deletes a member and their associated images
+ * @param member_id - The member ID to delete
+ * @throws Error if deletion fails
+ */
 export async function deleteMemberById(member_id: string) {
-  const supabase = createClient();
-  const { data, error } = await supabase
-    .from('members')
-    .delete()
-    .eq('id', member_id)
-  if (error) {
-    simpleToast('Erro ao deletar local!', 'error')
-    throw error
+  const supabase = getClient();
+  
+  // Delete member record
+  const deleteResult = await executeQuery(
+    () => supabase.from('members').delete().eq('id', member_id).select().single(),
+    'deleteMemberById - member'
+  );
+
+  if (deleteResult.error) {
+    simpleToast('Erro ao deletar local!', 'error');
+    throw deleteResult.error;
   }
   
+  // Delete associated images from storage
   const { error: storageError } = await supabase
     .storage
     .from('members')
     .remove([`images/${member_id}`]);
 
   if (storageError) {
-    console.error("Erro ao deletar a pasta de fotos do membro:", storageError.message);
-    simpleToast('Erro ao deletar fotos do local!', 'error')
+    logError('deleteMemberById - storage', storageError, { member_id });
+    simpleToast('Erro ao deletar fotos do local!', 'error');
     throw storageError;
   }
-  console.log(member_id)
-  simpleToast('Sucesso ao deletar local!', 'success')
+  
+  simpleToast('Sucesso ao deletar local!', 'success');
 }
 
+/**
+ * Fetches member name by ID
+ * @param member_id - The member ID
+ * @returns Member name or null
+ */
 export async function fetchMemberNameByID(member_id: string) {
-  var name = ""
-  const supabase = createClient();
-  const { data, error } = await supabase
-    .from('members')
-    .select("name")
-    .eq('id', member_id)
-  if (error) {
-    throw error
-  }
-  return name;
+  const supabase = getClient();
+  const result = await executeQuery<{ name: string }>(
+    () => supabase.from('members').select("name").eq('id', member_id).single(),
+    'fetchMemberNameByID'
+  );
+  return result.data?.name || null;
 }
 
+/**
+ * Creates a new member
+ * @param member - The member data to create
+ * @returns The created member
+ * @throws Error if creation fails
+ */
 export async function createMember(member: Member) {
-  const { data, error } = await supabase
-  .from('members')
-  .insert(member)
-  .select() 
+  const supabase = getClient();
+  const result = await executeQuery<Member>(
+    () => supabase.from('members').insert(member).select().single(),
+    'createMember'
+  );
 
-if (error) throw error
-if (!data || data.length === 0) throw new Error('Falha ao criar membro')
+  if (result.error || !result.data) {
+    throw result.error || new Error('Falha ao criar membro');
+  }
 
-return data[0] 
+  return result.data;
 }

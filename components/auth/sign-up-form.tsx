@@ -1,25 +1,15 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Input } from "../ui/input";
+import Link from "next/link";
+import { Button } from "../ui/button";
+import ErrorAlert from "./error-alert";
+import translateError from "@/utils/translateError";
 
-export function SignUpForm({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<"div">) {
+export function SignUpForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
@@ -34,87 +24,105 @@ export function SignUpForm({
     setError(null);
 
     if (password !== repeatPassword) {
-      setError("Passwords do not match");
+      setError("As senhas não coincidem");
+      setIsLoading(false);
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("A senha deve ter pelo menos 6 caracteres");
       setIsLoading(false);
       return;
     }
 
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/protected`,
+          // Use /auth/confirm for email confirmation (Supabase standard)
+          emailRedirectTo: `${window.location.origin}/auth/confirm?type=signup&next=/dashboard`,
         },
       });
+      
       if (error) throw error;
-      router.push("/auth/sign-up-success");
+      
+      // Check if email confirmation is required
+      // If user is null, email confirmation is required and email was sent
+      // If user exists, email confirmation might be disabled in Supabase settings
+      if (data.user && !data.session) {
+        // Email confirmation required - email should have been sent
+        router.push("/auth/sign-up-success");
+      } else if (data.session) {
+        // Email confirmation disabled - user is automatically logged in
+        router.push("/dashboard");
+      } else {
+        // Should not happen, but handle it
+        router.push("/auth/sign-up-success");
+      }
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred");
+      setError(error instanceof Error ? error.message : "Ocorreu um erro ao criar a conta");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">Sign up</CardTitle>
-          <CardDescription>Create a new account</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSignUp}>
-            <div className="flex flex-col gap-6">
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                </div>
-                <Input
-                  id="password"
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="repeat-password">Repeat Password</Label>
-                </div>
-                <Input
-                  id="repeat-password"
-                  type="password"
-                  required
-                  value={repeatPassword}
-                  onChange={(e) => setRepeatPassword(e.target.value)}
-                />
-              </div>
-              {error && <p className="text-sm text-red-500">{error}</p>}
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Creating an account..." : "Sign up"}
-              </Button>
-            </div>
-            <div className="mt-4 text-center text-sm">
-              Already have an account?{" "}
-              <Link href="/auth/login" className="underline underline-offset-4">
-                Login
-              </Link>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+    <form role="sign-up" className="flex items-center justify-center flex-col gap-4 w-full max-w-md">
+      <div className="self-start w-full">
+        <h2 className="text-xl sm:text-2xl font-bold">
+          Criar <span className="text-emerald-900">conta</span>
+        </h2>
+        <h3 className="text-sm sm:text-base text-gray-500">Preencha os dados para se cadastrar</h3>
+      </div>
+
+      <Input
+        type="email"
+        placeholder="Email"
+        name="email"
+        required
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        className="w-full min-w-0 sm:min-w-[20rem] border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-emerald-900"
+      />
+      <Input
+        type="password"
+        placeholder="Senha"
+        name="password"
+        required
+        minLength={6}
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        className="w-full min-w-0 sm:min-w-[20rem] border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-emerald-900"
+      />
+      <Input
+        type="password"
+        placeholder="Confirmar senha"
+        name="repeat-password"
+        required
+        minLength={6}
+        value={repeatPassword}
+        onChange={(e) => setRepeatPassword(e.target.value)}
+        className="w-full min-w-0 sm:min-w-[20rem] border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-emerald-900"
+      />
+
+      <div className="w-full flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-0">
+        <div className="flex justify-center sm:justify-start">
+          <Link href={'/auth/login'} className="text-sm text-gray-400">Já tenho uma conta</Link>
+        </div>
+        <div className="flex justify-center sm:justify-end">
+          <Button
+            className="w-full sm:w-[7rem] font-bold"
+            disabled={isLoading}
+            type="submit"
+            onClick={handleSignUp}
+          >
+            {isLoading ? "Criando..." : "Cadastrar"}
+          </Button>
+        </div>
+      </div>
+      
+      {error && <ErrorAlert error={translateError(error)} />}
+    </form>
   );
 }

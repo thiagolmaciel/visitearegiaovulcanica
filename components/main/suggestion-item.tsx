@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo, memo } from 'react'
 import Image from "next/image"
 import { abrevToName, truncateString } from "@/lib/textFunctions";
 import { getCityByID } from "@/service/locationServices";
@@ -8,12 +8,14 @@ import iconsMap from '@/lib/iconsMap';
 import { Service } from '@/model/Service';
 import { getImagesByID } from '@/service/imagesServices';
 import { ImageModel } from '@/model/ImageModel';
+
 interface SuggestionItemProps {
   image_url: string;
   title: string;
   slug: string;
   id: string;
   description?: string;
+  selectedFilters?: string[];
 }
 
 interface ServiceIcon {
@@ -22,7 +24,7 @@ interface ServiceIcon {
 
 
 
-const SuggestionItem = ({ image_url, description, title, slug, id }: SuggestionItemProps) => {
+const SuggestionItem = ({ image_url, description, title, slug, id, selectedFilters = [] }: SuggestionItemProps) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [cityName, setCityName] = useState<string>('Carregando...');
   const [stateName, setStateName] = useState<string>('');
@@ -30,6 +32,30 @@ const SuggestionItem = ({ image_url, description, title, slug, id }: SuggestionI
   const [serviceIcons, setServiceIcons] = useState<ServiceIcon[]>([]);
   const [services, setServices] = useState<Service[]>([]);
   const [image, setImage] = useState<ImageModel>({ url: '/house.jpg', name: 'house' });
+  
+  // Check if this item matches the selected filters
+  const matchesFilters = useMemo(() => {
+    if (selectedFilters.length === 0) return true;
+    
+    const states = ['São Paulo', 'Minas Gerais'];
+    
+    return selectedFilters.every(filter => {
+      const filterLower = filter.toLowerCase().trim();
+      
+      // Check state
+      if (states.includes(filter)) {
+        return stateName.toLowerCase() === filterLower;
+      }
+      
+      // Check city
+      if (cityNameOnly.toLowerCase() === filterLower) {
+        return true;
+      }
+      
+      // Check services
+      return services.some(service => service.name.toLowerCase() === filterLower);
+    });
+  }, [selectedFilters, stateName, cityNameOnly, services]);
 
   useEffect(() => {
     (async () => {
@@ -77,9 +103,12 @@ const SuggestionItem = ({ image_url, description, title, slug, id }: SuggestionI
     })();
   }, [id]);
 
+  // Hide item if it doesn't match filters (but still render for smooth transitions)
+  const shouldShow = matchesFilters;
+
   if(loading){
     return (
-      <div className="flex flex-col gap-3 w-full h-full min-h-[22rem] bg-white rounded-2xl shadow-lg overflow-hidden">
+      <div className={`flex flex-col gap-3 w-full h-full min-h-[22rem] bg-white rounded-2xl shadow-lg overflow-hidden ${!shouldShow ? 'hidden' : ''}`}>
         <div className="flex h-[14rem] w-full bg-gray-100 flex items-center justify-center flex-shrink-0">
           <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-gray-500"></div>
         </div>
@@ -97,6 +126,11 @@ const SuggestionItem = ({ image_url, description, title, slug, id }: SuggestionI
       </div>
     )
   }
+  
+  if (!shouldShow) {
+    return null;
+  }
+  
   return (
     <a href={`/afiliados/${slug}`} className="block h-full w-full">
       <div className="flex flex-col gap-3 w-full h-full min-h-[22rem] bg-white rounded-2xl shadow-lg overflow-hidden hover:-translate-y-1 transition-all ease-in-out duration-300 cursor-pointer">
@@ -167,4 +201,4 @@ const SuggestionItem = ({ image_url, description, title, slug, id }: SuggestionI
   );
 }
 
-export default SuggestionItem;
+export default memo(SuggestionItem);

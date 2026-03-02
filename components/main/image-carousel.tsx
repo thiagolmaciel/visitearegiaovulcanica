@@ -37,10 +37,10 @@ const ImageCarousel = ({ images }: Props) => {
                                 {!loadedImages.has(index) && (
                                     <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-pulse z-10" />
                                 )}
-                                <Image
-                                    src={image.url}
-                                    alt=''
-                                    fill
+                            <Image
+                            src={image.url}
+                            alt=''
+                            fill
                                     className={`object-cover transition-opacity duration-300 ${
                                         loadedImages.has(index) ? 'opacity-100' : 'opacity-0'
                                     }`}

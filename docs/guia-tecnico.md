@@ -23,11 +23,15 @@ Este guia explica, em linguagem direta, como o projeto funciona por dentro, como
 1) Instale dependências: `yarn`
 2) Crie um arquivo `.env.local` com:
    ```bash
-   NEXT_PUBLIC_SUPABASE_URL=https://kdwpecddwtaczhoorylb.supabase.co
-   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.
-   eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtkd3BlY2Rkd3RhY3pob29yeWxiIiwicm9sZSI6ImFub24iLCJpYXQ
-   iOjE3NDgzNTA2MzQsImV4cCI6MjA2MzkyNjYzNH0.jOwIBjIqWGi8TnFz2mWW3m82nCg_ah2s36uM-jIT3WY
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url_here
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key_here
+   SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
+   RESEND_API_KEY=your_resend_api_key_here  # Optional: for contact form emails
+   CONTACT_EMAIL=contato@regiaovulcanica.org.br  # Optional: contact form recipient
+   FROM_EMAIL=Contato Site <onboarding@resend.dev>  # Optional: email sender
    ```
+   
+   > **Nota**: As chaves do Supabase podem ser encontradas nas configurações da API do seu projeto no [dashboard do Supabase](https://supabase.com/dashboard).
 3) Rode em desenvolvimento: `yarn dev` (abre em `http://localhost:3000`)
 4) Para gerar build de produção: `yarn build`
 5) Para iniciar em produção (após build): `yarn start`

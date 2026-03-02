@@ -3,6 +3,7 @@
 import { useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { logError } from '@/lib/error-handler'
 
 const AuthCallbackPageContent = () => {
   const router = useRouter()
@@ -37,7 +38,7 @@ const AuthCallbackPageContent = () => {
           })
 
           if (sessionError) {
-            console.error('Erro ao criar sessão:', sessionError)
+            logError('AuthCallback - setSession', sessionError);
             router.push(`/auth/error?error=${encodeURIComponent(sessionError.message)}`)
             return
           }
@@ -45,7 +46,7 @@ const AuthCallbackPageContent = () => {
           // Redirecionar para página de atualização de senha
           router.push('/auth/update-password')
         } catch (err: any) {
-          console.error('Erro ao processar callback:', err)
+          logError('AuthCallback - process callback', err);
           router.push(`/auth/error?error=${encodeURIComponent(err.message || 'Erro desconhecido')}`)
         }
         return
@@ -72,7 +73,7 @@ const AuthCallbackPageContent = () => {
 
           router.push(next)
         } catch (err: any) {
-          console.error('Erro ao verificar OTP:', err)
+          logError('AuthCallback - verifyOtp', err);
           router.push(`/auth/error?error=${encodeURIComponent(err.message || 'Erro desconhecido')}`)
         }
         return

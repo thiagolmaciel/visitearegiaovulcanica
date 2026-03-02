@@ -65,12 +65,12 @@ export function ForgotPasswordForm({
       ) : (
         <form
           role="forgot-password"
-          className="flex items-center justify-center flex-col gap-4"
+          className="flex items-center justify-center flex-col gap-4 w-full max-w-md"
           onSubmit={handleForgotPassword}
         >
-          <div className="self-start">
-            <h2 className="text-2xl font-bold">Redefinir senha</h2>
-            <h3 className="text-gray-500 text-sm">
+          <div className="self-start w-full">
+            <h2 className="text-xl sm:text-2xl font-bold">Redefinir senha</h2>
+            <h3 className="text-sm sm:text-base text-gray-500">
               Digite seu email e enviaremos o link para redefinir sua senha
             </h3>
           </div>
@@ -81,14 +81,16 @@ export function ForgotPasswordForm({
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            className="w-full min-w-0 sm:min-w-[20rem] border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-emerald-900"
           />
 
-          <div className="flex flex-row items-center justify-between w-full">
-            <Link href={'/auth/login'} className="text-sm text-gray-400">Voltar</Link>
-
-            <div>
+          <div className="w-full flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-0">
+            <div className="flex justify-center sm:justify-start">
+              <Link href={'/auth/login'} className="text-sm text-gray-400">Voltar</Link>
+            </div>
+            <div className="flex justify-center sm:justify-end">
               <Button
-                className="w-[5rem] font-bold"
+                className="w-full sm:w-[5rem] font-bold"
                 disabled={isLoading}
                 type="submit"
               >

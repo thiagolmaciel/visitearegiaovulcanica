@@ -1,6 +1,23 @@
 import { RecoverAccountForm } from "@/components/auth/recover-account-form";
 import Image from "next/image";
 
+/**
+ * Account Recovery Page - OTP Code Flow
+ * 
+ * This page provides an alternative password recovery method using OTP (One-Time Password) codes.
+ * 
+ * Flow:
+ * 1. User enters email
+ * 2. Receives 6-digit OTP code via email
+ * 3. Enters OTP code to verify
+ * 4. Sets new password
+ * 
+ * Difference from /auth/forgot-password:
+ * - forgot-password: Uses email link reset (click link in email → redirects to update-password page)
+ * - recover: Uses OTP code flow (receive code → enter code → set password on same page)
+ * 
+ * Both methods are valid - users can choose their preferred recovery method.
+ */
 export default function Page() {
   return (
     <div className='bg-white flex grow max-w-[70rem] sm:min-h-[40rem]  rounded-lg shadow-md flex-col sm:flex-row overflow-clip relative'>

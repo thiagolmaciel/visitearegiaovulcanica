@@ -55,9 +55,40 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const defaultUrl = process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
+  : "http://localhost:3000";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(defaultUrl),
   title: "Portal do Afiliado",
   description: "Portal do Afiliado",
+  icons: {
+    icon: "/favicon.png",
+    apple: "/favicon.png",
+  },
+  openGraph: {
+    title: "Portal do Afiliado",
+    description: "Portal do Afiliado",
+    url: defaultUrl,
+    siteName: "VisiteRV",
+    images: [
+      {
+        url: "/logo.png",
+        width: 663,
+        height: 369,
+        alt: "VisiteRV Logo",
+      },
+    ],
+    locale: "pt_BR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Portal do Afiliado",
+    description: "Portal do Afiliado",
+    images: ["/logo.png"],
+  },
 };
 
 export default function AuthLayout({
@@ -66,7 +97,11 @@ export default function AuthLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
+      <head>
+        <link rel="icon" href="/favicon.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/favicon.png" />
+      </head>
       <body className="relative bg-none! bg-gray-200 ">
         <div className="h-screen flex items-center justify-center px-5">
         {children}

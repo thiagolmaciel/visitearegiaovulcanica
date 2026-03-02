@@ -1,5 +1,6 @@
 "use client"
 
+import { memo } from "react"
 import { Event } from "@/model/Event"
 import { Card, CardContent } from "@/components/ui/card"
 import Link from "next/link"
@@ -33,7 +34,7 @@ const categoryLabels: Record<string, string> = {
   outro: "Outro",
 }
 
-export default function EventCard({ event }: EventCardProps) {
+function EventCard({ event }: EventCardProps) {
   const startDate = new Date(event.start_date)
   const endDate = event.end_date ? new Date(event.end_date) : null
   
@@ -153,3 +154,4 @@ export default function EventCard({ event }: EventCardProps) {
   )
 }
 
+export default memo(EventCard)

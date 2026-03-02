@@ -13,26 +13,17 @@ import EventsCarousel from "@/components/main/events-carousel";
 import HashFragmentHandler from "@/components/auth/hash-fragment-handler";
 
 export default async function Home() {
-  const allMembers = await fetchAllMembers();
-  const pdcMembers = await fetchMembersByCityId('600f448c-da0f-49cf-8190-994630aab331');
-  const andMembers = await fetchMembersByCityId('f1f58689-b3b2-461b-9da0-300d6d72b94b');
-  const services: Service[] = await getAllServices() || [];
-  const activeEvents = await getActiveEvents();
+  // Parallelize independent queries for better performance
+  const [allMembers, pdcMembers, andMembers, services, activeEvents] = await Promise.all([
+    fetchAllMembers(),
+    fetchMembersByCityId('600f448c-da0f-49cf-8190-994630aab331'),
+    fetchMembersByCityId('f1f58689-b3b2-461b-9da0-300d6d72b94b'),
+    getAllServices(),
+    getActiveEvents()
+  ]);
 
-  // Get images from the first few members for preloading
-  const preloadImageUrls: string[] = [];
-  const membersToPreload = [...(allMembers || []), ...(pdcMembers || []), ...(andMembers || [])].slice(0, 6);
-  
-  for (const member of membersToPreload) {
-    try {
-      const images = await getImagesByID(member.id);
-      if (images.length > 0) {
-        preloadImageUrls.push(images[0].url);
-      }
-    } catch (error) {
-      console.log('Error preloading images for member:', member.id);
-    }
-  }
+  // Get images from the first few members for preloading (moved to client-side for non-blocking)
+  // This will be handled by the ImagePreloader component instead
 
   return (
     <>

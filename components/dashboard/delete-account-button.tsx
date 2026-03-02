@@ -1,6 +1,7 @@
 'use client'
 import React from 'react';
 import ConfirmDialog from './confirm-dialog';
+import { logError } from '@/lib/error-handler';
 
 export default function DeleteAccountButton() {
   const [dialogOpen, setDialogOpen] = React.useState(false);
@@ -8,11 +9,10 @@ export default function DeleteAccountButton() {
   async function handleDeleteAccount() {
     try {
       // Here you would implement the actual account deletion logic
-      console.log('Account deletion requested');
       // await deleteUserAccount();
       // router.push('/auth/login');
     } catch (error) {
-      console.error('Error deleting account:', error);
+      logError('DeleteAccountButton - handleDeleteAccount', error);
     }
   }
 
